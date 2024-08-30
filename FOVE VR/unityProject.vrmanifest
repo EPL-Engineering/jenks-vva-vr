@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.vva_toolkit.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\vs611\\Documents\\VersionControlledUnityProjects\\IHPL_Serrador\\VVA_Toolkit\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "VVA_Toolkit [Testing]"
+        }
+      }
+    }
+  ]
+}
