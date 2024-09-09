@@ -28,12 +28,14 @@ public class TiltControllerHz : MonoBehaviour
 
     private void Awake()
     {
-        XRDevice.DisableAutoXRCameraTracking(childCamera, true);
+        //XRDevice.DisableAutoXRCameraTracking(childCamera, true);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+//        Debug.Log("yeeha");
+        return;
 
         var inputDevices = new List<UnityEngine.XR.InputDevice>();
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
@@ -69,14 +71,14 @@ public class TiltControllerHz : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateCoordinates();
+        //UpdateCoordinates();
 
         //if changed print
-        if (preViveHMDPosition != ViveHMDPosition ||
-            preViveHMDRotation != ViveHMDRotation ||
-            preViveHMDVelocity != ViveHMDVelocity ||
-            preViveHMDAngularVelocity != ViveHMDAngularVelocity)
-        { PrintCoordinates(); }
+        //if (preViveHMDPosition != ViveHMDPosition ||
+        //    preViveHMDRotation != ViveHMDRotation ||
+        //    preViveHMDVelocity != ViveHMDVelocity ||
+        //    preViveHMDAngularVelocity != ViveHMDAngularVelocity)
+        //{ PrintCoordinates(); }
 
         transform.eulerAngles = new Vector3(RotateAmount[0], RotateAmount[1], 20*Mathf.Sin(RotateAmount[2] * Time.time));
 
