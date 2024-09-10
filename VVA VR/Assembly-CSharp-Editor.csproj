@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{A3E64420-59A9-866E-FB6F-73FFBA2DF737}</ProjectGuid>
+    <ProjectGuid>{B20FF5C7-1021-15F3-E3AB-FF27C4085B8D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -296,6 +296,9 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\15.0\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>Library\PackageCache\com.epl.klib@1c61ef5267\Runtime\Plugins\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="FoveClient_CLR">
       <HintPath>Assets\FoveUnityPlugin\FoveClient_CLR.dll</HintPath>
     </Reference>
@@ -304,6 +307,9 @@
     </Reference>
     <Reference Include="SyntaxTree.Mono.Cecil">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Messaging">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Messaging.dll</HintPath>
@@ -737,10 +743,16 @@
     <Reference Include="Unity.XR.OpenXR.Features.RuntimeDebugger.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.XR.OpenXR.Features.RuntimeDebugger.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="KLib.Network">
+      <HintPath>Library\ScriptAssemblies\KLib.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="NewAssembly">
+      <HintPath>Library\ScriptAssemblies\NewAssembly.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{17382006-901D-6371-C9C2-79102513278E}</Project>
+      <Project>{386512D3-D9AD-D6ED-6C1E-7A65FB68A5D0}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
   </ItemGroup>

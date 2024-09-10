@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.epl.klib": {
+      "version": "https://github.com/keh38/klib-unity.git?path=/Packages/com.epl.klib",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0"
+      },
+      "hash": "1c61ef52674326c47992dd7c9bd298d48afa24d7"
+    },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
       "depth": 1,
@@ -34,6 +43,13 @@
     },
     "com.unity.inputsystem": {
       "version": "1.0.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "2.0.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
