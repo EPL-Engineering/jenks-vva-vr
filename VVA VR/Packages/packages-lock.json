@@ -7,7 +7,7 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "2.0.0"
       },
-      "hash": "f22a98a12384ef6a81139e7a7c2fb876154217fc"
+      "hash": "cbc2ca044cdc674b13638a37a8e32c9461de77f3"
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",

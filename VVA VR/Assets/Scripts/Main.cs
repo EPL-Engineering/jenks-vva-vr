@@ -8,14 +8,12 @@ using KLib.Network;
 
 public class Main : MonoBehaviour
 {
-
-    //a true/false variable for connection status
     private bool _listenerReady = false;
 
     //Sockets.KTcpClient _client;
-    //private Sockets.KTcpListener _listener = null;
+    KTCPListener _listener = null;
     private bool _stopServer;
-    private UDPMulticastServer _udpServer;
+    private NetworkDiscoveryServer _discoveryServer;
 
     private string _address;
     private int _port = 4950;
@@ -24,37 +22,37 @@ public class Main : MonoBehaviour
     private void Start()
     {
         _address = NetworkUtils.FindServerAddress();
+
+        _discoveryServer = gameObject.AddComponent<NetworkDiscoveryServer>();
+        StartServer();
     }
+    
+    public void StartServer()
+    {
+        _stopServer = false;
 
-    /*
-        public void StartServer()
-        {
-            _scene = scene;
-            _stopServer = false;
+        _listener = new KTCPListener();
+        Debug.Log(_address);
+        _listener.StartListener(_address, _port, false);
 
-            Use = true;
+        StartCoroutine(TCPServer());
+        _discoveryServer.StartReceiving("VVA VR", _address, _port);
 
-            _listener = new Sockets.KTcpListener();
-            _listener.StartListener(_port, false);
-
-            StartCoroutine(TCPServer());
-            _udpServer.StartReceiving("SRI", _port);
-
-            Debug.Log("started SRI TCP listener");
-        }
-    */
+        Debug.Log("started TCP listener on " + _address + ":" + _port);
+    }
+    
 
     public void StopServer()
     {
         _stopServer = true;
-        //if (_listener != null)
-        //{
-        //    _listener.CloseListener();
-        //    _listener = null;
-        //}
+        if (_listener != null)
+        {
+            _listener.CloseListener();
+            _listener = null;
+        }
 
-        //_udpServer.StopReceiving();
-        //Debug.Log("stopped SRI TCP listener");
+        _discoveryServer.StopReceiving();
+        Debug.Log("stopped TCP listener");
     }
 
     void OnDestroy()
@@ -66,140 +64,53 @@ public class Main : MonoBehaviour
     {
         while (!_stopServer)
         {
-            //if (_listener.Pending())
-            //{
-            //    //ProcessMessage();
-            //}
+            if (_listener.Pending())
+            {
+                ProcessMessage();
+            }
             yield return null;
         }
     }
 
-    /*
-        void ProcessMessage()
+    void ProcessMessage()
+    {
+        bool exit = false;
+
+        //TestState receivedTestState = null;
+        bool result = true;
+
+        _listener.AcceptTcpClient();
+
+        string input = _listener.ReadStringFromInputStream();
+        var parts = input.Split(new char[] { ':' });
+        string command = parts[0];
+        string data = null;
+        if (parts.Length > 1)
         {
-            bool exit = false;
-
-            TestState receivedTestState = null;
-            bool result = true;
-
-            _listener.AcceptTcpClient();
-
-            string input = _listener.ReadStringFromInputStream();
-            var parts = input.Split(new char[] { ':' });
-            string command = parts[0];
-            string data = null;
-            if (parts.Length > 1)
-            {
-                data = parts[1];
-            }
-
-            Debug.Log("Command received: " + command);
-
-            switch (command)
-            {
-                case "DoNextTrial":
-                    _listener.SendAcknowledgement();
-                    _scene.DoNextTrial();
-                    break;
-
-                case "Disconnect":
-                    _listener.SendAcknowledgement();
-                    _scene.Disconnect();
-                    break;
-
-                case "EndTest":
-                    _listener.SendAcknowledgement();
-                    _scene.EndTest();
-                    break;
-
-                case "GetResources":
-                    var resources = _scene.EnumerateResources();
-                    _listener.WriteByteArray(Message.ToProtoBuf(resources));
-                    break;
-
-                case "GetSubjectInfo":
-                    var subjInfo = _scene.GetSubjectInfo();
-                    _listener.WriteByteArray(Message.ToProtoBuf(subjInfo));
-                    break;
-
-                case "Ping":
-                    _listener.SendAcknowledgement();
-                    _scene.RemoteIPAddress = data;
-                    _scene.Ping();
-                    break;
-
-                case "Play":
-                    _listener.SendAcknowledgement();
-                    _scene.PlayItem(int.Parse(data));
-                    break;
-
-                case "Return":
-                    _listener.SendAcknowledgement();
-                    exit = true;
-                    break;
-
-                case "RandomList":
-                    receivedTestState = ReceiveTestState();
-                    receivedTestState = _scene.InitializeRandomList(false);
-                    SendTestStateResponse(receivedTestState);
-                    break;
-
-                case "SetLevels":
-                    receivedTestState = ReceiveTestState();
-                    _listener.SendAcknowledgement();
-                    _scene.SetLevels(receivedTestState.level, receivedTestState.snr);
-                    break;
-
-                case "SetList":
-                    receivedTestState = ReceiveTestState();
-                    receivedTestState = _scene.InitializeList(receivedTestState.listNum, false);
-                    SendTestStateResponse(receivedTestState);
-                    break;
-
-                case "SetMaskerState":
-                    _listener.SendAcknowledgement();
-                    _scene.SetMaskerState(bool.Parse(data));
-                    break;
-
-                case "SetPupilSettings":
-                    var pupilSettings = ReceivePupilSettings();
-                    _listener.SendAcknowledgement();
-                    _scene.SetPupilSettings(pupilSettings);
-                    break;
-
-                case "SetTest":
-                    receivedTestState = ReceiveTestState();
-                    receivedTestState = _scene.InitializeTest(receivedTestState.testName);
-                    SendTestStateResponse(receivedTestState);
-                    break;
-
-                case "SetTestSNRVector":
-                    receivedTestState = ReceiveTestState();
-                    result = _scene.SetTestLevels(receivedTestState.level, receivedTestState.testSNRs);
-                    _listener.SendAcknowledgement(result);
-                    break;
-
-                case "ShowMessage":
-                    _listener.SendAcknowledgement();
-                    _scene.ShowMessage(data);
-                    break;
-
-                case "StartTest":
-                    _listener.SendAcknowledgement();
-                    _scene.StartTest(int.Parse(data));
-                    break;
-
-                default:
-                    _listener.SendAcknowledgement(false);
-                    break;
-            }
-
-            _listener.CloseTcpClient();
-
-            if (exit) _scene.Return();
+            data = parts[1];
         }
 
-        private TestState ReceiveTestState()
+        Debug.Log("Command received: " + command);
+
+        switch (command)
+        {
+            case "Ping":
+                _listener.SendAcknowledgement();
+                //_scene.RemoteIPAddress = data;
+                //_scene.Ping();
+                break;
+
+            default:
+                _listener.SendAcknowledgement(false);
+                break;
+        }
+
+        _listener.CloseTcpClient();
+
+        //if (exit) _scene.Return();
+    }
+
+   /*     private TestState ReceiveTestState()
         {
             TestState state = null;
             var bytes = _listener.ReadByteArrayFromInputStream();
@@ -210,7 +121,7 @@ public class Main : MonoBehaviour
 
             return state;
         }
-
+   
         private SpeechPupilConfiguration ReceivePupilSettings()
         {
             SpeechPupilConfiguration settings = null;

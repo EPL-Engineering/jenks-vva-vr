@@ -297,7 +297,7 @@
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\15.0\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>Library\PackageCache\com.epl.klib@f22a98a123\Runtime\Plugins\protobuf-net.dll</HintPath>
+      <HintPath>Library\PackageCache\com.epl.klib@cbc2ca044c\Runtime\Plugins\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="FoveClient_CLR">
       <HintPath>Assets\FoveUnityPlugin\FoveClient_CLR.dll</HintPath>
