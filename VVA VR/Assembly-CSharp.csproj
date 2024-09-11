@@ -73,7 +73,6 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\EyeShape.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\GazeRecorder.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_ZoomButton.cs" />
-    <Compile Include="Assets\Scripts\HomeScene.cs" />
     <Compile Include="Assets\Scripts\HeadTilt\TiltControllerHz.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_CoordinateAxis.cs" />
     <Compile Include="Assets\Scripts\HeadTilt\TransController.cs" />

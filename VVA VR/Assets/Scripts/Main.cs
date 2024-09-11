@@ -16,13 +16,14 @@ public class Main : MonoBehaviour
     //private Sockets.KTcpListener _listener = null;
     private bool _stopServer;
     private UDPMulticastServer _udpServer;
+
+    private string _address;
     private int _port = 4950;
 
-    public static string ServerAddress { private set; get; }
 
     private void Start()
     {
-        //NetworkUtils.FindServerAddress();
+        _address = NetworkUtils.FindServerAddress();
     }
 
     /*
@@ -52,8 +53,8 @@ public class Main : MonoBehaviour
         //    _listener = null;
         //}
 
-        _udpServer.StopReceiving();
-        Debug.Log("stopped SRI TCP listener");
+        //_udpServer.StopReceiving();
+        //Debug.Log("stopped SRI TCP listener");
     }
 
     void OnDestroy()
