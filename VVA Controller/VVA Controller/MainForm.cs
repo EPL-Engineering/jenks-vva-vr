@@ -15,6 +15,7 @@ namespace VVA_Controller
 {
     public partial class MainForm : Form
     {
+        private bool _haveVR;
         private IPEndPoint _ipEndPoint;
 
         public MainForm()
@@ -22,14 +23,51 @@ namespace VVA_Controller
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
-            _ipEndPoint = Discovery.Discover("VVA VR");
+            _haveVR = ConnectToVR();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private bool ConnectToVR()
         {
-            KTcpClient.SendCommand(_ipEndPoint, "Ping");
+            var ping = PingVR();
+
+            if (ping)
+            {
+                connectionStatusLabel.Image = imageList.Images[1];
+                connectionStatusLabel.Text = $"Connected to VR at {_ipEndPoint.ToString()}";
+            }
+            else
+            {
+                connectionStatusLabel.Image = imageList.Images[0];
+                connectionStatusLabel.Text = "No VR connection (double-click to retry)";
+            }
+
+            return false;
+        }
+
+        private bool PingVR()
+        {
+            bool success = false;
+
+            connectionStatusLabel.Image = imageList.Images[0];
+            connectionStatusLabel.Text = "Connecting to VR...";
+            Refresh();
+
+            _ipEndPoint = Discovery.Discover("VVA VR");
+            if (_ipEndPoint != null)
+            {
+                var result = KTcpClient.SendCommand(_ipEndPoint, "Ping");
+                success = result > 0;
+            }
+
+            return success;
+        }
+
+        private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("wtf");
+            _haveVR = ConnectToVR();
         }
     }
 }
