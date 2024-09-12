@@ -11,7 +11,7 @@ public class Main : MonoBehaviour
     private bool _listenerReady = false;
 
     //Sockets.KTcpClient _client;
-    KTCPListener _listener = null;
+    KTcpListener _listener = null;
     private bool _stopServer;
     private NetworkDiscoveryServer _discoveryServer;
 
@@ -31,7 +31,7 @@ public class Main : MonoBehaviour
     {
         _stopServer = false;
 
-        _listener = new KTCPListener();
+        _listener = new KTcpListener();
         Debug.Log(_address);
         _listener.StartListener(_address, _port, false);
 

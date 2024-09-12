@@ -29,7 +29,7 @@ namespace VVA_Controller
 
         private void button2_Click(object sender, EventArgs e)
         {
-            KTcpClient.SendCommand(_ipEndPoint.Address.ToString(), _ipEndPoint.Port, "Ping");
+            KTcpClient.SendCommand(_ipEndPoint, "Ping");
         }
     }
 }
