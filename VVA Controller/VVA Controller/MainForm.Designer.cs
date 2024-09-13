@@ -81,6 +81,7 @@ namespace VVA_Controller
             this.Controls.Add(this.statusStrip);
             this.Name = "MainForm";
             this.Text = "VVA VR Controller";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
