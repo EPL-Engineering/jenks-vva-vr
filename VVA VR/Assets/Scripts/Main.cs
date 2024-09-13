@@ -55,6 +55,15 @@ public class Main : MonoBehaviour
         Debug.Log("stopped TCP listener");
     }
 
+    void Return()
+    {
+#if UNITY_EDITOR
+        StopServer();
+#else
+        Application.Quit();
+#endif
+    }
+
     void OnDestroy()
     {
         StopServer();
@@ -77,7 +86,6 @@ public class Main : MonoBehaviour
         bool exit = false;
 
         //TestState receivedTestState = null;
-        bool result = true;
 
         _listener.AcceptTcpClient();
 
@@ -96,8 +104,16 @@ public class Main : MonoBehaviour
         {
             case "Ping":
                 _listener.SendAcknowledgement();
-                //_scene.RemoteIPAddress = data;
-                //_scene.Ping();
+                break;
+
+            case "Exit":
+                _listener.SendAcknowledgement();
+                exit = true;
+                break;
+
+            case "Test":
+                _listener.SendAcknowledgement();
+                StartCoroutine(RunTest(""));
                 break;
 
             default:
@@ -107,7 +123,7 @@ public class Main : MonoBehaviour
 
         _listener.CloseTcpClient();
 
-        //if (exit) _scene.Return();
+        if (exit) Return();
     }
 
    /*     private TestState ReceiveTestState()
@@ -146,6 +162,9 @@ public class Main : MonoBehaviour
             }
         }
     */
-
+    IEnumerator RunTest(string command)
+    {
+        yield break;
+    }
 
 }
