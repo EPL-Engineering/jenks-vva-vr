@@ -10,6 +10,8 @@ using KLib.Network;
 
 public class Main : MonoBehaviour
 {
+    public Camera camera;
+
     private bool _listenerReady = false;
 
     KTcpListener _listener = null;
@@ -21,7 +23,12 @@ public class Main : MonoBehaviour
 
     private void Start()
     {
-        KLogger.Log.StartLogging(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "Logs", "VVA-VR.txt"));
+        KLogger.Create(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "Logs", "VVA-VR.txt"), 
+            retainDays: 0.5f)
+            .StartLogging();
+
+        Debug.Log("App started");
 
         _address = NetworkUtils.FindServerAddress();
 
@@ -59,6 +66,7 @@ public class Main : MonoBehaviour
     void Return()
     {
         StopServer();
+        Debug.Log("App closed");
 #if !UNITY_EDITOR
         Application.Quit();
 #endif
@@ -116,6 +124,11 @@ public class Main : MonoBehaviour
                 StartCoroutine(RunTest(""));
                 break;
 
+            case "Abort":
+                _listener.SendAcknowledgement();
+                StartCoroutine(StopTest(""));
+                break;
+
             default:
                 _listener.SendAcknowledgement(false);
                 break;
@@ -126,44 +139,53 @@ public class Main : MonoBehaviour
         if (exit) Return();
     }
 
-   /*     private TestState ReceiveTestState()
-        {
-            TestState state = null;
-            var bytes = _listener.ReadByteArrayFromInputStream();
-            if (bytes != null)
-            {
-                state = Message.FromProtoBuf<TestState>(bytes);
-            }
+    /*     private TestState ReceiveTestState()
+         {
+             TestState state = null;
+             var bytes = _listener.ReadByteArrayFromInputStream();
+             if (bytes != null)
+             {
+                 state = Message.FromProtoBuf<TestState>(bytes);
+             }
 
-            return state;
-        }
-   
-        private SpeechPupilConfiguration ReceivePupilSettings()
-        {
-            SpeechPupilConfiguration settings = null;
-            var bytes = _listener.ReadByteArrayFromInputStream();
-            if (bytes != null)
-            {
-                settings = Message.FromProtoBuf<SpeechPupilConfiguration>(bytes);
-            }
+             return state;
+         }
 
-            return settings;
-        }
+         private SpeechPupilConfiguration ReceivePupilSettings()
+         {
+             SpeechPupilConfiguration settings = null;
+             var bytes = _listener.ReadByteArrayFromInputStream();
+             if (bytes != null)
+             {
+                 settings = Message.FromProtoBuf<SpeechPupilConfiguration>(bytes);
+             }
 
-        private void SendTestStateResponse(TestState response)
-        {
-            if (response != null)
-            {
-                _listener.WriteByteArray(SRI.Messages.Message.ToProtoBuf(response));
-            }
-            else
-            {
-                _listener.SendAcknowledgement(false);
-            }
-        }
-    */
+             return settings;
+         }
+
+         private void SendTestStateResponse(TestState response)
+         {
+             if (response != null)
+             {
+                 _listener.WriteByteArray(SRI.Messages.Message.ToProtoBuf(response));
+             }
+             else
+             {
+                 _listener.SendAcknowledgement(false);
+             }
+         }
+     */
     IEnumerator RunTest(string command)
     {
+        camera.backgroundColor = Color.white;
+
+        yield break;
+    }
+
+    IEnumerator StopTest(string command)
+    {
+        camera.backgroundColor = Color.black;
+
         yield break;
     }
 
