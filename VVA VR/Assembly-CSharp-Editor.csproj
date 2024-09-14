@@ -297,7 +297,7 @@
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\15.0\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>Library\PackageCache\com.epl.klib@c25a126ba4\Runtime\Plugins\protobuf-net.dll</HintPath>
+      <HintPath>Library\PackageCache\com.epl.klib@a3185ab14c\Runtime\Plugins\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="FoveClient_CLR">
       <HintPath>Assets\FoveUnityPlugin\FoveClient_CLR.dll</HintPath>
@@ -701,8 +701,8 @@
     <Reference Include="Unity.InputSystem">
       <HintPath>Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
     </Reference>
-    <Reference Include="NewAssembly">
-      <HintPath>Library\ScriptAssemblies\NewAssembly.dll</HintPath>
+    <Reference Include="KLib">
+      <HintPath>Library\ScriptAssemblies\KLib.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.OpenXR.Features.OculusQuestSupport">
       <HintPath>Library\ScriptAssemblies\Unity.XR.OpenXR.Features.OculusQuestSupport.dll</HintPath>

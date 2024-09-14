@@ -53,7 +53,7 @@ namespace VVA_Controller
 
             if (ping)
             {
-                connectionStatusLabel.Image = imageList.Images[1];
+                connectionStatusLabel.Image = imageList.Images[2];
                 connectionStatusLabel.Text = $"Connected to VR at {_ipEndPoint.ToString()}";
                 Log.Information($"Connected to VR at {_ipEndPoint.ToString()}");
             }
@@ -73,7 +73,7 @@ namespace VVA_Controller
 
             Log.Information("Pinging VR");
 
-            connectionStatusLabel.Image = imageList.Images[0];
+            connectionStatusLabel.Image = imageList.Images[1];
             connectionStatusLabel.Text = "Connecting to VR...";
             Refresh();
 
@@ -96,6 +96,11 @@ namespace VVA_Controller
         {
             Log.Information("Exit");
             Log.CloseAndFlush();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            KTcpClient.SendCommand(_ipEndPoint, "Exit");
         }
     }
 }

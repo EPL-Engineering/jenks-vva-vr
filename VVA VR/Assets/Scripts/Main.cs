@@ -2,15 +2,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
+using KLib;
 using KLib.Network;
 
 public class Main : MonoBehaviour
 {
     private bool _listenerReady = false;
 
-    //Sockets.KTcpClient _client;
     KTcpListener _listener = null;
     private bool _stopServer;
     private NetworkDiscoveryServer _discoveryServer;
@@ -18,9 +19,10 @@ public class Main : MonoBehaviour
     private string _address;
     private int _port = 4950;
 
-
     private void Start()
     {
+        KLogger.Log.StartLogging(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "Logs", "VVA-VR.txt"));
+
         _address = NetworkUtils.FindServerAddress();
 
         _discoveryServer = gameObject.AddComponent<NetworkDiscoveryServer>();
@@ -32,13 +34,12 @@ public class Main : MonoBehaviour
         _stopServer = false;
 
         _listener = new KTcpListener();
-        Debug.Log(_address);
         _listener.StartListener(_address, _port, false);
 
         StartCoroutine(TCPServer());
         _discoveryServer.StartReceiving("VVA VR", _address, _port);
 
-        Debug.Log("started TCP listener on " + _address + ":" + _port);
+        Debug.Log("Started TCP listener on " + _address + ":" + _port);
     }
     
 
@@ -52,14 +53,13 @@ public class Main : MonoBehaviour
         }
 
         _discoveryServer.StopReceiving();
-        Debug.Log("stopped TCP listener");
+        Debug.Log("Stopped TCP listener");
     }
 
     void Return()
     {
-#if UNITY_EDITOR
         StopServer();
-#else
+#if !UNITY_EDITOR
         Application.Quit();
 #endif
     }

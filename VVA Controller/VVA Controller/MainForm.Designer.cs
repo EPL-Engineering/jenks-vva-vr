@@ -61,7 +61,8 @@ namespace VVA_Controller
             this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList.Images.SetKeyName(0, "nav_plain_red.png");
-            this.imageList.Images.SetKeyName(1, "nav_plain_green.png");
+            this.imageList.Images.SetKeyName(1, "nav_plain_yellow.png");
+            this.imageList.Images.SetKeyName(2, "nav_plain_green.png");
             // 
             // button1
             // 
@@ -71,6 +72,7 @@ namespace VVA_Controller
             this.button1.TabIndex = 3;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainForm
             // 
