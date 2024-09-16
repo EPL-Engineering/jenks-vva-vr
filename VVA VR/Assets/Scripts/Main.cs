@@ -1,9 +1,14 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.XR.Management;
+
+using Fove.Unity;
 
 using KLib;
 using KLib.Network;
@@ -11,6 +16,11 @@ using KLib.Network;
 public class Main : MonoBehaviour
 {
     public Camera mainCamera;
+    public Camera foveCamera;
+    public Canvas canvas;
+    public Text messageText;
+
+    public RandomDotsController randomDots;
 
     private bool _listenerReady = false;
 
@@ -21,26 +31,53 @@ public class Main : MonoBehaviour
     private string _address;
     private int _port = 4950;
 
+    private Text _message;
+
+    private enum VRHMD { None, FOVE, Vive};
+    private VRHMD _vrHMD;
+
+    private float _fov = 60f;
+
     private void Start()
     {
         KLogger.Create(
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "Logs", "VVA-VR.txt"), 
-            retainDays: 0.5f)
+            retainDays: 14)
             .StartLogging();
 
         Debug.Log("App started");
+
+        InitializeHMD();
 
         _address = NetworkUtils.FindServerAddress();
 
         _discoveryServer = gameObject.AddComponent<NetworkDiscoveryServer>();
         StartServer();
     }
-    
-    private void CheckHMD()
-    {
-        //_isVR = XRGeneralSettings.Instance.Manager.activeLoader != null;
-    }
 
+    private void InitializeHMD()
+    {
+        _vrHMD = VRHMD.None;
+
+        Debug.Log("Initializing HMD");
+        var result = FoveManager.IsHardwareConnected();
+        if (result.value)
+        {
+            mainCamera = foveCamera;
+            canvas.worldCamera = foveCamera;
+            _fov = foveCamera.fieldOfView;
+            _vrHMD = VRHMD.FOVE;
+            Debug.Log("FOVE headset detected");
+        }
+        else
+        {
+            var haveVR = XRGeneralSettings.Instance.Manager.activeLoader != null;
+            if (!haveVR)
+            {
+                Debug.Log("no VR headset found");
+            }
+        }
+    }
 
     private void StartServer()
     {
@@ -72,7 +109,7 @@ public class Main : MonoBehaviour
     void Return()
     {
         StopServer();
-        Debug.Log("App closed");
+        Debug.Log("App closing");
 #if !UNITY_EDITOR
         Application.Quit();
 #endif
@@ -183,16 +220,20 @@ public class Main : MonoBehaviour
      */
     IEnumerator RunTest(string command)
     {
-        mainCamera.backgroundColor = Color.white;
+        messageText.enabled = false;
+//        mainCamera.backgroundColor = Color.white;
+        randomDots.InitializeDots(new Jenks.VVA.Dots(), _fov);
 
         yield break;
     }
 
     IEnumerator StopTest(string command)
     {
-        mainCamera.backgroundColor = Color.black;
+        //      mainCamera.backgroundColor = Color.black;
+        randomDots.ClearDots();
 
-        yield break;
+        yield return new WaitForSeconds(2);
+        messageText.enabled = true;
     }
 
 }

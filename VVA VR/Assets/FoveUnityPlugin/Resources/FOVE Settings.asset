@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6177d7dde3ed44c478dceb2afd356898, type: 3}
   m_Name: FOVE Settings
   m_EditorClassIdentifier: 
-  showAutomatically: 1
+  showAutomatically: 0
   ensureCalibration: 0
   customDesktopView: 1
   worldScale: 1
