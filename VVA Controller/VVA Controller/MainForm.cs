@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Serilog;
 
+using KLib;
 using KLib.Net;
 
 namespace VVA_Controller
@@ -51,11 +54,30 @@ namespace VVA_Controller
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+            TryVRConnection();
+        }
+
+        private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
+        {
+            TryVRConnection();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Log.Information("Exit");
+            Log.CloseAndFlush();
+        }
+
+        private void TryVRConnection()
+        {
             _haveVR = ConnectToVR();
+            startButton.Enabled = _haveVR;
         }
 
         private bool ConnectToVR(bool autoStart = true)
         {
+            bool success = false;
+
             if (autoStart)
             {
                 connectionStatusLabel.Image = imageList.Images[1];
@@ -67,9 +89,42 @@ namespace VVA_Controller
 
             if (ping)
             {
+                success = true;
                 connectionStatusLabel.Image = imageList.Images[2];
                 connectionStatusLabel.Text = $"Connected to VR at {_ipEndPoint.ToString()}";
                 Log.Information($"Connected to VR at {_ipEndPoint.ToString()}");
+            }
+            else if (autoStart)
+            {
+                connectionStatusLabel.Text = "Launching VR";
+                Log.Information("Launching VR");
+                Refresh();
+
+                var launch = LaunchVR();
+
+                if (launch)
+                {
+                    ping = PingVR();
+                    if (ping)
+                    {
+                        success = true;
+                        connectionStatusLabel.Image = imageList.Images[2];
+                        connectionStatusLabel.Text = $"Connected to VR at {_ipEndPoint.ToString()}";
+                        Log.Information($"Connected to VR at {_ipEndPoint.ToString()}");
+                    }
+                    else
+                    {
+                        connectionStatusLabel.Image = imageList.Images[0];
+                        connectionStatusLabel.Text = "No VR connection (double-click to retry)";
+                        Log.Information("No VR connection after launch");
+                    }
+                }
+                else
+                {
+                    connectionStatusLabel.Image = imageList.Images[0];
+                    connectionStatusLabel.Text = "Failed to launch VR (double-click to retry)";
+                    Log.Information("Failed to launch VR");
+                }
             }
             else
             {
@@ -78,7 +133,76 @@ namespace VVA_Controller
                 Log.Information("No VR connection");
             }
 
-            return false;
+            return success;
+        }
+
+        private string VRAppLocation
+        {
+            get
+            {
+#if DEBUG
+                var folder = @"D:\Development\Jenks\jenks-vva-vr\VVA VR\Build";
+#else
+                DirectoryInfo di = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory);
+                var folder = Path.Combine(Directory.GetParent(di.FullName).FullName, "VR");
+#endif
+                return Path.Combine(folder, "VVA VR.exe");
+            }
+        }
+
+        private bool LaunchVR()
+        {
+            bool success = true;
+            try
+            {
+                Process[] processes = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(VRAppLocation));
+                if (processes.Length == 0)
+                {
+                    Log.Information($"Starting new VR process '{VRAppLocation}'");
+                    Process.Start(VRAppLocation);
+
+                    // wait for VR app's discovery server to start
+                    int ntries = 0;
+                    IPEndPoint ep = null;
+                    while (ntries < 10)
+                    {
+                        Thread.Sleep(1000);
+                        ep = Discovery.Discover("VVA VR");
+                        if (ep != null) break;
+                        ++ntries;
+                    }
+                    if (ep == null)
+                    {
+                        success = false;
+                        Log.Information("Timed out waiting for VR to respond");
+                    }
+                }
+                else
+                {
+                    Log.Information("VR process already exists");
+                    IntPtr hWnd = Windows.FindWindow(null, "VR Hardware");
+                    Windows.ShowWindowAsync(hWnd, Windows.SW_SHOW);
+                    Windows.ShowWindowAsync(hWnd, Windows.SW_RESTORE);
+                    Windows.SetForegroundWindow(hWnd);
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                Log.Information("VR launch failed with exception: " + ex.Message);
+            }
+
+            return success;
+        }
+
+        public void CloseVRApp()
+        {
+            Process[] processes = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(VRAppLocation));
+            foreach (Process p in processes)
+            {
+                p.CloseMainWindow();
+                p.Close();
+            }
         }
 
         private bool PingVR()
@@ -94,18 +218,12 @@ namespace VVA_Controller
                 success = result > 0;
             }
 
+            if (!success)
+            {
+                Log.Information($"Ping failed (ipEndPoint =  {_ipEndPoint})");
+            }
+
             return success;
-        }
-
-        private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
-        {
-            _haveVR = ConnectToVR();
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Log.Information("Exit");
-            Log.CloseAndFlush();
         }
 
         private void button1_Click(object sender, EventArgs e)

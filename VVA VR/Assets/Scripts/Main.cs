@@ -10,7 +10,7 @@ using KLib.Network;
 
 public class Main : MonoBehaviour
 {
-    public Camera camera;
+    public Camera mainCamera;
 
     private bool _listenerReady = false;
 
@@ -36,7 +36,13 @@ public class Main : MonoBehaviour
         StartServer();
     }
     
-    public void StartServer()
+    private void CheckHMD()
+    {
+        //_isVR = XRGeneralSettings.Instance.Manager.activeLoader != null;
+    }
+
+
+    private void StartServer()
     {
         _stopServer = false;
 
@@ -50,7 +56,7 @@ public class Main : MonoBehaviour
     }
     
 
-    public void StopServer()
+    private void StopServer()
     {
         _stopServer = true;
         if (_listener != null)
@@ -177,14 +183,14 @@ public class Main : MonoBehaviour
      */
     IEnumerator RunTest(string command)
     {
-        camera.backgroundColor = Color.white;
+        mainCamera.backgroundColor = Color.white;
 
         yield break;
     }
 
     IEnumerator StopTest(string command)
     {
-        camera.backgroundColor = Color.black;
+        mainCamera.backgroundColor = Color.black;
 
         yield break;
     }
