@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KLib.Utilities">
+      <HintPath>..\..\..\..\KLib\Framework\KLib.Utilities.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,10 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jenks\VVA\Dots.cs" />
+    <Compile Include="Jenks\VVA\MotionSource.cs" />
+    <Compile Include="Jenks\VVA\Scene.cs" />
+    <Compile Include="Jenks\VVA\Settings.cs" />
+    <Compile Include="Jenks\VVA\TestSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(TargetDir)*.dll" "D:\Development\Jenks\jenks-vva-vr\VVA VR\Assets\Plugins"</PostBuildEvent>
+    <PostBuildEvent>copy /y "$(TargetDir)Jenks*.dll" "D:\Development\Jenks\jenks-vva-vr\VVA VR\Assets\Plugins"</PostBuildEvent>
   </PropertyGroup>
 </Project>

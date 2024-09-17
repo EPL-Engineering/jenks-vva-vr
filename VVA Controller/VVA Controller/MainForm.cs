@@ -18,6 +18,8 @@ using Serilog;
 using KLib;
 using KLib.Net;
 
+using Jenks.VVA;
+
 namespace VVA_Controller
 {
     public partial class MainForm : Form
@@ -30,12 +32,39 @@ namespace VVA_Controller
         private DateTime _runStartTime;
         private double _runDuration;
 
+        private Settings _testSettings;
+        private AppSettings _appSettings;
+
         public MainForm()
         {
             InitializeComponent();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
+        {
+            _appSettings = AppSettings.Restore();
+
+            if (_appSettings.controllerLocation.X > 0)
+            {
+                StartPosition = FormStartPosition.Manual;
+                Location = _appSettings.controllerLocation;
+            }
+
+            Log.Information($"VVA Controller v{Assembly.GetExecutingAssembly().GetName().Version.ToString()} started");
+        }
+
+        private async void MainForm_Shown(object sender, EventArgs e)
+        {
+            connectionStatusLabel.Text = "Starting logger...";
+            Refresh();
+
+            await StartLogging();
+
+            _testSettings = Settings.Restore();
+            TryVRConnection();
+        }
+
+        private async Task StartLogging()
         {
             _logLevel.MinimumLevel = Serilog.Events.LogEventLevel.Verbose;
 
@@ -47,14 +76,6 @@ namespace VVA_Controller
                     rollingInterval: RollingInterval.Day,
                     buffered: true)
                 .CreateLogger();
-
-            Log.Information($"VVA Controller v{Assembly.GetExecutingAssembly().GetName().Version.ToString()} started");
-
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            TryVRConnection();
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
@@ -64,6 +85,17 @@ namespace VVA_Controller
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _appSettings.controllerLocation = Location;
+
+            var vrLocation = GetVRLocation();
+            if (vrLocation.X > 0)
+            {
+                _appSettings.vrLocation = vrLocation;
+            }
+            _appSettings.Save();
+
+            CloseVRApp();
+
             Log.Information("Exit");
             Log.CloseAndFlush();
         }
@@ -96,7 +128,7 @@ namespace VVA_Controller
             }
             else if (autoStart)
             {
-                connectionStatusLabel.Text = "Launching VR";
+                connectionStatusLabel.Text = "Launching VR...";
                 Log.Information("Launching VR");
                 Refresh();
 
@@ -159,7 +191,7 @@ namespace VVA_Controller
                 if (processes.Length == 0)
                 {
                     Log.Information($"Starting new VR process '{VRAppLocation}'");
-                    Process.Start(VRAppLocation);
+                    var proc = Process.Start(VRAppLocation);
 
                     // wait for VR app's discovery server to start
                     int ntries = 0;
@@ -176,13 +208,17 @@ namespace VVA_Controller
                         success = false;
                         Log.Information("Timed out waiting for VR to respond");
                     }
+                    else if (_appSettings.vrLocation.X > 0)
+                    {
+                        Windows.MoveWindow(proc.MainWindowHandle, _appSettings.vrLocation.X, _appSettings.vrLocation.Y);
+                    }
                 }
                 else
                 {
                     Log.Information("VR process already exists");
                     IntPtr hWnd = Windows.FindWindow(null, "VR Hardware");
-                    Windows.ShowWindowAsync(hWnd, Windows.SW_SHOW);
-                    Windows.ShowWindowAsync(hWnd, Windows.SW_RESTORE);
+                    Windows.ShowWindowAsync(hWnd, Windows.ShowWindowFlags.Show);
+                    Windows.ShowWindowAsync(hWnd, Windows.ShowWindowFlags.Restore);
                     Windows.SetForegroundWindow(hWnd);
                 }
             }
@@ -193,6 +229,21 @@ namespace VVA_Controller
             }
 
             return success;
+        }
+
+        private Point GetVRLocation()
+        {
+            Point location = new Point(-1, -1);
+            Windows.Rect rect = new Windows.Rect();
+            Process[] processes = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(VRAppLocation));
+            if (processes.Length > 0)
+            {
+                Windows.GetWindowRect(processes[0].MainWindowHandle, ref rect);
+                location.X = rect.Left;
+                location.Y = rect.Top;
+            }
+
+            return location;
         }
 
         public void CloseVRApp()
@@ -224,12 +275,6 @@ namespace VVA_Controller
             }
 
             return success;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            KTcpClient.SendCommand(_ipEndPoint, "Exit");
-            ConnectToVR(autoStart: false);
         }
 
         private void startButton_Click(object sender, EventArgs e)
