@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using Serilog;
 
 using KLib;
+using KLib.Utilities;
 using KLib.Net;
 
 using Jenks.VVA;
@@ -34,6 +35,8 @@ namespace VVA_Controller
 
         private Settings _testSettings;
         private AppSettings _appSettings;
+
+        private bool _isDirty = false;
 
         public MainForm()
         {
@@ -60,7 +63,11 @@ namespace VVA_Controller
 
             await StartLogging();
 
-            _testSettings = Settings.Restore();
+            connectionStatusLabel.Text = "Restoring tests...";
+            Refresh();
+
+            await RestoreTests();
+
             TryVRConnection();
         }
 
@@ -76,6 +83,19 @@ namespace VVA_Controller
                     rollingInterval: RollingInterval.Day,
                     buffered: true)
                 .CreateLogger();
+        }
+
+        private async Task RestoreTests()
+        {
+            _testSettings = Settings.Restore();
+
+            await InitializeTables();
+
+        }
+
+        private async Task InitializeTables()
+        {
+            controlTable.FillTable(MotionSource.None, _testSettings.controlTests);
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
@@ -279,16 +299,30 @@ namespace VVA_Controller
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            _runDuration = 15;
-            _runStartTime = DateTime.Now;
+            try
+            {
+                var test = _testSettings.controlTests[controlTable.SelectedRow];
 
-            Log.Information("Starting run");
-            KTcpClient.SendCommand(_ipEndPoint, "Test");
-            startButton.Visible = false;
+                _runDuration = test.duration_s;
+                _runStartTime = DateTime.Now;
 
-            progressBar.Maximum = (int)(_runDuration / (0.001 * runTimer.Interval));
-            progressBar.Value = 0;
-            runTimer.Enabled = true;
+                Log.Information("Starting run: " + test.ToLogString());
+
+                var response = KTcpClient.SendCommandAndByteArray(_ipEndPoint, "Run", FileIO.ToProtoBuf(test));
+                startButton.Visible = false;
+
+                progressBar.Maximum = (int)(_runDuration / (0.001 * runTimer.Interval));
+                progressBar.Value = 0;
+                runTimer.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                runTimer.Enabled = false;
+                startButton.Visible = true;
+
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EndRun()
@@ -317,6 +351,17 @@ namespace VVA_Controller
                 runTimer.Enabled = false;
                 EndRun();
             }
+        }
+
+        private void mmFileExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void mmFileSave_Click(object sender, EventArgs e)
+        {
+            _testSettings.Save();
+            MessageBox.Show("Saved defaults.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

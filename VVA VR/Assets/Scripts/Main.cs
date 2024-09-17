@@ -13,6 +13,8 @@ using Fove.Unity;
 using KLib;
 using KLib.Network;
 
+using Jenks.VVA;
+
 public class Main : MonoBehaviour
 {
     public Camera mainCamera;
@@ -37,6 +39,8 @@ public class Main : MonoBehaviour
     private VRHMD _vrHMD;
 
     private float _fov = 60f;
+
+    private TestSpecification _currentTest;
 
     private void Start()
     {
@@ -71,6 +75,7 @@ public class Main : MonoBehaviour
         }
         else
         {
+            foveCamera.enabled = false;
             var haveVR = XRGeneralSettings.Instance.Manager.activeLoader != null;
             if (!haveVR)
             {
@@ -162,14 +167,15 @@ public class Main : MonoBehaviour
                 exit = true;
                 break;
 
-            case "Test":
+            case "Run":
+                var test = ReceiveTestSpecification();
                 _listener.SendAcknowledgement();
-                StartCoroutine(RunTest(""));
+                StartCoroutine(RunTest(test));
                 break;
 
             case "Abort":
                 _listener.SendAcknowledgement();
-                StartCoroutine(StopTest(""));
+                StartCoroutine(StopTest());
                 break;
 
             default:
@@ -182,55 +188,61 @@ public class Main : MonoBehaviour
         if (exit) Return();
     }
 
-    /*     private TestState ReceiveTestState()
-         {
-             TestState state = null;
-             var bytes = _listener.ReadByteArrayFromInputStream();
-             if (bytes != null)
-             {
-                 state = Message.FromProtoBuf<TestState>(bytes);
-             }
-
-             return state;
-         }
-
-         private SpeechPupilConfiguration ReceivePupilSettings()
-         {
-             SpeechPupilConfiguration settings = null;
-             var bytes = _listener.ReadByteArrayFromInputStream();
-             if (bytes != null)
-             {
-                 settings = Message.FromProtoBuf<SpeechPupilConfiguration>(bytes);
-             }
-
-             return settings;
-         }
-
-         private void SendTestStateResponse(TestState response)
-         {
-             if (response != null)
-             {
-                 _listener.WriteByteArray(SRI.Messages.Message.ToProtoBuf(response));
-             }
-             else
-             {
-                 _listener.SendAcknowledgement(false);
-             }
-         }
-     */
-    IEnumerator RunTest(string command)
+    private TestSpecification ReceiveTestSpecification()
     {
+        TestSpecification test = null;
+        var bytes = _listener.ReadByteArrayFromInputStream();
+        if (bytes != null)
+        {
+            test = FileIO.FromProtoBuf<TestSpecification>(bytes);
+        }
+
+        return test;
+    }
+
+    IEnumerator RunTest(TestSpecification test)
+    {
+        _currentTest = test;
+
+        Debug.Log("Running test: " + test.ToLogString());
         messageText.enabled = false;
-//        mainCamera.backgroundColor = Color.white;
-        randomDots.InitializeDots(new Jenks.VVA.Dots(), _fov);
+
+        SetScene(test.scene);
 
         yield break;
     }
 
-    IEnumerator StopTest(string command)
+    private void SetScene(Scene scene)
     {
-        //      mainCamera.backgroundColor = Color.black;
-        randomDots.ClearDots();
+        if (scene == Scene.White)
+        {
+            mainCamera.backgroundColor = Color.white;
+        }
+        else if (scene == Scene.Black)
+        {
+            mainCamera.backgroundColor = Color.black;
+        }
+        else if (scene == Scene.Dots)
+        {
+            randomDots.InitializeDots(new Jenks.VVA.Dots(), _fov);
+        }
+    }
+
+    private void ClearScene(Scene scene)
+    {
+        if (scene == Scene.White)
+        {
+            mainCamera.backgroundColor = Color.black;
+        }
+        else if (scene == Scene.Dots)
+        {
+            randomDots.ClearDots();
+        }
+    }
+
+    IEnumerator StopTest()
+    {
+        ClearScene(_currentTest.scene);
 
         yield return new WaitForSeconds(2);
         messageText.enabled = true;

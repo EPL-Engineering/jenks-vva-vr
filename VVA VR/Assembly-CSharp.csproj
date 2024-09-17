@@ -59,6 +59,7 @@
     <Compile Include="Assets\DataDiagram\Script\DD_LineButtonsContent.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.internal.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\CalibrationData.cs" />
+    <Compile Include="Assets\Scripts\RandomDot.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_DragBar.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\FovePluginVersion.cs" />
     <Compile Include="Assets\Scripts\HeadTilt\TiltController.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_Lines.cs" />
     <Compile Include="Assets\Scripts\HeadTilt\DontMove.cs" />
+    <Compile Include="Assets\Scripts\RandomDotsController.cs" />
     <Compile Include="Assets\Scripts\Graph\UdpSignal.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\GazableObject.Internal.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\EyeShape.cs" />
@@ -88,8 +90,6 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\PupilShape.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_LineButton.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_DataDiagram.cs" />
-    <Compile Include="Assets\Scripts\RandomDotsController.cs" />
-    <Compile Include="Assets\Scripts\RandomDot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\FoveUnityPlugin\FoveClient_CLR.dll" />
@@ -323,16 +323,16 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.22f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>Library\PackageCache\com.epl.klib@e62e214dc8\Runtime\Plugins\protobuf-net.dll</HintPath>
+      <HintPath>Library\PackageCache\com.epl.klib@7e8c1d8c40\Runtime\Plugins\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="FoveClient_CLR">
       <HintPath>Assets\FoveUnityPlugin\FoveClient_CLR.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="JenksVVA">
       <HintPath>Assets\Plugins\JenksVVA.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.22f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
@@ -724,6 +724,9 @@
     <Reference Include="Unity.XR.OpenXR.TestHelpers">
       <HintPath>Library\ScriptAssemblies\Unity.XR.OpenXR.TestHelpers.dll</HintPath>
     </Reference>
+    <Reference Include="KLib.Math">
+      <HintPath>Library\ScriptAssemblies\KLib.Math.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
       <HintPath>Library\ScriptAssemblies\UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
     </Reference>
@@ -753,9 +756,6 @@
     </Reference>
     <Reference Include="Unity.XR.OpenXR.Features.RuntimeDebugger.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.XR.OpenXR.Features.RuntimeDebugger.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="KLib.Math">
-      <HintPath>Library\ScriptAssemblies\KLib.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

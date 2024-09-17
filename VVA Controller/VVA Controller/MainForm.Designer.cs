@@ -36,11 +36,21 @@ namespace VVA_Controller
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.elapsedTimeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.startButton = new System.Windows.Forms.Button();
-            this.stopButton = new System.Windows.Forms.Button();
             this.runTimer = new System.Windows.Forms.Timer(this.components);
             this.mainMenu = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmFileRestore = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mmFileExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmEditOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.startButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
+            this.controlTable = new VVA_Controller.TestTable();
             this.statusStrip.SuspendLayout();
+            this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -49,9 +59,9 @@ namespace VVA_Controller
             this.connectionStatusLabel,
             this.progressBar,
             this.elapsedTimeLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 272);
+            this.statusStrip.Location = new System.Drawing.Point(0, 417);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(567, 22);
+            this.statusStrip.Size = new System.Drawing.Size(614, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -84,12 +94,90 @@ namespace VVA_Controller
             this.imageList.Images.SetKeyName(1, "nav_plain_yellow.png");
             this.imageList.Images.SetKeyName(2, "nav_plain_green.png");
             // 
+            // runTimer
+            // 
+            this.runTimer.Interval = 250;
+            this.runTimer.Tick += new System.EventHandler(this.runTimer_Tick);
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem});
+            this.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.mainMenu.Location = new System.Drawing.Point(0, 0);
+            this.mainMenu.Name = "mainMenu";
+            this.mainMenu.Size = new System.Drawing.Size(614, 23);
+            this.mainMenu.TabIndex = 22;
+            this.mainMenu.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mmFileRestore,
+            this.mmFileSave,
+            this.toolStripSeparator1,
+            this.mmFileExit});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // mmFileRestore
+            // 
+            this.mmFileRestore.Name = "mmFileRestore";
+            this.mmFileRestore.Size = new System.Drawing.Size(180, 22);
+            this.mmFileRestore.Text = "&Restore defaults";
+            // 
+            // mmFileSave
+            // 
+            this.mmFileSave.Name = "mmFileSave";
+            this.mmFileSave.Size = new System.Drawing.Size(180, 22);
+            this.mmFileSave.Text = "&Save defaults";
+            this.mmFileSave.Click += new System.EventHandler(this.mmFileSave_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // mmFileExit
+            // 
+            this.mmFileExit.Name = "mmFileExit";
+            this.mmFileExit.Size = new System.Drawing.Size(180, 22);
+            this.mmFileExit.Text = "E&xit";
+            this.mmFileExit.Click += new System.EventHandler(this.mmFileExit_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mmEditOptions});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 19);
+            this.editToolStripMenuItem.Text = "&Edit";
+            // 
+            // mmEditOptions
+            // 
+            this.mmEditOptions.Name = "mmEditOptions";
+            this.mmEditOptions.Size = new System.Drawing.Size(116, 22);
+            this.mmEditOptions.Text = "&Options";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Teal;
+            this.label1.Location = new System.Drawing.Point(17, 28);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 24);
+            this.label1.TabIndex = 24;
+            this.label1.Text = "Controls";
+            // 
             // startButton
             // 
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startButton.Image = global::VVA_Controller.Properties.Resources.media_play_green;
             this.startButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.startButton.Location = new System.Drawing.Point(400, 28);
+            this.startButton.Location = new System.Drawing.Point(21, 347);
             this.startButton.Name = "startButton";
             this.startButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.startButton.Size = new System.Drawing.Size(144, 51);
@@ -103,7 +191,7 @@ namespace VVA_Controller
             this.stopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopButton.Image = global::VVA_Controller.Properties.Resources.media_stop_red;
             this.stopButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.stopButton.Location = new System.Drawing.Point(400, 28);
+            this.stopButton.Location = new System.Drawing.Point(21, 347);
             this.stopButton.Name = "stopButton";
             this.stopButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.stopButton.Size = new System.Drawing.Size(144, 51);
@@ -112,25 +200,24 @@ namespace VVA_Controller
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
-            // runTimer
+            // controlTable
             // 
-            this.runTimer.Interval = 250;
-            this.runTimer.Tick += new System.EventHandler(this.runTimer_Tick);
-            // 
-            // mainMenu
-            // 
-            this.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.mainMenu.Location = new System.Drawing.Point(0, 0);
-            this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(567, 4);
-            this.mainMenu.TabIndex = 22;
-            this.mainMenu.Text = "menuStrip1";
+            this.controlTable.AutoSize = true;
+            this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.controlTable.Location = new System.Drawing.Point(21, 55);
+            this.controlTable.Name = "controlTable";
+            this.controlTable.Size = new System.Drawing.Size(578, 124);
+            this.controlTable.TabIndex = 25;
+            this.controlTable.Type = Jenks.VVA.MotionSource.None;
+            this.controlTable.Value = null;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(567, 294);
+            this.ClientSize = new System.Drawing.Size(614, 439);
+            this.Controls.Add(this.controlTable);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.mainMenu);
@@ -147,6 +234,8 @@ namespace VVA_Controller
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.mainMenu.ResumeLayout(false);
+            this.mainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -162,6 +251,15 @@ namespace VVA_Controller
         private System.Windows.Forms.Timer runTimer;
         private System.Windows.Forms.ToolStripStatusLabel elapsedTimeLabel;
         private System.Windows.Forms.MenuStrip mainMenu;
+        private System.Windows.Forms.Label label1;
+        private TestTable controlTable;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mmFileRestore;
+        private System.Windows.Forms.ToolStripMenuItem mmFileSave;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mmFileExit;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mmEditOptions;
     }
 }
 

@@ -34,8 +34,13 @@
     <Reference Include="KLib.Utilities">
       <HintPath>..\..\..\..\KLib\Framework\KLib.Utilities.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net, Version=3.0.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\3rd Party\protobuf-net r668\Full\net30\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,11 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jenks\VVA\Dots.cs" />
+    <Compile Include="Jenks\VVA\MotionDirection.cs" />
     <Compile Include="Jenks\VVA\MotionSource.cs" />
     <Compile Include="Jenks\VVA\Scene.cs" />
-    <Compile Include="Jenks\VVA\Settings.cs" />
     <Compile Include="Jenks\VVA\TestSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
