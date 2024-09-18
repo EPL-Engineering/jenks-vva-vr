@@ -12,17 +12,16 @@ public class GratingController : MonoBehaviour
 
     private GameObject _bars;
 
-    public void InitializeGrating(GratingProperties properties, float vfov)
+    public void InitializeGrating(GratingProperties properties, float vfov, float amplitude)
     {
         var aspectRatio = (float)Screen.width / Screen.height;
         float height = 2 * properties.distance_m * Mathf.Tan(vfov / 2 * Mathf.Deg2Rad);
-        float width = height * aspectRatio;
 
-        float width_deg = 2 * Mathf.Rad2Deg * Mathf.Atan(width / (2 * properties.distance_m));
+        float hfov = vfov * aspectRatio;
+        float width_deg = hfov; // + 2 * amplitude;
+        float width = 2 * properties.distance_m * Mathf.Tan(hfov / 2 * Mathf.Deg2Rad);
 
         var numBars = Mathf.CeilToInt(width_deg * properties.density_deg);
-        
-        KLogger.Debug("nbars = " + numBars);
 
         var barSize = 2 * properties.distance_m * Mathf.Tan(properties.size_deg / 2 * Mathf.Deg2Rad);
         barSize = 0.01f;
@@ -30,9 +29,10 @@ public class GratingController : MonoBehaviour
         var delta_x = width / (numBars - 1);
         float x = -(numBars - 1) / 2 * delta_x;
 
-        KLogger.Debug("barSize = " + barSize);
+        KLogger.Debug("barSize (cm) = " + barSize*100);
 
         _bars = new GameObject("bars");
+        _bars.transform.parent = transform;
 
         barPrefab.SetActive(true);
         barPrefab.transform.localScale = new Vector3(barSize, 10, 1);

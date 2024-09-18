@@ -15,7 +15,7 @@ namespace Jenks.VVA
         public float distance_m = 1f;
 
         [ProtoMember(2, IsRequired = true)]
-        public float size_deg = 0.08f;
+        public float size_deg = 0.25f;
 
         [ProtoMember(3, IsRequired = true)]
         public float density_deg = 0.2f;

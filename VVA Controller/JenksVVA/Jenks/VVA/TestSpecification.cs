@@ -34,9 +34,11 @@ namespace Jenks.VVA
             log += $"Scene={scene}, ";
             log += $"MotionSource={motionSource}, ";
 
-            if (motionSource != MotionSource.None)
+            if (motionSource == MotionSource.Vision)
             {
-
+                log += $"MotionDirection={motionDirection}, ";
+                log += $"MotionAmplitude={motionAmplitude}, ";
+                log += $"MotionVelocity={motionVelocity}, ";
             }
 
             log += $"Duration={duration_s}";

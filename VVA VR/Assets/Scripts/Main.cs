@@ -25,6 +25,8 @@ public class Main : MonoBehaviour
     public RandomDotsController randomDots;
     public GratingController grating;
 
+    public VisualFieldController visualFieldController;
+
     private bool _listenerReady = false;
 
     KTcpListener _listener = null;
@@ -238,12 +240,39 @@ public class Main : MonoBehaviour
         Debug.Log("Running test: " + test.ToLogString());
         messageText.enabled = false;
 
-        SetScene(test.scene);
+        SetScene(test.scene, test.motionAmplitude);
+
+        if (test.scene == Scene.Dots || test.scene == Scene.Bars)
+        {
+            var target = (test.scene == Scene.Dots) ? randomDots.transform : grating.transform;
+            if (test.motionSource == MotionSource.Vision)
+            {
+                if (test.motionDirection == MotionDirection.RollTilt)
+                {
+                    visualFieldController.StartMotion(target, tiltAmplitude: test.motionAmplitude, tiltVelocity: test.motionVelocity);
+                }
+                else if (test.motionDirection == MotionDirection.Translation)
+                {
+                    visualFieldController.StartMotion(target, 
+                        transAmplitude: ConvertDegreesToMeters(test.motionAmplitude), 
+                        transVelocity: ConvertDegreesToMeters(test.motionVelocity));
+                }
+            }
+        }
 
         yield break;
     }
 
-    private void SetScene(Scene scene)
+    private float ConvertDegreesToMeters(float degrees)
+    {
+        var aspectRatio = (float)Screen.width / Screen.height;
+        float hfov = _fov * aspectRatio;
+        float meters = 2 * _gratingProperties.distance_m * Mathf.Tan(degrees / 2 * Mathf.Deg2Rad);
+
+        return meters;
+    }
+
+    private void SetScene(Scene scene, float amplitude)
     {
         if (scene == Scene.White)
         {
@@ -259,7 +288,7 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Bars)
         {
-            grating.InitializeGrating(_gratingProperties, _fov);
+            grating.InitializeGrating(_gratingProperties, _fov, amplitude);
             mainCamera.backgroundColor = Color.white;
         }
         _sceneRunning = true;
@@ -281,6 +310,8 @@ public class Main : MonoBehaviour
 
     IEnumerator StopTest()
     {
+        visualFieldController.StopMotion();
+
         ClearScene(_currentTest.scene);
 
         yield return new WaitForSeconds(2);

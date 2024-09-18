@@ -213,25 +213,26 @@ namespace VVA_Controller
             this.controlTable.TabIndex = 25;
             this.controlTable.Type = Jenks.VVA.MotionSource.None;
             this.controlTable.Value = null;
-            this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
+            this.controlTable.SelectionChanged += new System.EventHandler(this.table_SelectionChanged);
             // 
             // visionTable
             // 
             this.visionTable.AutoSize = true;
             this.visionTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.visionTable.Location = new System.Drawing.Point(21, 248);
+            this.visionTable.Location = new System.Drawing.Point(21, 235);
             this.visionTable.Name = "visionTable";
             this.visionTable.Size = new System.Drawing.Size(578, 124);
             this.visionTable.TabIndex = 27;
             this.visionTable.Type = Jenks.VVA.MotionSource.None;
             this.visionTable.Value = null;
+            this.visionTable.SelectionChanged += new System.EventHandler(this.table_SelectionChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Teal;
-            this.label2.Location = new System.Drawing.Point(17, 221);
+            this.label2.Location = new System.Drawing.Point(17, 208);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 24);
             this.label2.TabIndex = 26;

@@ -58,7 +58,6 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Editor\FoveInterfaceEditor.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Editor\FoveSettingsEditor.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Editor\ProjectChecks.cs" />
-    <Compile Include="Assets\DataDiagram\Editor\DD_Menu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll" />

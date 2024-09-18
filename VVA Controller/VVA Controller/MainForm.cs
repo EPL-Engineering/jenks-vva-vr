@@ -37,13 +37,16 @@ namespace VVA_Controller
         private TestSettings _testSettings;
         private AppSettings _appSettings;
 
-        private int _selectedTable = -1;
+        private List<TestTable> _tables;
+        private TestTable _selectedTable = null;
 
         public MainForm()
         {
             InitializeComponent();
 
             startButton.Enabled = false;
+
+            _tables = new List<TestTable> { controlTable, visionTable };
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -71,7 +74,7 @@ namespace VVA_Controller
 
             await RestoreTests();
 
-            //TryVRConnection();
+            TryVRConnection();
         }
 
         private void mmFileExit_Click(object sender, EventArgs e)
@@ -144,7 +147,7 @@ namespace VVA_Controller
         private void TryVRConnection()
         {
             _haveVR = ConnectToVR();
-            startButton.Enabled = _haveVR && _selectedTable > -1;
+            startButton.Enabled = _haveVR && _selectedTable != null;
         }
 
         private bool ConnectToVR(bool autoStart = true)
@@ -323,7 +326,7 @@ namespace VVA_Controller
             startButton.Enabled = false;
             try
             {
-                var test = _testSettings.controlTests[controlTable.SelectedRow];
+                var test = GetSelectedTest();
 
                 _runDuration = test.duration_s;
                 _runStartTime = DateTime.Now;
@@ -359,6 +362,20 @@ namespace VVA_Controller
 
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private TestSpecification GetSelectedTest()
+        {
+            TestSpecification test = null;
+            if (_selectedTable == controlTable)
+            {
+                test = _testSettings.controlTests[_selectedTable.SelectedRow];
+            }
+            else if (_selectedTable == visionTable)
+            {
+                test = _testSettings.visionTests[_selectedTable.SelectedRow];
+            }
+            return test;
         }
 
         private void EndRun(bool vrStopped = false)
@@ -412,13 +429,23 @@ namespace VVA_Controller
             }
         }
 
-        private void controlTable_SelectionChanged(object sender, EventArgs e)
+        private void table_SelectionChanged(object sender, EventArgs e)
         {
-            if (controlTable.SelectedRow > -1)
+            _selectedTable = sender as TestTable;
+            if (_selectedTable.SelectedRow > -1)
             {
-                _selectedTable = 0;
                 startButton.Enabled = _haveVR;
             }
+            foreach (var t in _tables.FindAll(x => x != _selectedTable))
+            {
+                t.ClearSelection();
+            }
+
+        }
+
+        private void controlTable_SelectionChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

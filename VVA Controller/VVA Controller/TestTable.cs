@@ -49,6 +49,13 @@ namespace VVA_Controller
             col.ValueType = typeof(MotionDirection);
         }
 
+        public void ClearSelection()
+        {
+            _ignoreEvents = true;
+            dgv.ClearSelection();
+            _ignoreEvents = false;
+        }
+
         public void FillTable(MotionSource type, List<TestSpecification> test)
         {
             _ignoreEvents = true;
@@ -131,6 +138,22 @@ namespace VVA_Controller
                 if (e.ColumnIndex == 0)
                 {
                     Value[e.RowIndex].scene = (Scene)cells["Scene"].Value;
+                }
+                else if (e.ColumnIndex == 2)
+                {
+                    Value[e.RowIndex].motionDirection = (MotionDirection) cells["Motion"].Value;
+                }
+                else if (e.ColumnIndex == 3)
+                {
+                    Value[e.RowIndex].motionAmplitude = float.Parse(cells["Amplitude"].Value.ToString());
+                }
+                else if (e.ColumnIndex == 4)
+                {
+                    Value[e.RowIndex].motionVelocity = float.Parse(cells["Velocity"].Value.ToString());
+                }
+                else if (e.ColumnIndex == 5)
+                {
+                    Value[e.RowIndex].gain = float.Parse(cells["Gain"].Value.ToString());
                 }
                 else if (e.ColumnIndex == 6)
                 {
