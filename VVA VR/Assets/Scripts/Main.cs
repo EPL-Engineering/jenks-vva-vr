@@ -41,6 +41,7 @@ public class Main : MonoBehaviour
     private float _fov = 60f;
 
     private TestSpecification _currentTest;
+    private DotProperties _dotProperties;
 
     private void Start()
     {
@@ -173,6 +174,12 @@ public class Main : MonoBehaviour
                 StartCoroutine(RunTest(test));
                 break;
 
+            case "DotProperties":
+                _dotProperties = _listener.ReceiveProtoBuf<DotProperties>();
+                _listener.SendAcknowledgement();
+                Debug.Log("Received dot properties: " + _dotProperties.ToLogString());
+                break;
+
             case "Abort":
                 _listener.SendAcknowledgement();
                 StartCoroutine(StopTest());
@@ -224,7 +231,7 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Dots)
         {
-            randomDots.InitializeDots(new Jenks.VVA.Dots(), _fov);
+            randomDots.InitializeDots(new DotProperties(), _fov);
         }
     }
 

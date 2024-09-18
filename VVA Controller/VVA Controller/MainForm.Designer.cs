@@ -125,25 +125,25 @@ namespace VVA_Controller
             // mmFileRestore
             // 
             this.mmFileRestore.Name = "mmFileRestore";
-            this.mmFileRestore.Size = new System.Drawing.Size(180, 22);
+            this.mmFileRestore.Size = new System.Drawing.Size(158, 22);
             this.mmFileRestore.Text = "&Restore defaults";
             // 
             // mmFileSave
             // 
             this.mmFileSave.Name = "mmFileSave";
-            this.mmFileSave.Size = new System.Drawing.Size(180, 22);
+            this.mmFileSave.Size = new System.Drawing.Size(158, 22);
             this.mmFileSave.Text = "&Save defaults";
             this.mmFileSave.Click += new System.EventHandler(this.mmFileSave_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
             // 
             // mmFileExit
             // 
             this.mmFileExit.Name = "mmFileExit";
-            this.mmFileExit.Size = new System.Drawing.Size(180, 22);
+            this.mmFileExit.Size = new System.Drawing.Size(158, 22);
             this.mmFileExit.Text = "E&xit";
             this.mmFileExit.Click += new System.EventHandler(this.mmFileExit_Click);
             // 
@@ -160,13 +160,14 @@ namespace VVA_Controller
             this.mmEditOptions.Name = "mmEditOptions";
             this.mmEditOptions.Size = new System.Drawing.Size(116, 22);
             this.mmEditOptions.Text = "&Options";
+            this.mmEditOptions.Click += new System.EventHandler(this.mmEditOptions_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Teal;
-            this.label1.Location = new System.Drawing.Point(17, 28);
+            this.label1.Location = new System.Drawing.Point(17, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(79, 24);
             this.label1.TabIndex = 24;
@@ -204,12 +205,13 @@ namespace VVA_Controller
             // 
             this.controlTable.AutoSize = true;
             this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.controlTable.Location = new System.Drawing.Point(21, 55);
+            this.controlTable.Location = new System.Drawing.Point(21, 66);
             this.controlTable.Name = "controlTable";
             this.controlTable.Size = new System.Drawing.Size(578, 124);
             this.controlTable.TabIndex = 25;
             this.controlTable.Type = Jenks.VVA.MotionSource.None;
             this.controlTable.Value = null;
+            this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
             // 
             // MainForm
             // 

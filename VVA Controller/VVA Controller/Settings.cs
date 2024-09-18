@@ -11,7 +11,7 @@ namespace Jenks.VVA
         public List<TestSpecification> controlTests = new List<TestSpecification>();
         public List<TestSpecification> visionTests = new List<TestSpecification>();
         public List<TestSpecification> chairTests = new List<TestSpecification>();
-        public Dots dots = new Dots();
+        public DotProperties dotProperties = new DotProperties();
 
         public static Settings Restore()
         {

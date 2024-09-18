@@ -14,7 +14,7 @@ public class RandomDotsController : MonoBehaviour
 
     private List<RandomDot> _dots = new List<RandomDot>();
 
-    public void InitializeDots(Dots dots, float vfov)
+    public void InitializeDots(DotProperties dots, float vfov)
     {
         _fov = vfov;
         var aspectRatio = (float)Screen.width / Screen.height;

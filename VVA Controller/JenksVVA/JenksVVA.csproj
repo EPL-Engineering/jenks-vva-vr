@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Jenks\VVA\Dots.cs" />
+    <Compile Include="Jenks\VVA\DotProperties.cs" />
     <Compile Include="Jenks\VVA\MotionDirection.cs" />
     <Compile Include="Jenks\VVA\MotionSource.cs" />
     <Compile Include="Jenks\VVA\Scene.cs" />

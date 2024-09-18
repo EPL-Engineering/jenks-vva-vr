@@ -36,11 +36,13 @@ namespace VVA_Controller
         private Settings _testSettings;
         private AppSettings _appSettings;
 
-        private bool _isDirty = false;
+        private int _selectedTable = -1;
 
         public MainForm()
         {
             InitializeComponent();
+
+            startButton.Enabled = false;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -69,6 +71,24 @@ namespace VVA_Controller
             await RestoreTests();
 
             TryVRConnection();
+        }
+
+        private void mmFileExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void mmFileSave_Click(object sender, EventArgs e)
+        {
+            _testSettings.Save();
+            MessageBox.Show("Saved defaults.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void mmEditOptions_Click(object sender, EventArgs e)
+        {
+            var dlg = new OptionsDialog();
+            dlg.DotProperties = _testSettings.dotProperties;
+            dlg.ShowDialog();
         }
 
         private async Task StartLogging()
@@ -123,7 +143,7 @@ namespace VVA_Controller
         private void TryVRConnection()
         {
             _haveVR = ConnectToVR();
-            startButton.Enabled = _haveVR;
+            startButton.Enabled = _haveVR && _selectedTable > -1;
         }
 
         private bool ConnectToVR(bool autoStart = true)
@@ -306,10 +326,18 @@ namespace VVA_Controller
                 _runDuration = test.duration_s;
                 _runStartTime = DateTime.Now;
 
+                if (test.scene == Scene.Dots)
+                {
+                    Log.Information("Sending dot properties: " + _testSettings.dotProperties);
+                    KTcpClient.SendCommandAndByteArray(_ipEndPoint, "DotProperties", FileIO.ToProtoBuf(_testSettings.dotProperties));
+                }
+
+
                 Log.Information("Starting run: " + test.ToLogString());
 
                 var response = KTcpClient.SendCommandAndByteArray(_ipEndPoint, "Run", FileIO.ToProtoBuf(test));
                 startButton.Visible = false;
+                EnableControls(false);
 
                 progressBar.Maximum = (int)(_runDuration / (0.001 * runTimer.Interval));
                 progressBar.Value = 0;
@@ -329,8 +357,14 @@ namespace VVA_Controller
         {
             Log.Information("Aborting run");
             KTcpClient.SendCommand(_ipEndPoint, "Abort");
+            EnableControls(true);
             startButton.Visible = true;
             progressBar.Value = 0;
+        }
+
+        private void EnableControls(bool enable)
+        {
+            controlTable.Enabled = enable;
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -353,15 +387,13 @@ namespace VVA_Controller
             }
         }
 
-        private void mmFileExit_Click(object sender, EventArgs e)
+        private void controlTable_SelectionChanged(object sender, EventArgs e)
         {
-            Close();
-        }
-
-        private void mmFileSave_Click(object sender, EventArgs e)
-        {
-            _testSettings.Save();
-            MessageBox.Show("Saved defaults.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (controlTable.SelectedRow > -1)
+            {
+                _selectedTable = 0;
+                startButton.Enabled = _haveVR;
+            }
         }
     }
 }

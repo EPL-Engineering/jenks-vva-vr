@@ -21,6 +21,14 @@ namespace VVA_Controller
         public List<TestSpecification> Value { set; get; } = null;
 
         public int SelectedRow { private set; get; }
+        public event EventHandler SelectionChanged;
+        protected virtual void OnSelectionChanged()
+        {
+            if (this.SelectionChanged != null)
+            {
+                SelectionChanged(this, null);
+            }
+        }
 
         private const int _maxRows = 3;
 
@@ -57,9 +65,11 @@ namespace VVA_Controller
                 Value[testIndex].motionSource = Type;
                 AddRow(Value[testIndex]);
             }
+            SelectedRow = -1;
+            dgv.ClearSelection();
+
             _ignoreEvents = false;
 
-            dgv.ClearSelection();
         }
 
         private void AddRow(TestSpecification test)
@@ -131,7 +141,11 @@ namespace VVA_Controller
 
         private void dgv_SelectionChanged(object sender, EventArgs e)
         {
-            SelectedRow = dgv.CurrentRow.Index;
+            if (!_ignoreEvents)
+            {
+                SelectedRow = dgv.CurrentRow.Index;
+                OnSelectionChanged();
+            }
         }
     }
 }
