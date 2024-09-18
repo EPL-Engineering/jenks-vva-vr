@@ -6,23 +6,24 @@ using KLib.Utilities;
 
 namespace Jenks.VVA
 {
-    public class Settings
+    public class TestSettings
     {
         public List<TestSpecification> controlTests = new List<TestSpecification>();
         public List<TestSpecification> visionTests = new List<TestSpecification>();
         public List<TestSpecification> chairTests = new List<TestSpecification>();
         public DotProperties dotProperties = new DotProperties();
+        public GratingProperties gratingProperties = new GratingProperties();
 
-        public static Settings Restore()
+        public static TestSettings Restore()
         {
-            Settings settings = null;
+            TestSettings settings = null;
             if (File.Exists(FileLocation))
             {
-                settings = FileIO.XmlDeserialize<Settings>(FileLocation);
+                settings = FileIO.XmlDeserialize<TestSettings>(FileLocation);
             }
             else
             {
-                settings = new Settings();
+                settings = new TestSettings();
                 settings.Initialize();
             }
             return settings;

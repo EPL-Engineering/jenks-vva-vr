@@ -33,7 +33,7 @@ namespace VVA_Controller
         private DateTime _runStartTime;
         private double _runDuration;
 
-        private Settings _testSettings;
+        private TestSettings _testSettings;
         private AppSettings _appSettings;
 
         private int _selectedTable = -1;
@@ -107,7 +107,7 @@ namespace VVA_Controller
 
         private async Task RestoreTests()
         {
-            _testSettings = Settings.Restore();
+            _testSettings = TestSettings.Restore();
 
             await InitializeTables();
 
@@ -331,7 +331,11 @@ namespace VVA_Controller
                     Log.Information("Sending dot properties: " + _testSettings.dotProperties);
                     KTcpClient.SendCommandAndByteArray(_ipEndPoint, "DotProperties", FileIO.ToProtoBuf(_testSettings.dotProperties));
                 }
-
+                else if (test.scene == Scene.Bars)
+                {
+                    Log.Information("Sending grating properties: " + _testSettings.gratingProperties);
+                    KTcpClient.SendCommandAndByteArray(_ipEndPoint, "GratingProperties", FileIO.ToProtoBuf(_testSettings.gratingProperties));
+                }
 
                 Log.Information("Starting run: " + test.ToLogString());
 

@@ -108,7 +108,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="TestSettings.cs" />
     <Compile Include="TestTable.cs">
       <SubType>UserControl</SubType>
     </Compile>

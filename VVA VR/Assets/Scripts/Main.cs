@@ -23,6 +23,7 @@ public class Main : MonoBehaviour
     public Text messageText;
 
     public RandomDotsController randomDots;
+    public GratingController grating;
 
     private bool _listenerReady = false;
 
@@ -42,6 +43,7 @@ public class Main : MonoBehaviour
 
     private TestSpecification _currentTest;
     private DotProperties _dotProperties;
+    private GratingProperties _gratingProperties;
 
     private void Start()
     {
@@ -77,6 +79,7 @@ public class Main : MonoBehaviour
         else
         {
             foveCamera.enabled = false;
+            _fov = mainCamera.fieldOfView;
             var haveVR = XRGeneralSettings.Instance.Manager.activeLoader != null;
             if (!haveVR)
             {
@@ -180,6 +183,12 @@ public class Main : MonoBehaviour
                 Debug.Log("Received dot properties: " + _dotProperties.ToLogString());
                 break;
 
+            case "GratingProperties":
+                _gratingProperties = _listener.ReceiveProtoBuf<GratingProperties>();
+                _listener.SendAcknowledgement();
+                Debug.Log("Received grating properties: " + _gratingProperties.ToLogString());
+                break;
+
             case "Abort":
                 _listener.SendAcknowledgement();
                 StartCoroutine(StopTest());
@@ -231,7 +240,11 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Dots)
         {
-            randomDots.InitializeDots(new DotProperties(), _fov);
+            randomDots.InitializeDots(_dotProperties, _fov);
+        }
+        else if (scene == Scene.Bars)
+        {
+            grating.InitializeGrating(_gratingProperties, _fov);
         }
     }
 
@@ -244,6 +257,10 @@ public class Main : MonoBehaviour
         else if (scene == Scene.Dots)
         {
             randomDots.ClearDots();
+        }
+        else if (scene == Scene.Bars)
+        {
+            grating.ClearGrating();
         }
     }
 

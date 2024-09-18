@@ -10,15 +10,12 @@ public class RandomDotsController : MonoBehaviour
 {
     public GameObject dotPrefab;
 
-    private float _fov;
-
     private List<RandomDot> _dots = new List<RandomDot>();
 
     public void InitializeDots(DotProperties dots, float vfov)
     {
-        _fov = vfov;
         var aspectRatio = (float)Screen.width / Screen.height;
-        float height = 2 * dots.distance_m * Mathf.Tan(_fov/2 * Mathf.Deg2Rad);
+        float height = 2 * dots.distance_m * Mathf.Tan(vfov / 2 * Mathf.Deg2Rad);
         float width = height * aspectRatio;
 
         float width_deg = 2 * Mathf.Rad2Deg * Mathf.Atan(width / (2 * dots.distance_m));
@@ -38,7 +35,7 @@ public class RandomDotsController : MonoBehaviour
         for (int k = 0; k < numDots; k++)
         {
             var obj = GameObject.Instantiate(dotPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-            obj.name = "Dot" + _dots.Count.ToString();
+            obj.name = "Dot " + _dots.Count.ToString();
 
             var rd = obj.GetComponent<RandomDot>();
             _dots.Add(rd);
