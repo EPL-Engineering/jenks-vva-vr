@@ -32,6 +32,7 @@ namespace VVA_Controller
 
         private DateTime _runStartTime;
         private double _runDuration;
+        private DateTime _lastStatusCheck;
 
         private TestSettings _testSettings;
         private AppSettings _appSettings;
@@ -70,7 +71,7 @@ namespace VVA_Controller
 
             await RestoreTests();
 
-            TryVRConnection();
+            //TryVRConnection();
         }
 
         private void mmFileExit_Click(object sender, EventArgs e)
@@ -110,12 +111,12 @@ namespace VVA_Controller
             _testSettings = TestSettings.Restore();
 
             await InitializeTables();
-
         }
 
         private async Task InitializeTables()
         {
             controlTable.FillTable(MotionSource.None, _testSettings.controlTests);
+            visionTable.FillTable(MotionSource.Vision, _testSettings.visionTests);
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
@@ -319,12 +320,14 @@ namespace VVA_Controller
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            startButton.Enabled = false;
             try
             {
                 var test = _testSettings.controlTests[controlTable.SelectedRow];
 
                 _runDuration = test.duration_s;
                 _runStartTime = DateTime.Now;
+                _lastStatusCheck = DateTime.Now;
 
                 if (test.scene == Scene.Dots)
                 {
@@ -352,18 +355,30 @@ namespace VVA_Controller
                 Log.Error(ex.Message);
                 runTimer.Enabled = false;
                 startButton.Visible = true;
+                startButton.Enabled = true;
 
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void EndRun()
+        private void EndRun(bool vrStopped = false)
         {
-            Log.Information("Aborting run");
-            KTcpClient.SendCommand(_ipEndPoint, "Abort");
+            if (!vrStopped)
+            {
+                Log.Information("Aborting run");
+                KTcpClient.SendCommand(_ipEndPoint, "Abort");
+            }
+
             EnableControls(true);
             startButton.Visible = true;
+            startButton.Enabled = true;
             progressBar.Value = 0;
+
+            if (vrStopped)
+            {
+                elapsedTimeLabel.Text = "error";
+                KLib.Controls.MsgBox.Show("VR stopped unexpectedly.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void EnableControls(bool enable)
@@ -383,11 +398,17 @@ namespace VVA_Controller
             progressBar.Value = Math.Min(progressBar.Value + 1, progressBar.Maximum);
             elapsedTimeLabel.Text = elapsedTime.ToString(@"mm\:ss");
 
+            bool vrStopped = false;
+            if ((DateTime.Now - _lastStatusCheck).TotalSeconds > 2)
+            {
+                _lastStatusCheck = DateTime.Now;
+                vrStopped = KTcpClient.SendCommand(_ipEndPoint, "Status") < 0;
+            }
 
-            if (elapsedTime.TotalSeconds > _runDuration)
+            if (elapsedTime.TotalSeconds > _runDuration || vrStopped)
             {
                 runTimer.Enabled = false;
-                EndRun();
+                EndRun(vrStopped);
             }
         }
 

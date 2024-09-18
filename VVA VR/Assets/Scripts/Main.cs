@@ -45,6 +45,13 @@ public class Main : MonoBehaviour
     private DotProperties _dotProperties;
     private GratingProperties _gratingProperties;
 
+    private bool _sceneRunning = false;
+
+    private void Awake()
+    {
+        Application.logMessageReceived += HandleException;
+    }
+
     private void Start()
     {
         KLogger.Create(
@@ -127,6 +134,7 @@ public class Main : MonoBehaviour
     void OnDestroy()
     {
         StopServer();
+        Application.logMessageReceived -= HandleException;
     }
 
     IEnumerator TCPServer()
@@ -158,7 +166,10 @@ public class Main : MonoBehaviour
             data = parts[1];
         }
 
-        Debug.Log("Command received: " + command);
+        if (!command.Equals("Status"))
+        {
+            Debug.Log("Command received: " + command);
+        }
 
         switch (command)
         {
@@ -192,6 +203,10 @@ public class Main : MonoBehaviour
             case "Abort":
                 _listener.SendAcknowledgement();
                 StartCoroutine(StopTest());
+                break;
+
+            case "Status":
+                _listener.SendAcknowledgement(_sceneRunning);
                 break;
 
             default:
@@ -245,16 +260,15 @@ public class Main : MonoBehaviour
         else if (scene == Scene.Bars)
         {
             grating.InitializeGrating(_gratingProperties, _fov);
+            mainCamera.backgroundColor = Color.white;
         }
+        _sceneRunning = true;
     }
 
     private void ClearScene(Scene scene)
     {
-        if (scene == Scene.White)
-        {
-            mainCamera.backgroundColor = Color.black;
-        }
-        else if (scene == Scene.Dots)
+        mainCamera.backgroundColor = Color.black;
+        if (scene == Scene.Dots)
         {
             randomDots.ClearDots();
         }
@@ -262,6 +276,7 @@ public class Main : MonoBehaviour
         {
             grating.ClearGrating();
         }
+        _sceneRunning = false;
     }
 
     IEnumerator StopTest()
@@ -270,6 +285,19 @@ public class Main : MonoBehaviour
 
         yield return new WaitForSeconds(2);
         messageText.enabled = true;
+    }
+
+    public void HandleException(string condition, string stackTrace, LogType type)
+    {
+        if (type == LogType.Log || type == LogType.Warning || condition.Contains("Capability 'microphone'") || condition.Contains("reload asset from disk") || condition.Contains("<RI.Hid>"))
+        {
+            return;
+        }
+
+//        if (_sceneRunning)
+        {
+            StartCoroutine(StopTest());
+        }
     }
 
 }

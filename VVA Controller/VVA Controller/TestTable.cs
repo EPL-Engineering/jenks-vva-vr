@@ -78,15 +78,24 @@ namespace VVA_Controller
             var cells = dgv.Rows[rowIndex].Cells;
 
             cells["Scene"].Value = test.scene;
-            cells["Source"].Value = MotionSource.None.ToString();
+            cells["Source"].Value = test.motionSource.ToString();
             cells["Duration"].Value = test.duration_s.ToString();
+
+            if (test.motionSource == MotionSource.Vision)
+            {
+                cells["Motion"].Value = test.motionDirection;
+                cells["Amplitude"].Value = test.motionAmplitude;
+                cells["Velocity"].Value = test.motionVelocity;
+                cells["Gain"].Value = test.gain;
+            }
+
         }
 
         private void CustomizeDisplayForType()
         {
+            DisableColumn("Source", showName: true);
             if (Type == MotionSource.None)
             {
-                DisableColumn("Source", showName: true);
                 DisableColumn("Motion");
                 DisableColumn("Amplitude");
                 DisableColumn("Velocity");

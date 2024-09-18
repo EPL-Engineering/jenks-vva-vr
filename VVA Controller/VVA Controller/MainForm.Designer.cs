@@ -49,6 +49,8 @@ namespace VVA_Controller
             this.startButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.controlTable = new VVA_Controller.TestTable();
+            this.visionTable = new VVA_Controller.TestTable();
+            this.label2 = new System.Windows.Forms.Label();
             this.statusStrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +61,7 @@ namespace VVA_Controller
             this.connectionStatusLabel,
             this.progressBar,
             this.elapsedTimeLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 417);
+            this.statusStrip.Location = new System.Drawing.Point(0, 530);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(614, 22);
             this.statusStrip.TabIndex = 2;
@@ -178,7 +180,7 @@ namespace VVA_Controller
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startButton.Image = global::VVA_Controller.Properties.Resources.media_play_green;
             this.startButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.startButton.Location = new System.Drawing.Point(21, 347);
+            this.startButton.Location = new System.Drawing.Point(21, 465);
             this.startButton.Name = "startButton";
             this.startButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.startButton.Size = new System.Drawing.Size(144, 51);
@@ -192,7 +194,7 @@ namespace VVA_Controller
             this.stopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopButton.Image = global::VVA_Controller.Properties.Resources.media_stop_red;
             this.stopButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.stopButton.Location = new System.Drawing.Point(21, 347);
+            this.stopButton.Location = new System.Drawing.Point(21, 465);
             this.stopButton.Name = "stopButton";
             this.stopButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.stopButton.Size = new System.Drawing.Size(144, 51);
@@ -213,11 +215,35 @@ namespace VVA_Controller
             this.controlTable.Value = null;
             this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
             // 
+            // visionTable
+            // 
+            this.visionTable.AutoSize = true;
+            this.visionTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.visionTable.Location = new System.Drawing.Point(21, 248);
+            this.visionTable.Name = "visionTable";
+            this.visionTable.Size = new System.Drawing.Size(578, 124);
+            this.visionTable.TabIndex = 27;
+            this.visionTable.Type = Jenks.VVA.MotionSource.None;
+            this.visionTable.Value = null;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Teal;
+            this.label2.Location = new System.Drawing.Point(17, 221);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(101, 24);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Visual only";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 439);
+            this.ClientSize = new System.Drawing.Size(614, 552);
+            this.Controls.Add(this.visionTable);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.controlTable);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.startButton);
@@ -262,6 +288,8 @@ namespace VVA_Controller
         private System.Windows.Forms.ToolStripMenuItem mmFileExit;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mmEditOptions;
+        private TestTable visionTable;
+        private System.Windows.Forms.Label label2;
     }
 }
 

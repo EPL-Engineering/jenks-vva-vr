@@ -57,6 +57,7 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Utility\FoveUnityUtils.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveManager.Internal.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_LineButtonsContent.cs" />
+    <Compile Include="Assets\Scripts\GratingController.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.internal.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\CalibrationData.cs" />
     <Compile Include="Assets\Scripts\RandomDot.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\PupilShape.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_LineButton.cs" />
     <Compile Include="Assets\DataDiagram\Script\DD_DataDiagram.cs" />
-    <Compile Include="Assets\Scripts\GratingController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\FoveUnityPlugin\FoveClient_CLR.dll" />
