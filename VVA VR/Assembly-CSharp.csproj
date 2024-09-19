@@ -55,8 +55,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\FoveUnityPlugin\Source\Utility\FoveUnityUtils.cs" />
+    <Compile Include="Assets\Moog\KLib.Jenks.JoystickMessages.cs" />
+    <Compile Include="Assets\Scripts\VisualFieldController.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveManager.Internal.cs" />
+    <Compile Include="Assets\Moog\MOOGChairController.cs" />
     <Compile Include="Assets\Scripts\GratingController.cs" />
+    <Compile Include="Assets\Moog\TracingGame.Vestibular.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.internal.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\CalibrationData.cs" />
     <Compile Include="Assets\Scripts\RandomDot.cs" />
@@ -72,10 +76,6 @@
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveManager.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\PupilShape.cs" />
-    <Compile Include="Assets\Scripts\VisualFieldController.cs" />
-    <Compile Include="Assets\MOOG\MOOGChairController.cs" />
-    <Compile Include="Assets\MOOG\KLib.Jenks.JoystickMessages.cs" />
-    <Compile Include="Assets\MOOG\TracingGame.Vestibular.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\FoveUnityPlugin\FoveClient_CLR.dll" />

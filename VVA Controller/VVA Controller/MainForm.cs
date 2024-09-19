@@ -419,7 +419,11 @@ namespace VVA_Controller
             if ((DateTime.Now - _lastStatusCheck).TotalSeconds > 2)
             {
                 _lastStatusCheck = DateTime.Now;
-                vrStopped = KTcpClient.SendCommand(_ipEndPoint, "Status") < 0;
+                Debug.Write("checking...");
+                var r = KTcpClient.SendCommand(_ipEndPoint, "Status");
+                Debug.WriteLine("result=" + r);
+                //                vrStopped = KTcpClient.SendCommand(_ipEndPoint, "Status") < 0;
+                vrStopped = r < 0;
             }
 
             if (elapsedTime.TotalSeconds > _runDuration || vrStopped)

@@ -85,14 +85,22 @@ public class Main : MonoBehaviour
             _vrHMD = VRHMD.FOVE;
             Debug.Log("FOVE headset detected");
         }
-        else
+
+        if (_vrHMD == VRHMD.None)
         {
             foveCamera.enabled = false;
             _fov = mainCamera.fieldOfView;
-            var haveVR = XRGeneralSettings.Instance.Manager.activeLoader != null;
+
+            var haveVR = XRGeneralSettings.Instance != null && XRGeneralSettings.Instance.Manager.activeLoader != null;
+
             if (!haveVR)
             {
                 Debug.Log("no VR headset found");
+            }
+            else
+            {
+                _vrHMD = VRHMD.Vive;
+                Debug.Log("XR headset detected (assuming Vive Pro Eye)");
             }
         }
     }
