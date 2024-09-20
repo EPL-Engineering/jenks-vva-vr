@@ -52,8 +52,8 @@
     <Compile Include="Jenks\VVA\DotProperties.cs" />
     <Compile Include="Jenks\VVA\GrattingProperties.cs" />
     <Compile Include="Jenks\VVA\MotionDirection.cs" />
-    <Compile Include="Jenks\VVA\MotionSource.cs" />
     <Compile Include="Jenks\VVA\Scene.cs" />
+    <Compile Include="Jenks\VVA\ControlSpecification.cs" />
     <Compile Include="Jenks\VVA\TestSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

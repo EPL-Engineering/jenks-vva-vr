@@ -17,7 +17,6 @@ namespace VVA_Controller
 {
     public partial class TestTable : KUserControl
     {
-        public MotionSource Type { set; get; }
         public List<TestSpecification> Value { set; get; } = null;
 
         public int SelectedRow { private set; get; }
@@ -40,10 +39,6 @@ namespace VVA_Controller
             col.DataSource = Enum.GetValues(typeof(Scene));
             col.ValueType = typeof(Scene);
 
-            col = dgv.Columns["Source"] as DataGridViewComboBoxColumn;
-            col.DataSource = Enum.GetValues(typeof(MotionSource));
-            col.ValueType = typeof(MotionSource);
-
             col = dgv.Columns["Motion"] as DataGridViewComboBoxColumn;
             col.DataSource = Enum.GetValues(typeof(MotionDirection));
             col.ValueType = typeof(MotionDirection);
@@ -56,20 +51,16 @@ namespace VVA_Controller
             _ignoreEvents = false;
         }
 
-        public void FillTable(MotionSource type, List<TestSpecification> test)
+        public void FillTable(List<TestSpecification> test)
         {
             _ignoreEvents = true;
 
-            Type = type;
             Value = test;
-
-            CustomizeDisplayForType();
 
             dgv.Rows.Clear();
             for (int k=0; k<_maxRows; k++)
             {
                 var testIndex = Math.Min(k, Value.Count - 1);
-                Value[testIndex].motionSource = Type;
                 AddRow(Value[testIndex]);
             }
             SelectedRow = -1;
@@ -85,49 +76,8 @@ namespace VVA_Controller
             var cells = dgv.Rows[rowIndex].Cells;
 
             cells["Scene"].Value = test.scene;
-            cells["Source"].Value = test.motionSource.ToString();
+            cells["Scene"].Value = test.scene;
             cells["Duration"].Value = test.duration_s.ToString();
-
-            if (test.motionSource == MotionSource.Vision)
-            {
-                cells["Motion"].Value = test.motionDirection;
-                cells["Amplitude"].Value = test.motionAmplitude;
-                cells["Velocity"].Value = test.motionVelocity;
-                cells["Gain"].Value = test.gain;
-            }
-
-        }
-
-        private void CustomizeDisplayForType()
-        {
-            DisableColumn("Source", showName: true);
-            if (Type == MotionSource.None)
-            {
-                DisableColumn("Motion");
-                DisableColumn("Amplitude");
-                DisableColumn("Velocity");
-                DisableColumn("Gain");
-            }
-        }
-
-        private void DisableColumn(string name, bool showName = false)
-        {
-            var col = dgv.Columns[name];
-            var index = col.Index;
-            var headerText = col.HeaderText;
-            var width = col.Width;
-            dgv.Columns.RemoveAt(index);
-
-            col = new DataGridViewTextBoxColumn();
-            col.Name = name;
-            if (showName)
-            {
-                col.HeaderText = headerText;
-            }
-            col.Width = width;
-            col.ReadOnly = true;
-            col.DefaultCellStyle.BackColor = Color.FromArgb(216, 216, 216);
-            dgv.Columns.Insert(index, col);
         }
 
         private void dgv_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -139,23 +89,15 @@ namespace VVA_Controller
                 {
                     Value[e.RowIndex].scene = (Scene)cells["Scene"].Value;
                 }
+                else if (e.ColumnIndex == 1)
+                {
+                    Value[e.RowIndex].direction = (MotionDirection) cells["Motion"].Value;
+                }
                 else if (e.ColumnIndex == 2)
-                {
-                    Value[e.RowIndex].motionDirection = (MotionDirection) cells["Motion"].Value;
-                }
-                else if (e.ColumnIndex == 3)
-                {
-                    Value[e.RowIndex].motionAmplitude = float.Parse(cells["Amplitude"].Value.ToString());
-                }
-                else if (e.ColumnIndex == 4)
-                {
-                    Value[e.RowIndex].motionVelocity = float.Parse(cells["Velocity"].Value.ToString());
-                }
-                else if (e.ColumnIndex == 5)
                 {
                     Value[e.RowIndex].gain = float.Parse(cells["Gain"].Value.ToString());
                 }
-                else if (e.ColumnIndex == 6)
+                else if (e.ColumnIndex == 3)
                 {
                     Value[e.RowIndex].duration_s = float.Parse(cells["Duration"].Value.ToString());
                 }

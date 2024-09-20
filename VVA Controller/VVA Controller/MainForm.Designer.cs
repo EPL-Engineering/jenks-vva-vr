@@ -33,6 +33,7 @@ namespace VVA_Controller
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.connectionStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.headsetLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.elapsedTimeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
@@ -48,9 +49,10 @@ namespace VVA_Controller
             this.label1 = new System.Windows.Forms.Label();
             this.startButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
-            this.controlTable = new VVA_Controller.TestTable();
-            this.visionTable = new VVA_Controller.TestTable();
             this.label2 = new System.Windows.Forms.Label();
+            this.datafileTextBox = new System.Windows.Forms.TextBox();
+            this.controlTable = new VVA_Controller.ControlTable();
+            this.testTable = new VVA_Controller.TestTable();
             this.statusStrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -59,6 +61,7 @@ namespace VVA_Controller
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.connectionStatusLabel,
+            this.headsetLabel,
             this.progressBar,
             this.elapsedTimeLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 530);
@@ -70,6 +73,9 @@ namespace VVA_Controller
             // connectionStatusLabel
             // 
             this.connectionStatusLabel.AutoSize = false;
+            this.connectionStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.connectionStatusLabel.DoubleClickEnabled = true;
             this.connectionStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.connectionStatusLabel.Name = "connectionStatusLabel";
@@ -78,15 +84,27 @@ namespace VVA_Controller
             this.connectionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.connectionStatusLabel.DoubleClick += new System.EventHandler(this.connectionStatusLabel_DoubleClick);
             // 
+            // headsetLabel
+            // 
+            this.headsetLabel.AutoSize = false;
+            this.headsetLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.headsetLabel.Name = "headsetLabel";
+            this.headsetLabel.Size = new System.Drawing.Size(75, 17);
+            this.headsetLabel.Text = "---";
+            // 
             // progressBar
             // 
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(200, 16);
+            this.progressBar.Size = new System.Drawing.Size(150, 16);
             // 
             // elapsedTimeLabel
             // 
+            this.elapsedTimeLabel.DoubleClickEnabled = true;
             this.elapsedTimeLabel.Name = "elapsedTimeLabel";
             this.elapsedTimeLabel.Size = new System.Drawing.Size(0, 17);
+            this.elapsedTimeLabel.DoubleClick += new System.EventHandler(this.elapsedTimeLabel_DoubleClick);
             // 
             // imageList
             // 
@@ -203,30 +221,6 @@ namespace VVA_Controller
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
-            // controlTable
-            // 
-            this.controlTable.AutoSize = true;
-            this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.controlTable.Location = new System.Drawing.Point(21, 66);
-            this.controlTable.Name = "controlTable";
-            this.controlTable.Size = new System.Drawing.Size(578, 124);
-            this.controlTable.TabIndex = 25;
-            this.controlTable.Type = Jenks.VVA.MotionSource.None;
-            this.controlTable.Value = null;
-            this.controlTable.SelectionChanged += new System.EventHandler(this.table_SelectionChanged);
-            // 
-            // visionTable
-            // 
-            this.visionTable.AutoSize = true;
-            this.visionTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.visionTable.Location = new System.Drawing.Point(21, 235);
-            this.visionTable.Name = "visionTable";
-            this.visionTable.Size = new System.Drawing.Size(578, 124);
-            this.visionTable.TabIndex = 27;
-            this.visionTable.Type = Jenks.VVA.MotionSource.None;
-            this.visionTable.Value = null;
-            this.visionTable.SelectionChanged += new System.EventHandler(this.table_SelectionChanged);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -234,18 +228,47 @@ namespace VVA_Controller
             this.label2.ForeColor = System.Drawing.Color.Teal;
             this.label2.Location = new System.Drawing.Point(17, 208);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 24);
+            this.label2.Size = new System.Drawing.Size(55, 24);
             this.label2.TabIndex = 26;
-            this.label2.Text = "Visual only";
+            this.label2.Text = "Tests";
+            // 
+            // datafileTextBox
+            // 
+            this.datafileTextBox.Location = new System.Drawing.Point(200, 482);
+            this.datafileTextBox.Name = "datafileTextBox";
+            this.datafileTextBox.ReadOnly = true;
+            this.datafileTextBox.Size = new System.Drawing.Size(379, 20);
+            this.datafileTextBox.TabIndex = 28;
+            // 
+            // controlTable
+            // 
+            this.controlTable.AutoSize = true;
+            this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.controlTable.Location = new System.Drawing.Point(21, 66);
+            this.controlTable.Name = "controlTable";
+            this.controlTable.Size = new System.Drawing.Size(491, 124);
+            this.controlTable.TabIndex = 29;
+            this.controlTable.Value = null;
+            this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
+            // 
+            // testTable
+            // 
+            this.testTable.Location = new System.Drawing.Point(21, 235);
+            this.testTable.Name = "testTable";
+            this.testTable.Size = new System.Drawing.Size(355, 124);
+            this.testTable.TabIndex = 30;
+            this.testTable.Value = null;
+            this.testTable.SelectionChanged += new System.EventHandler(this.testTable_SelectionChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(614, 552);
-            this.Controls.Add(this.visionTable);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.testTable);
             this.Controls.Add(this.controlTable);
+            this.Controls.Add(this.datafileTextBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.statusStrip);
@@ -281,7 +304,6 @@ namespace VVA_Controller
         private System.Windows.Forms.ToolStripStatusLabel elapsedTimeLabel;
         private System.Windows.Forms.MenuStrip mainMenu;
         private System.Windows.Forms.Label label1;
-        private TestTable controlTable;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mmFileRestore;
         private System.Windows.Forms.ToolStripMenuItem mmFileSave;
@@ -289,8 +311,11 @@ namespace VVA_Controller
         private System.Windows.Forms.ToolStripMenuItem mmFileExit;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mmEditOptions;
-        private TestTable visionTable;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripStatusLabel headsetLabel;
+        private System.Windows.Forms.TextBox datafileTextBox;
+        private ControlTable controlTable;
+        private TestTable testTable;
     }
 }
 

@@ -54,34 +54,163 @@
     <UnityVersion>2020.3.22f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\ViveSR\Scripts\Tools\VvieSR_GetCameraPose.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_RigidReconstructionRenderer.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Module_Enums.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Utility\FoveUnityUtils.cs" />
-    <Compile Include="Assets\Moog\KLib.Jenks.JoystickMessages.cs" />
+    <Compile Include="Assets\Scripts\Moog\KLib.Jenks.JoystickMessages.cs" />
     <Compile Include="Assets\Scripts\VisualFieldController.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveManager.Internal.cs" />
-    <Compile Include="Assets\Moog\MOOGChairController.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Controller_Pose_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_StaticColliderInfo.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_EyeFocusSample_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_RigidReconstructionColliderManager.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_Lip.cs" />
+    <Compile Include="Assets\Scripts\ViveEyeTracker.cs" />
+    <Compile Include="Assets\Scripts\Moog\MOOGChairController.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Rigid_Recontruction_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_ViewCameraFrame.cs" />
     <Compile Include="Assets\Scripts\GratingController.cs" />
-    <Compile Include="Assets\Moog\TracingGame.Vestibular.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeDataType_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_SceneUnderstanding.cs" />
+    <Compile Include="Assets\Scripts\Moog\TracingGame.Vestibular.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.internal.cs" />
+    <Compile Include="Assets\Scripts\DataLog.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\CalibrationData.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraImagePlane.cs" />
     <Compile Include="Assets\Scripts\RandomDot.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_PassThrough_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Depth.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_StaticColliderPool.cs" />
+    <Compile Include="Assets\Scripts\DataLogger.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Portal\ViveSR_Portal.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\FovePluginVersion.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_LipData_v1.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_LipShapeTableDrawer.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\HeadTilt\TiltController.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\HmdAdjustmentData.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_VirtualCameraRig.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_LoadSampleDuplicateScene.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_Attributes.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DepthWarp.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraDepthExtra.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeDataType_v1.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Portal\ViveSR_PortalMgr.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\ScriptableObjects\FoveSettings.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Portal\ViveSR_PortalManager.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraImageCapture.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRanipal_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\Sample\SRanipal_AvatarLipSample.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_RigidReconstructionCollider.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\HeadTilt\DontMove.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Rigid_Recontruction.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_AIScene.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRanipal_API.cs" />
     <Compile Include="Assets\Scripts\RandomDotsController.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Depth_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_Eye_Enums.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\Graph\UdpSignal.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\Sample\SRanipal_MirrorCameraSample_Lip.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\GazableObject.Internal.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_RigidReconstruction.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_RuntimeStatusEvent.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraImageRenderer.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_LoadSampleScene.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_AI_Scene_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\DartBoard.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWorks_Enums.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\EyeShape.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_Eye.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_PassThrough.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Tools\ViveSR_ControllerLatency.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\GazeRecorder.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_Module.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_Lip_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_AI_Scene.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_GazeRaySample_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Portal\ViveSR_PortalTraveller.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_EyeSettingSample.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_AvatarEyeSample.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\HeadTilt\TiltControllerHz.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_LipData_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Tools\ViveSR_Timer.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Controller_Pose.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_TrackedCamera.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_Layers.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\HeadTilt\TransController.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Tools\ViveSR_FileTool.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraDepthCollider.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_GameViewDebugTool.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\GazableObject.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\Crosstalk Scripts\PlayerScript.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Depth_Mesh.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_Eye_Framework.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_GazeRaySample.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeData.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\UDP Scripts\networkHost.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_Settings.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeShapeTableDrawer_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_Eye_API.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_Lip_Framework.cs" />
+    <Compile Include="Assets\VVA_Toolkit\Scripts\Crosstalk Scripts\ServerScript.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_Lip_API.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveManager.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_API.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_EyeFocusSample.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_AvatarEyeSample_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DataErrorEvent.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DepthWarpToRightEye.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_SRworkManager.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\Sample\SRanipal_AvatarLipSample_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Depth_Mesh_Enums.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Lip\SRanipal_LipShapeTableDrawer_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_MirrorCameraSample_Eye.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\PupilShape.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\Sample\SRanipal_MirrorCameraSample_Eye_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_Eye_v2.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeShapeTableDrawer.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraRig.cs" />
+    <Compile Include="Assets\ViveSR\Scripts\ViveSR_AISceneRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilSkyboxCubed.shader" />
+    <None Include="Assets\ViveSR\Plugins\SRWork_Client_API.dll" />
+    <None Include="Assets\ViveSR\Shaders\Resources\Segmentation.shader" />
+    <None Include="Assets\ViveSR\Shaders\ViveSRCG.cginc" />
+    <None Include="Assets\ViveSR\Plugins\SRanipal.dll" />
+    <None Include="Assets\ViveSR\Shaders\Resources\PortalMeshShader.shader" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilUnlitTexture.shader" />
+    <None Include="Assets\ViveSR\Shaders\Unlit-Alpha2Gray.shader" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilAlphaTestStandard.shader" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilShadowedUnlitTexture.shader" />
+    <None Include="Assets\ViveSR\Plugins\ViveSRWorks_Client.dll" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilCleaner.shader" />
+    <None Include="Assets\ViveSR\Shaders\Resources\WireframeGeoShader.shader" />
+    <None Include="Assets\ViveSR\Shaders\Resources\TransparentMesh.shader" />
+    <None Include="Assets\ViveSR\Plugins\SRWorks_Log.dll" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilShadowedMeshCuller.shader" />
+    <None Include="Assets\ViveSR\Plugins\libHTC_License.dll" />
+    <None Include="Assets\ViveSR\Shaders\Resources\depurpleShader.shader" />
+    <None Include="Assets\ViveSR\Plugins\ViveSR_Client.dll" />
     <None Include="Assets\FoveUnityPlugin\FoveClient_CLR.dll" />
     <None Include="Assets\FoveUnityPlugin\FoveClient_CLR.xml" />
+    <None Include="Assets\VVA_Toolkit\Scenes\Notes.txt" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilStandard.shader" />
+    <None Include="Assets\ViveSR\Shaders\DepthWarpShader.compute" />
+    <None Include="Assets\ViveSR\Shaders\DartBoardShader.shader" />
+    <None Include="Assets\ViveSR\Shaders\CameraDepthOcclusionShader.shader" />
+    <None Include="Assets\ViveSR\Plugins\nanomsg.dll" />
+    <None Include="Assets\ViveSR\Plugins\ViveSR_CommunicationRules.dll" />
+    <None Include="Assets\ViveSR\Shaders\Resources\StencilBlendStandard.shader" />
     <None Include="Assets\FoveUnityPlugin\Resources\EyeShader.shader" />
     <None Include="Assets\FoveUnityPlugin\x86_64\FoveClient.dll" />
+    <None Include="Assets\ViveSR\Shaders\DepthCleaner.shader" />
+    <None Include="Assets\ViveSR\Shaders\DefishShader.shader" />
+    <None Include="Assets\ViveSR\Shaders\PointCloudGeoShader.shader" />
     <None Include="Assets\FoveUnityPlugin\x86_64\FoveUnityFuncs.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -307,9 +436,6 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.22f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>Library\PackageCache\com.epl.klib@0ea5b75abe\Runtime\Plugins\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="FoveClient_CLR">
       <HintPath>Assets\FoveUnityPlugin\FoveClient_CLR.dll</HintPath>
     </Reference>
@@ -318,6 +444,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>Library\PackageCache\com.epl.klib@ec07709fd6\Runtime\Plugins\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.22f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -747,6 +876,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="TobiiXRSDK.csproj">
+      <Project>{5E5A1D20-98DD-397E-D9DE-DC5C13C85735}</Project>
+      <Name>TobiiXRSDK</Name>
+    </ProjectReference>
+    <ProjectReference Include="TobiiXRCore.csproj">
+      <Project>{E1B27CF7-B9A2-6D94-B519-8D6E3C4A967F}</Project>
+      <Name>TobiiXRCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="TobiiXRG2OM.csproj">
+      <Project>{9EADFC5E-0604-EEAD-A07C-A072A676C023}</Project>
+      <Name>TobiiXRG2OM</Name>
+    </ProjectReference>
+    <ProjectReference Include="GazeModifierEditor.csproj">
+      <Project>{6366F6D1-64D8-B4E5-BE5A-9B01952AC6A0}</Project>
+      <Name>GazeModifierEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="TobiiXRDevTools.csproj">
+      <Project>{08A1E782-E12A-F239-4693-FAC9001A5785}</Project>
+      <Name>TobiiXRDevTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="TobiiXRInternalEditor.csproj">
+      <Project>{AEE68FE7-517B-82D2-71CC-73BF445D8639}</Project>
+      <Name>TobiiXRInternalEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="TobiiXREditor.csproj">
+      <Project>{541D53E7-9065-01E4-E066-CCDC2C28E765}</Project>
+      <Name>TobiiXREditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

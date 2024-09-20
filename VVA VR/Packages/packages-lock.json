@@ -7,7 +7,15 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "2.0.0"
       },
-      "hash": "0ea5b75abe5bdb5169a891171b65252958a506ae"
+      "hash": "ec07709fd646d788a63e15dfd5649a188c85b17a"
+    },
+    "com.tobii.xr.sdk": {
+      "version": "file:D:/Development/3rd Party/Tobii/TobiiXRSDK_3.0.1.179",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.xr.management": "3.2.16"
+      }
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
@@ -48,7 +56,7 @@
     },
     "com.unity.subsystemregistration": {
       "version": "1.0.6",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -105,8 +113,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.management": {
-      "version": "4.0.1",
-      "depth": 1,
+      "version": "4.0.7",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.vr": "1.0.0",

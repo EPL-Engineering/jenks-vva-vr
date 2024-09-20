@@ -15,6 +15,9 @@ public class VisualFieldController : MonoBehaviour
     private float _startTime;
     private bool _isRunning = false;
 
+    public float X { get; private set; } = 0;
+    public float Z { get; private set; } = 0;
+
     public void StartMotion(Transform target, float tiltAmplitude = 0, float tiltVelocity = 0, float transAmplitude = 0, float transVelocity = 0)
     {
         _target = target;
@@ -27,12 +30,13 @@ public class VisualFieldController : MonoBehaviour
 
         _startTime = Time.time;
         _isRunning = true;
-
-        KLib.KLogger.Debug("v = " + _transVelocity);
     }
 
     public void StopMotion()
     {
+        X = 0;
+        Z = 0;
+
         _isRunning = false;
     }
 
@@ -40,8 +44,11 @@ public class VisualFieldController : MonoBehaviour
     {
         if (_isRunning)
         {
-            _target.eulerAngles = new Vector3(0, 0, _tiltAmplitude * Mathf.Sin(_tiltVelocity * (Time.time - _startTime)));
-            _target.position = new Vector3(_transAmplitude * Mathf.Sin(_transVelocity * (Time.time - _startTime)), 0, 0);
+            X = _transAmplitude * Mathf.Sin(2 * Mathf.PI * _transVelocity * (Time.time - _startTime));
+            Z = _tiltAmplitude * Mathf.Sin(2 * Mathf.PI * _tiltVelocity * (Time.time - _startTime));
+
+            _target.eulerAngles = new Vector3(0, 0, Z);
+            _target.position = new Vector3(X, 0, 0);
         }
     }
 }

@@ -8,11 +8,11 @@ namespace Jenks.VVA
 {
     public class TestSettings
     {
-        public List<TestSpecification> controlTests = new List<TestSpecification>();
-        public List<TestSpecification> visionTests = new List<TestSpecification>();
-        public List<TestSpecification> chairTests = new List<TestSpecification>();
+        public List<ControlSpecification> controls = new List<ControlSpecification>();
+        public List<TestSpecification> tests = new List<TestSpecification>();
         public DotProperties dotProperties = new DotProperties();
         public GratingProperties gratingProperties = new GratingProperties();
+        public int filterLength = 5;
 
         public static TestSettings Restore()
         {
@@ -44,45 +44,40 @@ namespace Jenks.VVA
 
         private void Initialize()
         {
-            controlTests.Add(
-                new TestSpecification
+            controls.Add(
+                new ControlSpecification
                 {
                     scene = Scene.White,
-                    motionSource = MotionSource.None
+                    frequencyHz = 0.03f
                 });
-            controlTests.Add(
-                new TestSpecification
+            controls.Add(
+                new ControlSpecification
                 {
                     scene = Scene.Black,
-                    motionSource = MotionSource.None
+                    frequencyHz = 0.1f
                 });
-            controlTests.Add(
-                new TestSpecification
+            controls.Add(
+                new ControlSpecification
                 {
                     scene = Scene.Dots,
-                    motionSource = MotionSource.None
+                    frequencyHz = 0.18f
                 });
 
-            visionTests.Add(
+            tests.Add(
                 new TestSpecification
                 {
                     scene = Scene.Bars,
-                    motionSource = MotionSource.Vision,
-                    motionVelocity = 1
                 });
-            visionTests.Add(
+            tests.Add(
                 new TestSpecification
                 {
                     scene = Scene.Bars,
-                    motionSource = MotionSource.Vision,
-                    motionVelocity = 2
                 });
 
-            chairTests.Add(
+            tests.Add(
                 new TestSpecification
                 {
                     scene = Scene.Bars,
-                    motionSource = MotionSource.Chair
                 });
         }
     }

@@ -1,0 +1,48 @@
+In order for the scene to work without using base stations 
+(Note, base stations still need to see headset):
+
+Change the config file of Steam.
+C:\Program Files (x86)\Steam\config\steamvr.vrsettings
+
+Add to steamvr section:
+""forceFadeOnBadTracking" : false,"
+
+https://steamcommunity.com/app/358720/discussions/0/343788552552150997/
+
+A little buggy when it goes in and out of seeing the base stations but works best when you start the application without the base stations seeing the Vive at all.
+
+*************Example***********************
+
+   "steamvr" : {
+      "forceFadeOnBadTracking" : false,
+      "installID" : "3059663118213563149",
+      "lastVersionNotice" : "1.19.7",
+      "lastVersionNoticeDate" : "1629242773",
+      "mirrorViewEye" : 2,
+      "showMirrorView" : false
+   }
+
+*******************************************
+
+For migrating code, this solves the issue of opening OpenXR instead of Steam.
+*******************************************
+
+    private void Awake()
+    {
+        XRDevice.DisableAutoXRCameraTracking(childCamera, true);
+    }
+
+*******************************************
+
+
+Stripes:
+http://www.stripegenerator.com/
+
+For pitch black on HTC Vive:
+
+https://www.reddit.com/r/Vive/comments/4iqtb5/psa_how_to_enable_true_black_pixels/
+
+SteamVR->Developer->Developer Settings->Disable Direct Mode
+
+ NVIDIA Control Panel -> Video, click Adjust video color settings 
+ HTC -> Contrast 52%

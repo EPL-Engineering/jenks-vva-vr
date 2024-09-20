@@ -109,6 +109,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSettings.cs" />
+    <Compile Include="ControlTable.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ControlTable.designer.cs">
+      <DependentUpon>ControlTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="TestTable.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -131,6 +137,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ControlTable.resx">
+      <DependentUpon>ControlTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TestTable.resx">
       <DependentUpon>TestTable.cs</DependentUpon>
     </EmbeddedResource>

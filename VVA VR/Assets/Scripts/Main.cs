@@ -9,11 +9,14 @@ using UnityEngine.UI;
 using UnityEngine.XR.Management;
 
 using Fove.Unity;
+using ViveSR.anipal.Eye;
 
 using KLib;
 using KLib.Network;
 
 using Jenks.VVA;
+
+public enum VRHMD { None, FOVE, Vive };
 
 public class Main : MonoBehaviour
 {
@@ -26,6 +29,9 @@ public class Main : MonoBehaviour
     public GratingController grating;
 
     public VisualFieldController visualFieldController;
+    public ViveEyeTracker viveEyeTracker;
+
+    public DataLogger dataLogger;
 
     private bool _listenerReady = false;
 
@@ -38,7 +44,6 @@ public class Main : MonoBehaviour
 
     private Text _message;
 
-    private enum VRHMD { None, FOVE, Vive};
     private VRHMD _vrHMD;
 
     private float _fov = 60f;
@@ -56,6 +61,11 @@ public class Main : MonoBehaviour
 
     private void Start()
     {
+        Application.runInBackground = true;
+#if UNITY_EDITOR
+        Application.targetFrameRate = 90;
+#endif
+
         KLogger.Create(
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "Logs", "VVA-VR.txt"), 
             retainDays: 14)
@@ -100,6 +110,7 @@ public class Main : MonoBehaviour
             else
             {
                 _vrHMD = VRHMD.Vive;
+                mainCamera.fieldOfView = 71.5f;
                 Debug.Log("XR headset detected (assuming Vive Pro Eye)");
             }
         }
@@ -167,7 +178,7 @@ public class Main : MonoBehaviour
 
         _listener.AcceptTcpClient();
 
-        string input = _listener.ReadStringFromInputStream();
+        string input = _listener.ReadString();
         var parts = input.Split(new char[] { ':' });
         string command = parts[0];
         string data = null;
@@ -176,7 +187,7 @@ public class Main : MonoBehaviour
             data = parts[1];
         }
 
-        if (!command.Equals("Status"))
+        if (!command.Equals("GetStatus"))
         {
             Debug.Log("Command received: " + command);
         }
@@ -215,7 +226,15 @@ public class Main : MonoBehaviour
                 StartCoroutine(StopTest());
                 break;
 
-            case "Status":
+            case "GetFilename":
+                _listener.WriteStringAsByteArray(dataLogger.Filename);
+                break;
+
+            case "GetHeadset":
+                _listener.WriteStringAsByteArray(_vrHMD.ToString());
+                break;
+
+            case "GetStatus":
                 _listener.SendAcknowledgement(_sceneRunning);
                 break;
 
@@ -232,7 +251,7 @@ public class Main : MonoBehaviour
     private TestSpecification ReceiveTestSpecification()
     {
         TestSpecification test = null;
-        var bytes = _listener.ReadByteArrayFromInputStream();
+        var bytes = _listener.ReadByteArray();
         if (bytes != null)
         {
             test = FileIO.FromProtoBuf<TestSpecification>(bytes);
@@ -247,6 +266,13 @@ public class Main : MonoBehaviour
 
         Debug.Log("Running test: " + test.ToLogString());
         messageText.enabled = false;
+
+        if (_vrHMD == VRHMD.Vive)
+        {
+            viveEyeTracker.StartTracking();
+        }
+
+        dataLogger.StartLogging(test.ToLogString(), _vrHMD);
 
         SetScene(test.scene, test.motionAmplitude);
 
@@ -263,7 +289,7 @@ public class Main : MonoBehaviour
                 {
                     visualFieldController.StartMotion(target, 
                         transAmplitude: ConvertDegreesToMeters(test.motionAmplitude), 
-                        transVelocity: ConvertDegreesToMeters(test.motionVelocity));
+                        transVelocity: test.motionVelocity);
                 }
             }
         }
@@ -274,7 +300,7 @@ public class Main : MonoBehaviour
     private float ConvertDegreesToMeters(float degrees)
     {
         var aspectRatio = (float)Screen.width / Screen.height;
-        float hfov = _fov * aspectRatio;
+        float hfov = 2 * Mathf.Rad2Deg * Mathf.Atan(aspectRatio * Mathf.Tan(_fov / 2 * Mathf.Deg2Rad));
         float meters = 2 * _gratingProperties.distance_m * Mathf.Tan(degrees / 2 * Mathf.Deg2Rad);
 
         return meters;
@@ -296,7 +322,7 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Bars)
         {
-            grating.InitializeGrating(_gratingProperties, _fov, amplitude);
+            grating.InitializeGrating(_gratingProperties, _fov);
             mainCamera.backgroundColor = Color.white;
         }
         _sceneRunning = true;
@@ -318,6 +344,8 @@ public class Main : MonoBehaviour
 
     IEnumerator StopTest()
     {
+        viveEyeTracker.StopTracking();
+        dataLogger.StopLogging();
         visualFieldController.StopMotion();
 
         ClearScene(_currentTest.scene);

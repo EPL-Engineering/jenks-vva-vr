@@ -9,21 +9,12 @@ namespace Jenks.VVA
         public Scene scene = Scene.Black;
 
         [ProtoMember(2, IsRequired = true)]
-        public MotionSource motionSource = MotionSource.None;
+        public MotionDirection direction = MotionDirection.RollTilt;
 
         [ProtoMember(3, IsRequired = true)]
-        public MotionDirection motionDirection = MotionDirection.RollTilt;
-
-        [ProtoMember(4, IsRequired = true)]
-        public float motionAmplitude = 20f;
-
-        [ProtoMember(5, IsRequired = true)]
-        public float motionVelocity = 1f;
-
-        [ProtoMember(6, IsRequired = true)]
         public float gain = 1;
 
-        [ProtoMember(7, IsRequired = true)]
+        [ProtoMember(4, IsRequired = true)]
         public float duration_s = 30;
 
         public TestSpecification() { }
@@ -32,15 +23,8 @@ namespace Jenks.VVA
         {
             string log = "";
             log += $"Scene={scene}, ";
-            log += $"MotionSource={motionSource}, ";
-
-            if (motionSource == MotionSource.Vision)
-            {
-                log += $"MotionDirection={motionDirection}, ";
-                log += $"MotionAmplitude={motionAmplitude}, ";
-                log += $"MotionVelocity={motionVelocity}, ";
-            }
-
+            log += $"Direction={direction}, ";
+            log += $"Gain={gain}, ";
             log += $"Duration={duration_s}";
 
             return log;

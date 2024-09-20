@@ -33,20 +33,18 @@ namespace VVA_Controller
         private DateTime _runStartTime;
         private double _runDuration;
         private DateTime _lastStatusCheck;
+        private bool _haveFileName;
 
         private TestSettings _testSettings;
         private AppSettings _appSettings;
 
-        private List<TestTable> _tables;
-        private TestTable _selectedTable = null;
+        private int _selectedTable = -1;
 
         public MainForm()
         {
             InitializeComponent();
 
             startButton.Enabled = false;
-
-            _tables = new List<TestTable> { controlTable, visionTable };
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -118,13 +116,18 @@ namespace VVA_Controller
 
         private async Task InitializeTables()
         {
-            controlTable.FillTable(MotionSource.None, _testSettings.controlTests);
-            visionTable.FillTable(MotionSource.Vision, _testSettings.visionTests);
+            //controlTable.FillTable(MotionSource.None, _testSettings.controlTests);
+            //visionTable.FillTable(MotionSource.Vision, _testSettings.visionTests);
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
         {
             TryVRConnection();
+        }
+
+        private void elapsedTimeLabel_DoubleClick(object sender, EventArgs e)
+        {
+            headsetLabel.Text = GetHeadset();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -147,7 +150,23 @@ namespace VVA_Controller
         private void TryVRConnection()
         {
             _haveVR = ConnectToVR();
+            headsetLabel.Text = GetHeadset();
             startButton.Enabled = _haveVR && _selectedTable != null;
+        }
+
+        private string GetHeadset()
+        {
+            string result = "---";
+            if (_haveVR)
+            {
+                result = KTcpClient.SendMessageReceiveString(_ipEndPoint, "GetHeadset");
+                if (!string.IsNullOrEmpty(result) && result.Equals("None"))
+                {
+                    result = "No HMD";
+                }
+            }
+
+            return result;
         }
 
         private bool ConnectToVR(bool autoStart = true)
@@ -309,7 +328,7 @@ namespace VVA_Controller
             _ipEndPoint = Discovery.Discover("VVA VR");
             if (_ipEndPoint != null)
             {
-                var result = KTcpClient.SendCommand(_ipEndPoint, "Ping");
+                var result = KTcpClient.SendMessage(_ipEndPoint, "Ping");
                 success = result > 0;
             }
 
@@ -329,28 +348,30 @@ namespace VVA_Controller
                 var test = GetSelectedTest();
 
                 _runDuration = test.duration_s;
-                _runStartTime = DateTime.Now;
-                _lastStatusCheck = DateTime.Now;
 
                 if (test.scene == Scene.Dots)
                 {
                     Log.Information("Sending dot properties: " + _testSettings.dotProperties);
-                    KTcpClient.SendCommandAndByteArray(_ipEndPoint, "DotProperties", FileIO.ToProtoBuf(_testSettings.dotProperties));
+                    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", FileIO.ToProtoBuf(_testSettings.dotProperties));
                 }
                 else if (test.scene == Scene.Bars)
                 {
                     Log.Information("Sending grating properties: " + _testSettings.gratingProperties);
-                    KTcpClient.SendCommandAndByteArray(_ipEndPoint, "GratingProperties", FileIO.ToProtoBuf(_testSettings.gratingProperties));
+                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", FileIO.ToProtoBuf(_testSettings.gratingProperties));
                 }
 
                 Log.Information("Starting run: " + test.ToLogString());
 
-                var response = KTcpClient.SendCommandAndByteArray(_ipEndPoint, "Run", FileIO.ToProtoBuf(test));
+                var response = KTcpClient.SendMessage(_ipEndPoint, "Run", FileIO.ToProtoBuf(test));
                 startButton.Visible = false;
                 EnableControls(false);
 
                 progressBar.Maximum = (int)(_runDuration / (0.001 * runTimer.Interval));
                 progressBar.Value = 0;
+
+                _runStartTime = DateTime.Now;
+                _lastStatusCheck = DateTime.Now;
+                _haveFileName = false;
                 runTimer.Enabled = true;
             }
             catch (Exception ex)
@@ -367,14 +388,14 @@ namespace VVA_Controller
         private TestSpecification GetSelectedTest()
         {
             TestSpecification test = null;
-            if (_selectedTable == controlTable)
-            {
-                test = _testSettings.controlTests[_selectedTable.SelectedRow];
-            }
-            else if (_selectedTable == visionTable)
-            {
-                test = _testSettings.visionTests[_selectedTable.SelectedRow];
-            }
+            //if (_selectedTable == controlTable)
+            //{
+            //    test = _testSettings.controlTests[_selectedTable.SelectedRow];
+            //}
+            //else if (_selectedTable == visionTable)
+            //{
+            //    test = _testSettings.visionTests[_selectedTable.SelectedRow];
+            //}
             return test;
         }
 
@@ -383,7 +404,7 @@ namespace VVA_Controller
             if (!vrStopped)
             {
                 Log.Information("Aborting run");
-                KTcpClient.SendCommand(_ipEndPoint, "Abort");
+                KTcpClient.SendMessage(_ipEndPoint, "Abort");
             }
 
             EnableControls(true);
@@ -418,12 +439,16 @@ namespace VVA_Controller
             bool vrStopped = false;
             if ((DateTime.Now - _lastStatusCheck).TotalSeconds > 2)
             {
+                if (!_haveFileName)
+                {
+                    var fn = KTcpClient.SendMessageReceiveString(_ipEndPoint, "GetFilename");
+                    datafileTextBox.Text = "File: " +  fn;
+                    Log.Information("Datafile=" + fn);
+                    _haveFileName = true;
+                }
+
                 _lastStatusCheck = DateTime.Now;
-                Debug.Write("checking...");
-                var r = KTcpClient.SendCommand(_ipEndPoint, "Status");
-                Debug.WriteLine("result=" + r);
-                //                vrStopped = KTcpClient.SendCommand(_ipEndPoint, "Status") < 0;
-                vrStopped = r < 0;
+                vrStopped = KTcpClient.SendMessage(_ipEndPoint, "GetStatus") < 0;
             }
 
             if (elapsedTime.TotalSeconds > _runDuration || vrStopped)
@@ -433,23 +458,24 @@ namespace VVA_Controller
             }
         }
 
-        private void table_SelectionChanged(object sender, EventArgs e)
+        private void controlTable_SelectionChanged(object sender, EventArgs e)
         {
-            _selectedTable = sender as TestTable;
-            if (_selectedTable.SelectedRow > -1)
+            _selectedTable = 0;
+            testTable.ClearSelection();
+            if (controlTable.SelectedRow > -1)
             {
                 startButton.Enabled = _haveVR;
             }
-            foreach (var t in _tables.FindAll(x => x != _selectedTable))
-            {
-                t.ClearSelection();
-            }
-
         }
 
-        private void controlTable_SelectionChanged(object sender, EventArgs e)
+        private void testTable_SelectionChanged(object sender, EventArgs e)
         {
-
+            _selectedTable = 1;
+            controlTable.ClearSelection();
+            if (testTable.SelectedRow > -1)
+            {
+                startButton.Enabled = _haveVR;
+            }
         }
     }
 }
