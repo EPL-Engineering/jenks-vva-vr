@@ -238,6 +238,11 @@ public class Main : MonoBehaviour
                 _listener.SendAcknowledgement(_sceneRunning);
                 break;
 
+            case "Calibrate":
+                _listener.SendAcknowledgement(_sceneRunning);
+                StartCoroutine(DoEyeCalibration());
+                break;
+
             default:
                 _listener.SendAcknowledgement(false);
                 break;
@@ -271,25 +276,29 @@ public class Main : MonoBehaviour
         {
             viveEyeTracker.StartTracking();
         }
+        else if (_vrHMD == VRHMD.FOVE)
+        {
+            Debug.Log("Fove tracking ready = " + FoveManager.IsEyeTrackingReady().value);
+        }
 
         dataLogger.StartLogging(test.ToLogString(), _vrHMD);
 
-        SetScene(test.scene, test.motionAmplitude);
+        SetScene(test.scene, test.amplitude_degrees);
 
         if (test.scene == Scene.Dots || test.scene == Scene.Bars)
         {
             var target = (test.scene == Scene.Dots) ? randomDots.transform : grating.transform;
-            if (test.motionSource == MotionSource.Vision)
+            if (test.motionSource == MotionSource.Internal)
             {
                 if (test.motionDirection == MotionDirection.RollTilt)
                 {
-                    visualFieldController.StartMotion(target, tiltAmplitude: test.motionAmplitude, tiltVelocity: test.motionVelocity);
+                    visualFieldController.StartMotion(target, tiltAmplitude: test.amplitude_degrees, tiltVelocity: test.frequency_Hz);
                 }
                 else if (test.motionDirection == MotionDirection.Translation)
                 {
                     visualFieldController.StartMotion(target, 
-                        transAmplitude: ConvertDegreesToMeters(test.motionAmplitude), 
-                        transVelocity: test.motionVelocity);
+                        transAmplitude: ConvertDegreesToMeters(test.amplitude_degrees), 
+                        transVelocity: test.frequency_Hz);
                 }
             }
         }
@@ -352,6 +361,17 @@ public class Main : MonoBehaviour
 
         yield return new WaitForSeconds(2);
         messageText.enabled = true;
+    }
+
+    IEnumerator DoEyeCalibration()
+    {
+        Debug.Log("Fove eye tracking enabled:" + FoveManager.IsEyeTrackingEnabled().value);
+        Debug.Log("Fove eye tracking ready:" + FoveManager.IsEyeTrackingReady().value);
+        Debug.Log("Fove eye tracking calibrated:" + FoveManager.IsEyeTrackingCalibrated().value);
+
+        FoveManager.StartEyeTrackingCalibration();
+
+        yield break;
     }
 
     public void HandleException(string condition, string stackTrace, LogType type)

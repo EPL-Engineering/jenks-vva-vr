@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Fove.Unity;
+
 public class DataLogger : MonoBehaviour
 {
     public VisualFieldController controller;
@@ -44,7 +46,12 @@ public class DataLogger : MonoBehaviour
 
         if (_hmd == VRHMD.Vive)
         {
-            _log.AddGaze(viveEyeTracker.GazeAngle);
+            _log.AddGaze(viveEyeTracker.GazeAngle.x, viveEyeTracker.GazeAngle.y);
+        }
+        else if (_hmd == VRHMD.FOVE)
+        {
+            var ray = FoveManager.GetHmdCombinedGazeRay().value;
+            _log.AddGaze(ray.direction.x, ray.direction.y);
         }
         //_log.AddEye(_tracker.LeftPosition, _tracker.LeftGazeAngle, _tracker.LeftGaze, _tracker.LeftSize, _tracker.LeftOpenness);
         //_log.AddEye(_tracker.RightPosition, _tracker.RightGazeAngle, _tracker.RightGaze, _tracker.RightSize, _tracker.RightOpenness);

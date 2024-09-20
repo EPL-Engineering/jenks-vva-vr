@@ -51,8 +51,9 @@ namespace VVA_Controller
             this.stopButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.datafileTextBox = new System.Windows.Forms.TextBox();
-            this.controlTable = new VVA_Controller.ControlTable();
+            this.controlTable = new VVA_Controller.TestTable();
             this.testTable = new VVA_Controller.TestTable();
+            this.button1 = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -246,25 +247,40 @@ namespace VVA_Controller
             this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.controlTable.Location = new System.Drawing.Point(21, 66);
             this.controlTable.Name = "controlTable";
-            this.controlTable.Size = new System.Drawing.Size(491, 124);
+            this.controlTable.Size = new System.Drawing.Size(578, 124);
             this.controlTable.TabIndex = 29;
+            this.controlTable.Type = Jenks.VVA.MotionSource.Internal;
             this.controlTable.Value = null;
             this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
             // 
             // testTable
             // 
+            this.testTable.AutoSize = true;
+            this.testTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.testTable.Location = new System.Drawing.Point(21, 235);
             this.testTable.Name = "testTable";
-            this.testTable.Size = new System.Drawing.Size(355, 124);
+            this.testTable.Size = new System.Drawing.Size(578, 124);
             this.testTable.TabIndex = 30;
+            this.testTable.Type = Jenks.VVA.MotionSource.Internal;
             this.testTable.Value = null;
             this.testTable.SelectionChanged += new System.EventHandler(this.testTable_SelectionChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(192, 388);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 31;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(614, 552);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.testTable);
             this.Controls.Add(this.controlTable);
             this.Controls.Add(this.datafileTextBox);
@@ -314,8 +330,9 @@ namespace VVA_Controller
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripStatusLabel headsetLabel;
         private System.Windows.Forms.TextBox datafileTextBox;
-        private ControlTable controlTable;
+        private TestTable controlTable;
         private TestTable testTable;
+        private System.Windows.Forms.Button button1;
     }
 }
 

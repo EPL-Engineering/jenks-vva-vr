@@ -75,9 +75,9 @@ public class DataLog
         _data.Append($"{time,15:F4}\t{targetPosition.x,10:F4}\t{targetPosition.y,10:F4}");
     }
 
-    public void AddGaze(Vector2 gazeAngle)
+    public void AddGaze(float x, float y)
     {
-        _data.Append($"\t{gazeAngle.x,10:F4}\t{gazeAngle.y,10:F4}");
+        _data.Append($"\t{x,10:F4}\t{y,10:F4}");
     }
 
     public void AddEye(Vector2 position, Vector2 gaze, Vector3 gazeDir, float size, float openness)

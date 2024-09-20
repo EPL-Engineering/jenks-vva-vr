@@ -116,8 +116,8 @@ namespace VVA_Controller
 
         private async Task InitializeTables()
         {
-            //controlTable.FillTable(MotionSource.None, _testSettings.controlTests);
-            //visionTable.FillTable(MotionSource.Vision, _testSettings.visionTests);
+            controlTable.FillTable(MotionSource.Internal, _testSettings.controls);
+            testTable.FillTable(MotionSource.UDP, _testSettings.tests);
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
@@ -388,14 +388,14 @@ namespace VVA_Controller
         private TestSpecification GetSelectedTest()
         {
             TestSpecification test = null;
-            //if (_selectedTable == controlTable)
-            //{
-            //    test = _testSettings.controlTests[_selectedTable.SelectedRow];
-            //}
-            //else if (_selectedTable == visionTable)
-            //{
-            //    test = _testSettings.visionTests[_selectedTable.SelectedRow];
-            //}
+            if (_selectedTable == 0)
+            {
+                test = _testSettings.controls[controlTable.SelectedRow];
+            }
+            else if (_selectedTable == 1)
+            {
+                test = _testSettings.tests[testTable.SelectedRow];
+            }
             return test;
         }
 
@@ -476,6 +476,11 @@ namespace VVA_Controller
             {
                 startButton.Enabled = _haveVR;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            KTcpClient.SendMessage(_ipEndPoint, "Calibrate");
         }
     }
 }

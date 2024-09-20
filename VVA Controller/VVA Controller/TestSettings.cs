@@ -8,7 +8,7 @@ namespace Jenks.VVA
 {
     public class TestSettings
     {
-        public List<ControlSpecification> controls = new List<ControlSpecification>();
+        public List<TestSpecification> controls = new List<TestSpecification>();
         public List<TestSpecification> tests = new List<TestSpecification>();
         public DotProperties dotProperties = new DotProperties();
         public GratingProperties gratingProperties = new GratingProperties();
@@ -45,39 +45,48 @@ namespace Jenks.VVA
         private void Initialize()
         {
             controls.Add(
-                new ControlSpecification
+                new TestSpecification
                 {
                     scene = Scene.White,
-                    frequencyHz = 0.03f
+                    motionSource = MotionSource.Internal,
+                    amplitude_degrees = 0,
                 });
             controls.Add(
-                new ControlSpecification
-                {
-                    scene = Scene.Black,
-                    frequencyHz = 0.1f
-                });
-            controls.Add(
-                new ControlSpecification
+                new TestSpecification
                 {
                     scene = Scene.Dots,
-                    frequencyHz = 0.18f
+                    motionSource = MotionSource.Internal,
+                    frequency_Hz = 0.18f
+                });
+            controls.Add(
+                new TestSpecification
+                {
+                    scene = Scene.Bars,
+                    motionSource = MotionSource.Internal,
+                    frequency_Hz = 0.18f
                 });
 
             tests.Add(
                 new TestSpecification
                 {
                     scene = Scene.Bars,
+                    motionSource = MotionSource.UDP,
+                    gain = 4.4848f,
                 });
             tests.Add(
                 new TestSpecification
                 {
                     scene = Scene.Bars,
+                    motionSource = MotionSource.UDP,
+                    gain = 0.4226f,
                 });
 
             tests.Add(
                 new TestSpecification
                 {
                     scene = Scene.Bars,
+                    motionSource = MotionSource.UDP,
+                    gain = 0.1304f,
                 });
         }
     }
