@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.IO;
 
+using KLib;
 using KLib.Utilities;
+
 
 namespace VVA_Controller
 {
@@ -16,7 +18,7 @@ namespace VVA_Controller
             AppSettings settings = null;
             if (File.Exists(FileLocation))
             {
-                settings = FileIO.XmlDeserialize<AppSettings>(FileLocation);
+                settings = KFile.XmlDeserialize<AppSettings>(FileLocation);
             }
             else
             {
@@ -27,7 +29,7 @@ namespace VVA_Controller
 
         public void Save()
         {
-            FileIO.XmlSerialize(this, FileLocation);
+            KFile.XmlSerialize(this, FileLocation);
         }
 
         private static string FileLocation

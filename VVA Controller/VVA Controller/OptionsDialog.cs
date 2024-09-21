@@ -15,6 +15,7 @@ namespace VVA_Controller
     public partial class OptionsDialog : Form
     {
         public DotProperties DotProperties { set; get; }
+        public GratingProperties GratingProperties { set; get; }
 
         public OptionsDialog()
         {
@@ -26,6 +27,9 @@ namespace VVA_Controller
             dotSizeNumeric.FloatValue = DotProperties.size_deg;
             dotDensityNumeric.FloatValue = DotProperties.density_deg2;
             dotVelocityNumeric.FloatValue = DotProperties.sdVelocity_deg_per_s;
+
+            barWidthNumeric.FloatValue = GratingProperties.size_deg;
+            barDensityNumeric.FloatValue = GratingProperties.density_deg;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -38,6 +42,9 @@ namespace VVA_Controller
             DotProperties.size_deg = dotSizeNumeric.FloatValue;
             DotProperties.density_deg2 = dotDensityNumeric.FloatValue;
             DotProperties.sdVelocity_deg_per_s = dotVelocityNumeric.FloatValue;
+
+            GratingProperties.size_deg = barWidthNumeric.FloatValue;
+            GratingProperties.density_deg = barDensityNumeric.FloatValue;
 
             Close();
         }

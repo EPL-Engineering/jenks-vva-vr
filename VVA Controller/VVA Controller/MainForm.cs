@@ -72,7 +72,7 @@ namespace VVA_Controller
 
             await RestoreTests();
 
-            TryVRConnection();
+            //TryVRConnection();
         }
 
         private void mmFileExit_Click(object sender, EventArgs e)
@@ -90,6 +90,7 @@ namespace VVA_Controller
         {
             var dlg = new OptionsDialog();
             dlg.DotProperties = _testSettings.dotProperties;
+            dlg.GratingProperties = _testSettings.gratingProperties;
             dlg.ShowDialog();
         }
 
@@ -352,17 +353,17 @@ namespace VVA_Controller
                 if (test.scene == Scene.Dots)
                 {
                     Log.Information("Sending dot properties: " + _testSettings.dotProperties);
-                    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", FileIO.ToProtoBuf(_testSettings.dotProperties));
+                    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
                 }
                 else if (test.scene == Scene.Bars)
                 {
                     Log.Information("Sending grating properties: " + _testSettings.gratingProperties);
-                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", FileIO.ToProtoBuf(_testSettings.gratingProperties));
+                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.gratingProperties));
                 }
 
                 Log.Information("Starting run: " + test.ToLogString());
 
-                var response = KTcpClient.SendMessage(_ipEndPoint, "Run", FileIO.ToProtoBuf(test));
+                var response = KTcpClient.SendMessage(_ipEndPoint, "Run", KFile.ToProtoBuf(test));
                 startButton.Visible = false;
                 EnableControls(false);
 

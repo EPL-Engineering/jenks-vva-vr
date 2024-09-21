@@ -19,7 +19,7 @@ namespace Jenks.VVA
             TestSettings settings = null;
             if (File.Exists(FileLocation))
             {
-                settings = FileIO.XmlDeserialize<TestSettings>(FileLocation);
+                settings = KLib.KFile.XmlDeserialize<TestSettings>(FileLocation);
             }
             else
             {
@@ -31,7 +31,7 @@ namespace Jenks.VVA
 
         public void Save()
         {
-            FileIO.XmlSerialize(this, FileLocation);
+            KLib.KFile.XmlSerialize(this, FileLocation);
         }
 
         private static string FileLocation

@@ -40,10 +40,6 @@ namespace VVA_Controller
             col.DataSource = Enum.GetValues(typeof(Scene));
             col.ValueType = typeof(Scene);
 
-            col = dgv.Columns["Source"] as DataGridViewComboBoxColumn;
-            col.DataSource = Enum.GetValues(typeof(MotionSource));
-            col.ValueType = typeof(MotionSource);
-
             col = dgv.Columns["Motion"] as DataGridViewComboBoxColumn;
             col.DataSource = Enum.GetValues(typeof(MotionDirection));
             col.ValueType = typeof(MotionDirection);
@@ -70,8 +66,22 @@ namespace VVA_Controller
             {
                 var testIndex = Math.Min(k, Value.Count - 1);
                 Value[testIndex].motionSource = Type;
+
+                if (Type == MotionSource.Internal)
+                {
+                    Value[testIndex].gain = 1;
+                }
+
+
                 AddRow(Value[testIndex]);
             }
+
+            dgv.Refresh();
+            for (int kc = 3; kc < dgv.Columns.Count; kc++)
+            {
+                dgv.Columns[kc].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+
             SelectedRow = -1;
             dgv.ClearSelection();
 
@@ -91,26 +101,50 @@ namespace VVA_Controller
             if (test.motionSource == MotionSource.Internal)
             {
                 cells["Motion"].Value = test.motionDirection;
-                cells["Amplitude"].Value = test.amplitude_degrees;
-                cells["Velocity"].Value = test.frequency_Hz;
+                cells["Amplitude"].Value = test.amplitude_degrees.ToString();
+                cells["Frequency"].Value = test.frequency_Hz;
                 cells["Gain"].Value = test.gain;
             }
+            else if (test.motionSource == MotionSource.UDP)
+            {
+                cells["Motion"].Value = test.motionDirection;
+                SetGainCellProperties(cells["Gain"], test.motionSource, test.motionDirection, test.gain);
+            }
+        }
 
+        private void SetGainCellProperties(DataGridViewCell c, MotionSource motionSource, MotionDirection motionDirection, float gain)
+        {
+            if (motionSource == MotionSource.UDP)
+            {
+                if (motionDirection == MotionDirection.RollTilt)
+                {
+                    c.Value = 1;
+                    c.Style.BackColor = Color.FromArgb(216, 216, 216);
+                    c.ReadOnly = true;
+                }
+                if (motionDirection == MotionDirection.Translation)
+                {
+                    c.Value = gain;
+                    c.Style.BackColor = Color.White;
+                    c.ReadOnly = false;
+                }
+            }
         }
 
         private void CustomizeDisplayForType()
         {
-            DisableColumn("Source", showName: true);
-            if (Type == MotionSource.UDP)
+            if (Type == MotionSource.Internal)
             {
-                DisableColumn("Motion");
-                DisableColumn("Amplitude");
-                DisableColumn("Velocity");
                 DisableColumn("Gain");
+            }
+            else if (Type == MotionSource.UDP)
+            {
+                DisableColumn("Amplitude");
+                DisableColumn("Frequency");
             }
         }
 
-        private void DisableColumn(string name, bool showName = false)
+        private void DisableColumn(string name, bool showName = true)
         {
             var col = dgv.Columns[name];
             var index = col.Index;
@@ -126,7 +160,14 @@ namespace VVA_Controller
             }
             col.Width = width;
             col.ReadOnly = true;
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             col.DefaultCellStyle.BackColor = Color.FromArgb(216, 216, 216);
+
+            col.HeaderCell.Style.WrapMode = DataGridViewTriState.True;
+            col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            col.Resizable = DataGridViewTriState.False;
+            col.SortMode = DataGridViewColumnSortMode.NotSortable;
+
             dgv.Columns.Insert(index, col);
         }
 
@@ -142,6 +183,7 @@ namespace VVA_Controller
                 else if (e.ColumnIndex == 2)
                 {
                     Value[e.RowIndex].motionDirection = (MotionDirection) cells["Motion"].Value;
+                    SetGainCellProperties(cells["Gain"], Value[e.RowIndex].motionSource, Value[e.RowIndex].motionDirection, Value[e.RowIndex].gain);
                 }
                 else if (e.ColumnIndex == 3)
                 {
@@ -149,7 +191,7 @@ namespace VVA_Controller
                 }
                 else if (e.ColumnIndex == 4)
                 {
-                    Value[e.RowIndex].frequency_Hz = float.Parse(cells["Velocity"].Value.ToString());
+                    Value[e.RowIndex].frequency_Hz = float.Parse(cells["Frequency"].Value.ToString());
                 }
                 else if (e.ColumnIndex == 5)
                 {
@@ -159,6 +201,7 @@ namespace VVA_Controller
                 {
                     Value[e.RowIndex].duration_s = float.Parse(cells["Duration"].Value.ToString());
                 }
+
                 OnValueChanged();
             }
         }
@@ -179,5 +222,6 @@ namespace VVA_Controller
                 OnSelectionChanged();
             }
         }
+
     }
 }

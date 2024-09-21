@@ -28,13 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dgv = new System.Windows.Forms.DataGridView();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dgv = new VVA_Controller.CustomDataGridView();
             this.Scene = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Source = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Motion = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Amplitude = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Velocity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Gain = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Amplitude = new CSUST.Data.TNumEditDataGridViewColumn();
+            this.Frequency = new CSUST.Data.TNumEditDataGridViewColumn();
+            this.Gain = new CSUST.Data.TNumEditDataGridViewColumn();
             this.Duration = new CSUST.Data.TNumEditDataGridViewColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
@@ -53,7 +58,7 @@
             this.Source,
             this.Motion,
             this.Amplitude,
-            this.Velocity,
+            this.Frequency,
             this.Gain,
             this.Duration});
             this.dgv.Location = new System.Drawing.Point(3, 3);
@@ -61,7 +66,7 @@
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(572, 118);
+            this.dgv.Size = new System.Drawing.Size(572, 114);
             this.dgv.TabIndex = 24;
             this.dgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellValueChanged);
             this.dgv.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgv_CurrentCellDirtyStateChanged);
@@ -73,14 +78,17 @@
             this.Scene.HeaderText = "Scene";
             this.Scene.Name = "Scene";
             this.Scene.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Scene.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.Scene.Width = 75;
             // 
             // Source
             // 
-            this.Source.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.Source.DefaultCellStyle = dataGridViewCellStyle1;
             this.Source.HeaderText = "Source";
             this.Source.Name = "Source";
+            this.Source.ReadOnly = true;
+            this.Source.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Source.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Source.Width = 75;
             // 
             // Motion
@@ -91,27 +99,52 @@
             // 
             // Amplitude
             // 
-            this.Amplitude.HeaderText = "Amplitude";
+            this.Amplitude.DecimalLength = 1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Format = "F1";
+            this.Amplitude.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Amplitude.HeaderText = "Amplitude (degrees)";
             this.Amplitude.Name = "Amplitude";
+            this.Amplitude.RemoveTrailingZeros = true;
+            this.Amplitude.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Amplitude.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Amplitude.Width = 75;
             // 
-            // Velocity
+            // Frequency
             // 
-            this.Velocity.HeaderText = "Velocity";
-            this.Velocity.Name = "Velocity";
-            this.Velocity.Width = 75;
+            this.Frequency.DecimalLength = 2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Format = "F2";
+            this.Frequency.DefaultCellStyle = dataGridViewCellStyle3;
+            this.Frequency.HeaderText = "Frequency (Hz)";
+            this.Frequency.Name = "Frequency";
+            this.Frequency.RemoveTrailingZeros = true;
+            this.Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Frequency.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Frequency.Width = 75;
             // 
             // Gain
             // 
+            this.Gain.DecimalLength = 4;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Format = "F4";
+            this.Gain.DefaultCellStyle = dataGridViewCellStyle4;
             this.Gain.HeaderText = "Gain";
             this.Gain.Name = "Gain";
+            this.Gain.RemoveTrailingZeros = true;
+            this.Gain.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Gain.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Gain.Width = 75;
             // 
             // Duration
             // 
-            this.Duration.HeaderText = "Seconds";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Format = "F0";
+            this.Duration.DefaultCellStyle = dataGridViewCellStyle5;
+            this.Duration.HeaderText = "Duration (seconds)";
             this.Duration.Name = "Duration";
-            this.Duration.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Duration.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Duration.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Duration.Width = 75;
             // 
             // TestTable
@@ -122,7 +155,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.dgv);
             this.Name = "TestTable";
-            this.Size = new System.Drawing.Size(578, 124);
+            this.Size = new System.Drawing.Size(578, 120);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
 
@@ -130,13 +163,13 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dgv;
+        private CustomDataGridView dgv;
         private System.Windows.Forms.DataGridViewComboBoxColumn Scene;
-        private System.Windows.Forms.DataGridViewComboBoxColumn Source;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source;
         private System.Windows.Forms.DataGridViewComboBoxColumn Motion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Amplitude;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Velocity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Gain;
+        private CSUST.Data.TNumEditDataGridViewColumn Amplitude;
+        private CSUST.Data.TNumEditDataGridViewColumn Frequency;
+        private CSUST.Data.TNumEditDataGridViewColumn Gain;
         private CSUST.Data.TNumEditDataGridViewColumn Duration;
     }
 }

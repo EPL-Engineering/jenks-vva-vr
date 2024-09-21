@@ -33,15 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KLib">
+      <HintPath>..\..\..\..\KLib\Framework\KLib.dll</HintPath>
+    </Reference>
     <Reference Include="KLib.Controls">
       <HintPath>..\..\..\..\KLib\Framework\KLib.Controls.dll</HintPath>
     </Reference>
     <Reference Include="KLib.Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\KLib\Framework\KLib.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="KLib.Utilities">
-      <HintPath>..\..\..\..\KLib\Framework\KLib.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="Serilog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.4.0.1\lib\net471\Serilog.dll</HintPath>
@@ -94,6 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettingscs.cs" />
+    <Compile Include="CustomDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomDataGridView.Designer.cs">
+      <DependentUpon>CustomDataGridView.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
