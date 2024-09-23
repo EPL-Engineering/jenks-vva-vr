@@ -12,12 +12,12 @@ using Jenks.VVA;
 
 namespace VVA_Controller
 {
-    public partial class OptionsDialog : Form
+    public partial class ScenePropertiesDialog : Form
     {
         public DotProperties DotProperties { set; get; }
         public GratingProperties GratingProperties { set; get; }
 
-        public OptionsDialog()
+        public ScenePropertiesDialog()
         {
             InitializeComponent();
         }

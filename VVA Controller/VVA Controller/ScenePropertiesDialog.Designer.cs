@@ -1,6 +1,6 @@
 ﻿namespace VVA_Controller
 {
-    partial class OptionsDialog
+    partial class ScenePropertiesDialog
     {
         /// <summary>
         /// Required designer variable.

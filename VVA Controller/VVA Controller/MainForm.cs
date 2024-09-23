@@ -86,9 +86,9 @@ namespace VVA_Controller
             MessageBox.Show("Saved defaults.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void mmEditOptions_Click(object sender, EventArgs e)
+        private void mmToolsScene_Click(object sender, EventArgs e)
         {
-            var dlg = new OptionsDialog();
+            var dlg = new ScenePropertiesDialog();
             dlg.DotProperties = _testSettings.dotProperties;
             dlg.GratingProperties = _testSettings.gratingProperties;
             dlg.ShowDialog();
@@ -152,7 +152,9 @@ namespace VVA_Controller
         {
             _haveVR = ConnectToVR();
             headsetLabel.Text = GetHeadset();
-            startButton.Enabled = _haveVR && _selectedTable != null;
+
+            startButton.Enabled = _haveVR && _selectedTable > -1;
+            mmToolsHeadset.Enabled = _haveVR;
         }
 
         private string GetHeadset()
@@ -479,9 +481,16 @@ namespace VVA_Controller
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void mmToolsHeadset_Click(object sender, EventArgs e)
         {
-            KTcpClient.SendMessage(_ipEndPoint, "Calibrate");
+            var dlg = new HeadsetDialog(_ipEndPoint);
+            dlg.ShowDialog();
+        }
+
+        private void mmToolsMoog_Click(object sender, EventArgs e)
+        {
+            var dlg = new MoogDialog();
+            dlg.ShowDialog();
         }
     }
 }

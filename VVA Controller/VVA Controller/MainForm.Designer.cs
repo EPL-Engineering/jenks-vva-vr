@@ -45,16 +45,16 @@ namespace VVA_Controller
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mmFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mmEditOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmToolsHeadset = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmToolsScene = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.startButton = new System.Windows.Forms.Button();
-            this.stopButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.datafileTextBox = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.mmToolsMoog = new System.Windows.Forms.ToolStripMenuItem();
             this.testTable = new VVA_Controller.TestTable();
             this.controlTable = new VVA_Controller.TestTable();
+            this.startButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -172,17 +172,27 @@ namespace VVA_Controller
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mmEditOptions});
+            this.mmToolsHeadset,
+            this.mmToolsMoog,
+            this.mmToolsScene});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 19);
-            this.editToolStripMenuItem.Text = "&Edit";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(46, 19);
+            this.editToolStripMenuItem.Text = "&Tools";
             // 
-            // mmEditOptions
+            // mmToolsHeadset
             // 
-            this.mmEditOptions.Name = "mmEditOptions";
-            this.mmEditOptions.Size = new System.Drawing.Size(116, 22);
-            this.mmEditOptions.Text = "&Options";
-            this.mmEditOptions.Click += new System.EventHandler(this.mmEditOptions_Click);
+            this.mmToolsHeadset.Enabled = false;
+            this.mmToolsHeadset.Name = "mmToolsHeadset";
+            this.mmToolsHeadset.Size = new System.Drawing.Size(180, 22);
+            this.mmToolsHeadset.Text = "&Headset";
+            this.mmToolsHeadset.Click += new System.EventHandler(this.mmToolsHeadset_Click);
+            // 
+            // mmToolsScene
+            // 
+            this.mmToolsScene.Name = "mmToolsScene";
+            this.mmToolsScene.Size = new System.Drawing.Size(180, 22);
+            this.mmToolsScene.Text = "&Scene properties";
+            this.mmToolsScene.Click += new System.EventHandler(this.mmToolsScene_Click);
             // 
             // label1
             // 
@@ -194,6 +204,56 @@ namespace VVA_Controller
             this.label1.Size = new System.Drawing.Size(79, 24);
             this.label1.TabIndex = 24;
             this.label1.Text = "Controls";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Teal;
+            this.label2.Location = new System.Drawing.Point(17, 208);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 24);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Tests";
+            // 
+            // datafileTextBox
+            // 
+            this.datafileTextBox.Location = new System.Drawing.Point(200, 482);
+            this.datafileTextBox.Name = "datafileTextBox";
+            this.datafileTextBox.ReadOnly = true;
+            this.datafileTextBox.Size = new System.Drawing.Size(379, 20);
+            this.datafileTextBox.TabIndex = 28;
+            // 
+            // mmToolsMoog
+            // 
+            this.mmToolsMoog.Name = "mmToolsMoog";
+            this.mmToolsMoog.Size = new System.Drawing.Size(180, 22);
+            this.mmToolsMoog.Text = "&Moog";
+            this.mmToolsMoog.Click += new System.EventHandler(this.mmToolsMoog_Click);
+            // 
+            // testTable
+            // 
+            this.testTable.AutoSize = true;
+            this.testTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.testTable.Location = new System.Drawing.Point(21, 235);
+            this.testTable.Name = "testTable";
+            this.testTable.Size = new System.Drawing.Size(578, 120);
+            this.testTable.TabIndex = 30;
+            this.testTable.Type = Jenks.VVA.MotionSource.Internal;
+            this.testTable.Value = null;
+            this.testTable.SelectionChanged += new System.EventHandler(this.testTable_SelectionChanged);
+            // 
+            // controlTable
+            // 
+            this.controlTable.AutoSize = true;
+            this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.controlTable.Location = new System.Drawing.Point(21, 66);
+            this.controlTable.Name = "controlTable";
+            this.controlTable.Size = new System.Drawing.Size(578, 120);
+            this.controlTable.TabIndex = 29;
+            this.controlTable.Type = Jenks.VVA.MotionSource.Internal;
+            this.controlTable.Value = null;
+            this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
             // 
             // startButton
             // 
@@ -223,73 +283,11 @@ namespace VVA_Controller
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Teal;
-            this.label2.Location = new System.Drawing.Point(17, 208);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 24);
-            this.label2.TabIndex = 26;
-            this.label2.Text = "Tests";
-            // 
-            // datafileTextBox
-            // 
-            this.datafileTextBox.Location = new System.Drawing.Point(200, 482);
-            this.datafileTextBox.Name = "datafileTextBox";
-            this.datafileTextBox.ReadOnly = true;
-            this.datafileTextBox.Size = new System.Drawing.Size(379, 20);
-            this.datafileTextBox.TabIndex = 28;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(192, 388);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 31;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(395, 360);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 32;
-            // 
-            // testTable
-            // 
-            this.testTable.AutoSize = true;
-            this.testTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.testTable.Location = new System.Drawing.Point(21, 235);
-            this.testTable.Name = "testTable";
-            this.testTable.Size = new System.Drawing.Size(578, 120);
-            this.testTable.TabIndex = 30;
-            this.testTable.Type = Jenks.VVA.MotionSource.Internal;
-            this.testTable.Value = null;
-            this.testTable.SelectionChanged += new System.EventHandler(this.testTable_SelectionChanged);
-            // 
-            // controlTable
-            // 
-            this.controlTable.AutoSize = true;
-            this.controlTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.controlTable.Location = new System.Drawing.Point(21, 66);
-            this.controlTable.Name = "controlTable";
-            this.controlTable.Size = new System.Drawing.Size(578, 120);
-            this.controlTable.TabIndex = 29;
-            this.controlTable.Type = Jenks.VVA.MotionSource.Internal;
-            this.controlTable.Value = null;
-            this.controlTable.SelectionChanged += new System.EventHandler(this.controlTable_SelectionChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(614, 552);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.testTable);
             this.Controls.Add(this.controlTable);
             this.Controls.Add(this.datafileTextBox);
@@ -305,7 +303,7 @@ namespace VVA_Controller
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "VVA VR Controller";
+            this.Text = " ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
@@ -335,14 +333,14 @@ namespace VVA_Controller
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mmFileExit;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mmEditOptions;
+        private System.Windows.Forms.ToolStripMenuItem mmToolsScene;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripStatusLabel headsetLabel;
         private System.Windows.Forms.TextBox datafileTextBox;
         private TestTable controlTable;
         private TestTable testTable;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolStripMenuItem mmToolsHeadset;
+        private System.Windows.Forms.ToolStripMenuItem mmToolsMoog;
     }
 }
 
