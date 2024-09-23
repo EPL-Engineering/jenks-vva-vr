@@ -42,7 +42,7 @@ public class DataLogger : MonoBehaviour
     {
         if (!_isRunning) return;
 
-        _log.StartEntry(Time.timeSinceLevelLoad, controller.X, controller.Z);
+        _log.StartEntry(Time.timeSinceLevelLoad, controller.X, controller.RollTilt);
 
         if (_hmd == VRHMD.Vive)
         {
@@ -51,10 +51,12 @@ public class DataLogger : MonoBehaviour
         else if (_hmd == VRHMD.FOVE)
         {
             var ray = FoveManager.GetHmdCombinedGazeRay().value;
-            _log.AddGaze(ray.direction.x, ray.direction.y);
+            //_log.AddGaze(ray.direction.x, ray.direction.y);
+            var torsionLeft = FoveManager.GetEyeTorsion(Fove.Eye.Left).value;
+            var torsionRight = FoveManager.GetEyeTorsion(Fove.Eye.Right).value;
+            Debug.Log(torsionLeft);
+            _log.AddGaze(torsionLeft, torsionRight);
         }
-        //_log.AddEye(_tracker.LeftPosition, _tracker.LeftGazeAngle, _tracker.LeftGaze, _tracker.LeftSize, _tracker.LeftOpenness);
-        //_log.AddEye(_tracker.RightPosition, _tracker.RightGazeAngle, _tracker.RightGaze, _tracker.RightSize, _tracker.RightOpenness);
 
         _log.EndEntry();
     }

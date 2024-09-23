@@ -31,6 +31,8 @@ public class Main : MonoBehaviour
     public VisualFieldController visualFieldController;
     public ViveEyeTracker viveEyeTracker;
 
+    public MoogUDPServer moogUDPServer;
+
     public DataLogger dataLogger;
 
     private bool _listenerReady = false;
@@ -79,6 +81,8 @@ public class Main : MonoBehaviour
 
         _discoveryServer = gameObject.AddComponent<NetworkDiscoveryServer>();
         StartServer();
+
+        moogUDPServer.StartReceiving();
     }
 
     private void InitializeHMD()
@@ -145,7 +149,9 @@ public class Main : MonoBehaviour
 
     void Return()
     {
+        moogUDPServer.StopReceiving();
         StopServer();
+
         Debug.Log("App closing");
 #if !UNITY_EDITOR
         Application.Quit();
@@ -226,6 +232,10 @@ public class Main : MonoBehaviour
                 StartCoroutine(StopTest());
                 break;
 
+            case "GetEyeTrackingReady":
+                _listener.SendAcknowledgement(IsEyeTrackingReady());
+                break;
+
             case "GetFilename":
                 _listener.WriteStringAsByteArray(dataLogger.Filename);
                 break;
@@ -234,12 +244,16 @@ public class Main : MonoBehaviour
                 _listener.WriteStringAsByteArray(_vrHMD.ToString());
                 break;
 
+            case "GetHeadsetInformation":
+                _listener.WriteStringAsByteArray(GetHeadsetInformation());
+                break;
+
             case "GetStatus":
                 _listener.SendAcknowledgement(_sceneRunning);
                 break;
 
-            case "Calibrate":
-                _listener.SendAcknowledgement(_sceneRunning);
+            case "DoEyeCalibration":
+                _listener.SendAcknowledgement();
                 StartCoroutine(DoEyeCalibration());
                 break;
 
@@ -278,6 +292,7 @@ public class Main : MonoBehaviour
         }
         else if (_vrHMD == VRHMD.FOVE)
         {
+            FoveManager.RegisterCapabilities(Fove.ClientCapabilities.EyeTorsion);
             Debug.Log("Fove tracking ready = " + FoveManager.IsEyeTrackingReady().value);
         }
 
@@ -301,9 +316,24 @@ public class Main : MonoBehaviour
                         transVelocity: test.frequency_Hz);
                 }
             }
+            else if (test.motionSource == MotionSource.UDP)
+            {
+                visualFieldController.StartMotion(target, moogUDPServer);
+            }
         }
 
         yield break;
+    }
+
+    private bool IsEyeTrackingReady()
+    {
+        bool isReady = false;
+        if (_vrHMD == VRHMD.FOVE)
+        {
+            isReady = FoveManager.IsEyeTrackingReady();
+        }
+
+        return isReady;
     }
 
     private float ConvertDegreesToMeters(float degrees)
@@ -363,12 +393,48 @@ public class Main : MonoBehaviour
         messageText.enabled = true;
     }
 
+    private string GetHeadsetInformation()
+    {
+        System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+        if (_vrHMD == VRHMD.FOVE)
+        {
+            var hardwareInfo = FoveManager.Headset.QueryHardwareInfo().value;
+            var manufacturer = FromCharArray(hardwareInfo.manufacturer);
+            var model = FromCharArray(hardwareInfo.modelName);
+            var sn = FromCharArray(hardwareInfo.serialNumber);
+
+            builder.AppendLine("Headset: " + model);
+            builder.AppendLine("SN: " + sn);
+            builder.AppendLine();
+            builder.AppendLine("Eye tracking");
+            builder.AppendLine("------------");
+            builder.AppendLine("Enabled:" + FoveManager.IsEyeTrackingEnabled().value);
+            builder.AppendLine("Calibrated:" + FoveManager.IsEyeTrackingCalibrated().value);
+            builder.AppendLine("Ready:" + FoveManager.IsEyeTrackingReady().value);
+        }
+
+        Debug.Log(builder.ToString());
+
+        return builder.ToString();
+    }
+
+    private string FromCharArray(char[] arr)
+    {
+        int len = 0;
+        while (len < arr.Length)
+        {
+            if (arr[len] == (char) 0)
+            {
+                break;
+            }
+            len++;
+        }
+        return new string(arr, 0, len);
+    }
+
     IEnumerator DoEyeCalibration()
     {
-        Debug.Log("Fove eye tracking enabled:" + FoveManager.IsEyeTrackingEnabled().value);
-        Debug.Log("Fove eye tracking ready:" + FoveManager.IsEyeTrackingReady().value);
-        Debug.Log("Fove eye tracking calibrated:" + FoveManager.IsEyeTrackingCalibrated().value);
-
         FoveManager.StartEyeTrackingCalibration();
 
         yield break;

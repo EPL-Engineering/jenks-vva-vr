@@ -58,7 +58,7 @@
     <Compile Include="Assets\ViveSR\Scripts\ViveSR_RigidReconstructionRenderer.cs" />
     <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Module_Enums.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Utility\FoveUnityUtils.cs" />
-    <Compile Include="Assets\Scripts\Moog\KLib.Jenks.JoystickMessages.cs" />
+    <Compile Include="Assets\Scripts\Moog\Moog.JoystickMessages.cs" />
     <Compile Include="Assets\Scripts\VisualFieldController.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveManager.Internal.cs" />
     <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Controller_Pose_Enums.cs" />
@@ -73,7 +73,6 @@
     <Compile Include="Assets\Scripts\GratingController.cs" />
     <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeDataType_v2.cs" />
     <Compile Include="Assets\ViveSR\Scripts\ViveSR_SceneUnderstanding.cs" />
-    <Compile Include="Assets\Scripts\Moog\TracingGame.Vestibular.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.internal.cs" />
     <Compile Include="Assets\Scripts\DataLog.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Classes\CalibrationData.cs" />
@@ -175,6 +174,7 @@
     <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeShapeTableDrawer.cs" />
     <Compile Include="Assets\ViveSR\Scripts\ViveSR_DualCameraRig.cs" />
     <Compile Include="Assets\ViveSR\Scripts\ViveSR_AISceneRenderer.cs" />
+    <Compile Include="Assets\Scripts\Moog\MoogUDPServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ViveSR\Shaders\Resources\StencilSkyboxCubed.shader" />

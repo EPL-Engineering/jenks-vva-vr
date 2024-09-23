@@ -46,11 +46,11 @@ namespace VVA_Controller
             this.mmFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mmToolsHeadset = new System.Windows.Forms.ToolStripMenuItem();
+            this.mmToolsMoog = new System.Windows.Forms.ToolStripMenuItem();
             this.mmToolsScene = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.datafileTextBox = new System.Windows.Forms.TextBox();
-            this.mmToolsMoog = new System.Windows.Forms.ToolStripMenuItem();
             this.testTable = new VVA_Controller.TestTable();
             this.controlTable = new VVA_Controller.TestTable();
             this.startButton = new System.Windows.Forms.Button();
@@ -66,7 +66,7 @@ namespace VVA_Controller
             this.headsetLabel,
             this.progressBar,
             this.elapsedTimeLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 530);
+            this.statusStrip.Location = new System.Drawing.Point(0, 498);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(614, 22);
             this.statusStrip.TabIndex = 2;
@@ -183,14 +183,21 @@ namespace VVA_Controller
             // 
             this.mmToolsHeadset.Enabled = false;
             this.mmToolsHeadset.Name = "mmToolsHeadset";
-            this.mmToolsHeadset.Size = new System.Drawing.Size(180, 22);
+            this.mmToolsHeadset.Size = new System.Drawing.Size(161, 22);
             this.mmToolsHeadset.Text = "&Headset";
             this.mmToolsHeadset.Click += new System.EventHandler(this.mmToolsHeadset_Click);
+            // 
+            // mmToolsMoog
+            // 
+            this.mmToolsMoog.Name = "mmToolsMoog";
+            this.mmToolsMoog.Size = new System.Drawing.Size(161, 22);
+            this.mmToolsMoog.Text = "&Moog";
+            this.mmToolsMoog.Click += new System.EventHandler(this.mmToolsMoog_Click);
             // 
             // mmToolsScene
             // 
             this.mmToolsScene.Name = "mmToolsScene";
-            this.mmToolsScene.Size = new System.Drawing.Size(180, 22);
+            this.mmToolsScene.Size = new System.Drawing.Size(161, 22);
             this.mmToolsScene.Text = "&Scene properties";
             this.mmToolsScene.Click += new System.EventHandler(this.mmToolsScene_Click);
             // 
@@ -218,18 +225,11 @@ namespace VVA_Controller
             // 
             // datafileTextBox
             // 
-            this.datafileTextBox.Location = new System.Drawing.Point(200, 482);
+            this.datafileTextBox.Location = new System.Drawing.Point(200, 446);
             this.datafileTextBox.Name = "datafileTextBox";
             this.datafileTextBox.ReadOnly = true;
             this.datafileTextBox.Size = new System.Drawing.Size(379, 20);
             this.datafileTextBox.TabIndex = 28;
-            // 
-            // mmToolsMoog
-            // 
-            this.mmToolsMoog.Name = "mmToolsMoog";
-            this.mmToolsMoog.Size = new System.Drawing.Size(180, 22);
-            this.mmToolsMoog.Text = "&Moog";
-            this.mmToolsMoog.Click += new System.EventHandler(this.mmToolsMoog_Click);
             // 
             // testTable
             // 
@@ -260,7 +260,7 @@ namespace VVA_Controller
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startButton.Image = global::VVA_Controller.Properties.Resources.media_play_green;
             this.startButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.startButton.Location = new System.Drawing.Point(21, 465);
+            this.startButton.Location = new System.Drawing.Point(21, 429);
             this.startButton.Name = "startButton";
             this.startButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.startButton.Size = new System.Drawing.Size(144, 51);
@@ -274,7 +274,7 @@ namespace VVA_Controller
             this.stopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopButton.Image = global::VVA_Controller.Properties.Resources.media_stop_red;
             this.stopButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.stopButton.Location = new System.Drawing.Point(21, 465);
+            this.stopButton.Location = new System.Drawing.Point(21, 429);
             this.stopButton.Name = "stopButton";
             this.stopButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.stopButton.Size = new System.Drawing.Size(144, 51);
@@ -287,7 +287,7 @@ namespace VVA_Controller
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 552);
+            this.ClientSize = new System.Drawing.Size(614, 520);
             this.Controls.Add(this.testTable);
             this.Controls.Add(this.controlTable);
             this.Controls.Add(this.datafileTextBox);

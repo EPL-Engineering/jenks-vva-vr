@@ -616,6 +616,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114000010313761880, guid: 042142d01b081ab4ca555ec74a04c2cb,
         type: 3}
+      propertyPath: disableTimewarp
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010313761880, guid: 042142d01b081ab4ca555ec74a04c2cb,
+        type: 3}
       propertyPath: fetchOrientation
       value: 0
       objectReference: {fileID: 0}
@@ -634,6 +639,7 @@ GameObject:
   - component: {fileID: 1711859562}
   - component: {fileID: 1711859563}
   - component: {fileID: 1711859564}
+  - component: {fileID: 1711859565}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -661,6 +667,7 @@ MonoBehaviour:
   grating: {fileID: 1887519853}
   visualFieldController: {fileID: 1711859562}
   viveEyeTracker: {fileID: 1711859564}
+  moogUDPServer: {fileID: 1711859565}
   dataLogger: {fileID: 1711859563}
 --- !u!4 &1711859561
 Transform:
@@ -712,6 +719,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 224b26aef3b3cc045847807fbaf41d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1711859565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711859559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e731f9077da66954da2d8d32081a4d55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1887519852

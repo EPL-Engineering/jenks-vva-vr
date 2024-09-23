@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace KLib.Jenks
+namespace Moog
 {
     enum JoystickMsgId
     {

@@ -72,7 +72,7 @@ namespace VVA_Controller
 
             await RestoreTests();
 
-            //TryVRConnection();
+            TryVRConnection();
         }
 
         private void mmFileExit_Click(object sender, EventArgs e)
@@ -160,6 +160,7 @@ namespace VVA_Controller
         private string GetHeadset()
         {
             string result = "---";
+            bool eyeTrackingReady = false;
             if (_haveVR)
             {
                 result = KTcpClient.SendMessageReceiveString(_ipEndPoint, "GetHeadset");
@@ -167,7 +168,13 @@ namespace VVA_Controller
                 {
                     result = "No HMD";
                 }
+                else
+                {
+                    eyeTrackingReady = KTcpClient.SendMessage(_ipEndPoint, "GetEyeTrackingReady") > 0;
+                }
             }
+
+            headsetLabel.BackColor = eyeTrackingReady ? Color.LightGreen : connectionStatusLabel.BackColor;
 
             return result;
         }
@@ -489,7 +496,10 @@ namespace VVA_Controller
 
         private void mmToolsMoog_Click(object sender, EventArgs e)
         {
-            var dlg = new MoogDialog();
+            KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
+            KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.gratingProperties));
+
+            var dlg = new MoogDialog(_ipEndPoint, GetSelectedTest());
             dlg.ShowDialog();
         }
     }
