@@ -98,6 +98,7 @@ public class Main : MonoBehaviour
             _fov = foveCamera.fieldOfView;
             _vrHMD = VRHMD.FOVE;
             Debug.Log("FOVE headset detected");
+            FoveManager.RegisterCapabilities(Fove.ClientCapabilities.EyeTorsion);
         }
 
         if (_vrHMD == VRHMD.None)
@@ -292,7 +293,6 @@ public class Main : MonoBehaviour
         }
         else if (_vrHMD == VRHMD.FOVE)
         {
-            FoveManager.RegisterCapabilities(Fove.ClientCapabilities.EyeTorsion);
             Debug.Log("Fove tracking ready = " + FoveManager.IsEyeTrackingReady().value);
         }
 
@@ -307,18 +307,21 @@ public class Main : MonoBehaviour
             {
                 if (test.motionDirection == MotionDirection.RollTilt)
                 {
-                    visualFieldController.StartMotion(target, tiltAmplitude: test.amplitude_degrees, tiltVelocity: test.frequency_Hz);
+                    visualFieldController.StartMotion(target, amplitude: test.amplitude_degrees, frequency: test.frequency_Hz);
                 }
                 else if (test.motionDirection == MotionDirection.Translation)
                 {
-                    visualFieldController.StartMotion(target, 
-                        transAmplitude: ConvertDegreesToMeters(test.amplitude_degrees), 
-                        transVelocity: test.frequency_Hz);
+                    visualFieldController.StartMotion(target,
+                        amplitude: test.amplitude_degrees,
+                        frequency: test.frequency_Hz,
+                        gain: test.gain,
+                        translate: true
+                        );
                 }
             }
             else if (test.motionSource == MotionSource.UDP)
             {
-                visualFieldController.StartMotion(target, moogUDPServer);
+                visualFieldController.StartMotion(target, moogUDPServer, test.gain, test.motionDirection==MotionDirection.Translation);
             }
         }
 
@@ -334,15 +337,6 @@ public class Main : MonoBehaviour
         }
 
         return isReady;
-    }
-
-    private float ConvertDegreesToMeters(float degrees)
-    {
-        var aspectRatio = (float)Screen.width / Screen.height;
-        float hfov = 2 * Mathf.Rad2Deg * Mathf.Atan(aspectRatio * Mathf.Tan(_fov / 2 * Mathf.Deg2Rad));
-        float meters = 2 * _gratingProperties.distance_m * Mathf.Tan(degrees / 2 * Mathf.Deg2Rad);
-
-        return meters;
     }
 
     private void SetScene(Scene scene, float amplitude)

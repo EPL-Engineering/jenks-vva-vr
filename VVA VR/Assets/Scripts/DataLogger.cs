@@ -29,7 +29,7 @@ public class DataLogger : MonoBehaviour
         _hmd = hmd;
         _isRunning = true;
 
-        _log.Initialize(config, eyeTracking: _hmd != VRHMD.None);
+        _log.Initialize(config, hmd);
     }
 
     public void StopLogging()
@@ -51,11 +51,11 @@ public class DataLogger : MonoBehaviour
         else if (_hmd == VRHMD.FOVE)
         {
             var ray = FoveManager.GetHmdCombinedGazeRay().value;
-            //_log.AddGaze(ray.direction.x, ray.direction.y);
+            _log.AddGaze(ray.direction.x, ray.direction.y);
+
             var torsionLeft = FoveManager.GetEyeTorsion(Fove.Eye.Left).value;
             var torsionRight = FoveManager.GetEyeTorsion(Fove.Eye.Right).value;
-            Debug.Log(torsionLeft);
-            _log.AddGaze(torsionLeft, torsionRight);
+            _log.AddTorsion(torsionLeft, torsionRight);
         }
 
         _log.EndEntry();

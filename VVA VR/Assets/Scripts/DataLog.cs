@@ -25,19 +25,24 @@ public class DataLog
         _lengthIncrement = lengthIncrement;
     }
 
-    public void Initialize(string header, bool eyeTracking)
+    public void Initialize(string header, VRHMD vrHMD)
     {
         List<string> columnHeads = new List<string>();
         columnHeads.Add("Time_s");
         {
             columnHeads.Add("X");
-            columnHeads.Add("Z");
+            columnHeads.Add("RollTilt");
         }
 
-        if (eyeTracking)
+        if (vrHMD != VRHMD.None)
         {
             columnHeads.Add("GazeAngX");
             columnHeads.Add("GazeAngY");
+        }
+        if (vrHMD == VRHMD.FOVE)
+        {
+            columnHeads.Add("TorsionLeft");
+            columnHeads.Add("TorsionRight");
         }
 
         var dt = System.DateTime.Now;
@@ -65,14 +70,9 @@ public class DataLog
         _dataPath = Path.Combine(folder, $"VVA-DataLog-{dt.ToString("yyyyMMdd_Hmmss")}.txt");
     }
 
-    public void StartEntry(float time, float x, float z)
+    public void StartEntry(float time, float x, float rollTilt)
     {
-        _data.Append($"{time,15:F4}\t{x,10:F4}\t{z,10:F4}");
-    }
-
-    public void StartGazeEntry(float time, Vector2 targetPosition)
-    {
-        _data.Append($"{time,15:F4}\t{targetPosition.x,10:F4}\t{targetPosition.y,10:F4}");
+        _data.Append($"{time,15:F4}\t{x,10:F4}\t{rollTilt,10:F4}");
     }
 
     public void AddGaze(float x, float y)
@@ -80,12 +80,9 @@ public class DataLog
         _data.Append($"\t{x,10:F4}\t{y,10:F4}");
     }
 
-    public void AddEye(Vector2 position, Vector2 gaze, Vector3 gazeDir, float size, float openness)
+    public void AddTorsion(float left, float right)
     {
-        _data.Append($"\t{position.x,10:F4}\t{position.y,10:F4}");
-        _data.Append($"\t{gaze.x,10:F4}\t{gaze.y,10:F4}");
-        _data.Append($"\t{gazeDir.x,10:F4}\t{gazeDir.y,10:F4}\t{gazeDir.z,10:F4}");
-        _data.Append($"\t{size,10:F4}\t{openness,10:F4}");
+        _data.Append($"\t{left,10:F4}\t{right,10:F4}");
     }
 
     public void EndEntry()

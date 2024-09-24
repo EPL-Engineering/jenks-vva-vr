@@ -68,7 +68,7 @@ namespace VVA_Controller
             this.elapsedTimeLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 498);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(614, 22);
+            this.statusStrip.Size = new System.Drawing.Size(604, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -129,7 +129,7 @@ namespace VVA_Controller
             this.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(614, 23);
+            this.mainMenu.Size = new System.Drawing.Size(604, 23);
             this.mainMenu.TabIndex = 22;
             this.mainMenu.Text = "menuStrip1";
             // 
@@ -287,7 +287,7 @@ namespace VVA_Controller
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 520);
+            this.ClientSize = new System.Drawing.Size(604, 520);
             this.Controls.Add(this.testTable);
             this.Controls.Add(this.controlTable);
             this.Controls.Add(this.datafileTextBox);

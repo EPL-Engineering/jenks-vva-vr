@@ -6,11 +6,10 @@ public class VisualFieldController : MonoBehaviour
 {
     private Transform _target;
 
-    private float _tiltAmplitude;
-    private float _tiltVelocity;
-
-    private float _transAmplitude;
-    private float _transVelocity;
+    private float _amplitude;
+    private float _frequency;
+    private float _gain;
+    private bool _translate = false;
 
     private float _startTime;
     private bool _isRunning = false;
@@ -19,31 +18,32 @@ public class VisualFieldController : MonoBehaviour
 
     private MoogUDPServer _moogUDPServer;
 
-    public float X { get; private set; } = 0;
     public float RollTilt { get; private set; } = 0;
+    public float X { get; private set; } = 0;
 
-    public void StartMotion(Transform target, float tiltAmplitude = 0, float tiltVelocity = 0, float transAmplitude = 0, float transVelocity = 0)
+    public void StartMotion(Transform target, float amplitude = 0, float frequency = 0, float gain = 1, bool translate = false)
     {
         _useUDP = false;
 
         _target = target;
 
-        _tiltAmplitude = tiltAmplitude;
-        _tiltVelocity = tiltVelocity;
-
-        _transAmplitude = transAmplitude;
-        _transVelocity = transVelocity;
+        _amplitude = amplitude;
+        _frequency = frequency;
+        _gain = gain;
+        _translate = translate;
 
         _startTime = Time.time;
         _isRunning = true;
     }
 
-    public void StartMotion(Transform target, MoogUDPServer moogUDPServer)
+    public void StartMotion(Transform target, MoogUDPServer moogUDPServer, float gain, bool translate)
     {
         _useUDP = true;
 
         _target = target;
         _moogUDPServer = moogUDPServer;
+        _gain = gain;
+        _translate = translate;
 
         _startTime = Time.time;
         _isRunning = true;
@@ -63,17 +63,22 @@ public class VisualFieldController : MonoBehaviour
         {
             if (_useUDP)
             {
-                X = _moogUDPServer.X;
                 RollTilt = _moogUDPServer.RollTilt;
             }
             else
             {
-                X = _transAmplitude * Mathf.Sin(2 * Mathf.PI * _transVelocity * (Time.time - _startTime));
-                RollTilt = _tiltAmplitude * Mathf.Sin(2 * Mathf.PI * _tiltVelocity * (Time.time - _startTime));
+                RollTilt = _amplitude * Mathf.Sin(2 * Mathf.PI * _frequency * (Time.time - _startTime));
             }
 
-            _target.eulerAngles = new Vector3(0, 0, RollTilt);
-            _target.position = new Vector3(X, 0, 0);
+            if (_translate)
+            {
+                X = _gain * RollTilt;
+                _target.position = new Vector3(X, 0, 0);
+            }
+            else
+            {
+                _target.eulerAngles = new Vector3(0, 0, RollTilt);
+            }
         }
     }
 }
