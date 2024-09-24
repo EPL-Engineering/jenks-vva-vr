@@ -65,7 +65,7 @@ public class Main : MonoBehaviour
     {
         Application.runInBackground = true;
 #if UNITY_EDITOR
-        Application.targetFrameRate = 90;
+        //Application.targetFrameRate = 90;
 #endif
 
         KLogger.Create(
@@ -74,6 +74,10 @@ public class Main : MonoBehaviour
             .StartLogging();
 
         Debug.Log("App started");
+
+
+        //grating.InitializeGrating(new GratingProperties(), 60);
+        //return;
 
         InitializeHMD();
 
@@ -161,7 +165,7 @@ public class Main : MonoBehaviour
 
     void OnDestroy()
     {
-        StopServer();
+        //StopServer();
         Application.logMessageReceived -= HandleException;
     }
 
@@ -321,7 +325,7 @@ public class Main : MonoBehaviour
             }
             else if (test.motionSource == MotionSource.UDP)
             {
-                visualFieldController.StartMotion(target, moogUDPServer, test.gain, test.motionDirection==MotionDirection.Translation);
+                visualFieldController.StartMotion(target, moogUDPServer, test.gain, test.motionDirection == MotionDirection.Translation);
             }
         }
 
@@ -355,8 +359,11 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Bars)
         {
+
+            Debug.Log("w = " + UnityEngine.XR.XRSettings.eyeTextureWidth);
+
             grating.InitializeGrating(_gratingProperties, _fov);
-            mainCamera.backgroundColor = Color.white;
+            //mainCamera.backgroundColor = Color.white;
         }
         _sceneRunning = true;
     }

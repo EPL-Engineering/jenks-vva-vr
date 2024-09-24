@@ -11,52 +11,95 @@ public class GratingController : MonoBehaviour
     public GameObject barPrefab;
 
     private GameObject _bars;
+    public Material material;
+    public Transform quad;
 
     public void InitializeGrating(GratingProperties properties, float vfov)
     {
         transform.localEulerAngles = Vector3.zero;
-        transform.position = Vector3.zero;
+        transform.position = new Vector3(0, 0, 1);
 
         var aspectRatio = (float)Screen.width / Screen.height;
-        float height = 2 * properties.distance_m * Mathf.Tan(vfov / 2 * Mathf.Deg2Rad);
 
-        float hfov = 2 * Mathf.Rad2Deg * Mathf.Atan(aspectRatio * Mathf.Tan(vfov/2 * Mathf.Deg2Rad));
-        float width = 2 * 2 * properties.distance_m * Mathf.Tan(hfov / 2 * Mathf.Deg2Rad);
+        float degreesPerBar = 1f / properties.density_deg;
 
-        var delta_x = 2 * properties.distance_m * Mathf.Tan(1 / properties.density_deg / 2 * Mathf.Deg2Rad);
-        var numBars = Mathf.CeilToInt(width / delta_x);
-        if (numBars % 2 == 0) ++numBars;
-        KLogger.Debug("numBars = " + numBars);
+        float hfov = 2 * Mathf.Rad2Deg * Mathf.Atan(aspectRatio * Mathf.Tan(vfov / 2 * Mathf.Deg2Rad));
+        float width_wu = 2 * properties.distance_m * Mathf.Tan(hfov / 2 * Mathf.Deg2Rad);
 
-        var barSize = 2 * properties.distance_m * Mathf.Tan(properties.size_deg / 2 * Mathf.Deg2Rad);
-        barSize = 0.01f;
+        width_wu *= 2;
 
-        float x = -(numBars - 1) / 2 * delta_x;
+        var wuPerBar = 2 * properties.distance_m * Mathf.Tan(degreesPerBar / 2 * Mathf.Deg2Rad);
+        float numBars = (width_wu / wuPerBar);
 
-        KLogger.Debug("barSize (cm) = " + barSize * 100);
+        float pixelsPerWU = (float)Screen.width / width_wu;
+        var pixelsPerBar = Mathf.RoundToInt(wuPerBar * pixelsPerWU);
 
-        _bars = new GameObject("bars");
-        _bars.transform.parent = transform;
+        float barWidth_wu = 2 * properties.distance_m * Mathf.Tan(properties.size_deg / 2 * Mathf.Deg2Rad);
+        int barWidth_pixels = Mathf.CeilToInt(barWidth_wu * pixelsPerWU);
 
-        barPrefab.SetActive(true);
-        barPrefab.transform.localScale = new Vector3(barSize, 10, 1);
+        Debug.Log("Screen width (pixels) = " + Screen.width);
+        Debug.Log("Screen width (w.u.) = " + width_wu);
+        Debug.Log("Screen width (degrees) = " + hfov);
+        Debug.Log("world units per bar = " + wuPerBar);
+        Debug.Log("num bars = " + numBars);
 
-        for (int k = 0; k < numBars; k++)
+        Texture2D tex = new Texture2D(pixelsPerBar, pixelsPerBar, TextureFormat.ARGB32, false);
+        var colors = tex.GetPixels();
+        for (int k = 0; k < colors.Length; k++) colors[k] = Color.white;
+
+        int offset = Mathf.RoundToInt((float)(pixelsPerBar - barWidth_pixels) / 2);
+        for (int krow = 0; krow < pixelsPerBar; krow++)
         {
-            var obj = GameObject.Instantiate(barPrefab, new Vector3(x, 0, 0), Quaternion.identity, _bars.transform);
-            obj.name = "Bar " + (k+1).ToString();
-
-            x += delta_x;
+            for (int kcol = 0; kcol < barWidth_pixels; kcol++) colors[kcol + offset] = Color.black;
+            offset += pixelsPerBar;
         }
 
-        barPrefab.SetActive(false);
-        _bars.transform.localPosition = new Vector3(0, 0, 1);
+        tex.SetPixels(colors);
+        tex.Apply();
+
+        quad.localScale = new Vector3(width_wu, width_wu, 1);
+        material.mainTexture = tex;
+        material.mainTextureScale = new Vector2(numBars, 1);
+
+
+        //float height = 2 * properties.distance_m * Mathf.Tan(vfov / 2 * Mathf.Deg2Rad);
+
+
+        //var delta_x = 2 * properties.distance_m * Mathf.Tan(1 / properties.density_deg / 2 * Mathf.Deg2Rad);
+        //var numBars = Mathf.CeilToInt(width / delta_x);
+        //if (numBars % 2 == 0) ++numBars;
+        //KLogger.Debug("numBars = " + numBars);
+
+        //var barSize = 2 * properties.distance_m * Mathf.Tan(properties.size_deg / 2 * Mathf.Deg2Rad);
+
+        //float x = -(numBars - 1) / 2 * delta_x;
+
+        //KLogger.Debug("barSize (cm) = " + barSize * 100);
+
+        //_bars = new GameObject("bars");
+        //_bars.transform.parent = transform;
+
+        //barPrefab.SetActive(true);
+        //barPrefab.transform.localScale = new Vector3(barSize, 0.2f, 1);
+
+        //for (int k = 0; k < numBars; k++)
+        //{
+        //    var obj = GameObject.Instantiate(barPrefab, new Vector3(x, 0, 0), Quaternion.identity, _bars.transform);
+        //    obj.name = "Bar " + (k+1).ToString();
+
+        //    x += delta_x;
+        //}
+
+        //barPrefab.SetActive(false);
+        //_bars.transform.localPosition = new Vector3(0, 0, 1);
 
     }
 
     public void ClearGrating()
     {
-        GameObject.Destroy(_bars);
+        transform.position = new Vector3(0, -10, 1);
+
+        //GameObject.Destroy(_bars);
     }
 
 }
