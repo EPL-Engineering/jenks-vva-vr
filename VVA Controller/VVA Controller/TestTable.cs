@@ -98,36 +98,29 @@ namespace VVA_Controller
             cells["Source"].Value = test.motionSource.ToString();
             cells["Duration"].Value = test.duration_s.ToString();
 
+            cells["Motion"].Value = test.motionDirection;
+            SetGainCellProperties(cells["Gain"], test.motionDirection, test.gain);
+
             if (test.motionSource == MotionSource.Internal)
             {
-                cells["Motion"].Value = test.motionDirection;
                 cells["Amplitude"].Value = test.amplitude_degrees.ToString();
                 cells["Frequency"].Value = test.frequency_Hz;
-                cells["Gain"].Value = test.gain;
-            }
-            else if (test.motionSource == MotionSource.UDP)
-            {
-                cells["Motion"].Value = test.motionDirection;
-                SetGainCellProperties(cells["Gain"], test.motionSource, test.motionDirection, test.gain);
             }
         }
 
-        private void SetGainCellProperties(DataGridViewCell c, MotionSource motionSource, MotionDirection motionDirection, float gain)
+        private void SetGainCellProperties(DataGridViewCell c, MotionDirection motionDirection, float gain)
         {
-            if (motionSource == MotionSource.UDP)
+            if (motionDirection == MotionDirection.RollTilt)
             {
-                if (motionDirection == MotionDirection.RollTilt)
-                {
-                    c.Value = 1;
-                    c.Style.BackColor = Color.FromArgb(216, 216, 216);
-                    c.ReadOnly = true;
-                }
-                if (motionDirection == MotionDirection.Translation)
-                {
-                    c.Value = gain;
-                    c.Style.BackColor = Color.White;
-                    c.ReadOnly = false;
-                }
+                c.Value = 1;
+                c.Style.BackColor = Color.FromArgb(216, 216, 216);
+                c.ReadOnly = true;
+            }
+            if (motionDirection == MotionDirection.Translation)
+            {
+                c.Value = gain;
+                c.Style.BackColor = Color.White;
+                c.ReadOnly = false;
             }
         }
 
@@ -135,7 +128,7 @@ namespace VVA_Controller
         {
             if (Type == MotionSource.Internal)
             {
-                DisableColumn("Gain");
+                //DisableColumn("Gain");
             }
             else if (Type == MotionSource.UDP)
             {
@@ -183,7 +176,7 @@ namespace VVA_Controller
                 else if (e.ColumnIndex == 2)
                 {
                     Value[e.RowIndex].motionDirection = (MotionDirection) cells["Motion"].Value;
-                    SetGainCellProperties(cells["Gain"], Value[e.RowIndex].motionSource, Value[e.RowIndex].motionDirection, Value[e.RowIndex].gain);
+                    SetGainCellProperties(cells["Gain"], Value[e.RowIndex].motionDirection, Value[e.RowIndex].gain);
                 }
                 else if (e.ColumnIndex == 3)
                 {

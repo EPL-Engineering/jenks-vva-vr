@@ -44,11 +44,9 @@ public class Main : MonoBehaviour
     private string _address;
     private int _port = 4950;
 
-    private Text _message;
-
     private VRHMD _vrHMD;
-
     private float _fov = 60f;
+    private Vector2 _screenSize;
 
     private TestSpecification _currentTest;
     private DotProperties _dotProperties;
@@ -75,23 +73,33 @@ public class Main : MonoBehaviour
 
         Debug.Log("App started");
 
+        messageText.text = "Initializing...";
+        StartCoroutine(Initialize());
+    }
 
-        //grating.InitializeGrating(new GratingProperties(), 60);
-        //return;
+    private IEnumerator Initialize()
+    {
+        yield return null;
 
         InitializeHMD();
 
+        yield return null;
         _address = NetworkUtils.FindServerAddress();
 
         _discoveryServer = gameObject.AddComponent<NetworkDiscoveryServer>();
         StartServer();
 
         moogUDPServer.StartReceiving();
+
+        messageText.text = "Standing by...";
+
+        yield break;
     }
 
     private void InitializeHMD()
     {
         _vrHMD = VRHMD.None;
+        _screenSize = new Vector2(Screen.width, Screen.height);
 
         Debug.Log("Initializing HMD");
         var result = FoveManager.IsHardwareConnected();
@@ -100,6 +108,7 @@ public class Main : MonoBehaviour
             mainCamera = foveCamera;
             canvas.worldCamera = foveCamera;
             _fov = foveCamera.fieldOfView;
+            _screenSize = new Vector2(1280, 1440);
             _vrHMD = VRHMD.FOVE;
             Debug.Log("FOVE headset detected");
             FoveManager.RegisterCapabilities(Fove.ClientCapabilities.EyeTorsion);
@@ -119,7 +128,10 @@ public class Main : MonoBehaviour
             else
             {
                 _vrHMD = VRHMD.Vive;
-                mainCamera.fieldOfView = 71.5f;
+                mainCamera.fieldOfView = 98f;
+                _fov = 98f;
+                _screenSize = new Vector2(1440, 1600);
+                //UnityEngine.XR.XRSettings.gameViewRenderMode = UnityEngine.XR.GameViewRenderMode.BothEyes;
                 Debug.Log("XR headset detected (assuming Vive Pro Eye)");
             }
         }
@@ -339,6 +351,10 @@ public class Main : MonoBehaviour
         {
             isReady = FoveManager.IsEyeTrackingReady();
         }
+        else if (_vrHMD == VRHMD.Vive)
+        {
+            isReady = SRanipal_Eye_Framework.Status == SRanipal_Eye_Framework.FrameworkStatus.WORKING;
+        }
 
         return isReady;
     }
@@ -359,11 +375,7 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Bars)
         {
-
-            Debug.Log("w = " + UnityEngine.XR.XRSettings.eyeTextureWidth);
-
-            grating.InitializeGrating(_gratingProperties, _fov);
-            //mainCamera.backgroundColor = Color.white;
+            grating.InitializeGrating(_gratingProperties, _fov, _screenSize);
         }
         _sceneRunning = true;
     }
@@ -414,8 +426,12 @@ public class Main : MonoBehaviour
             builder.AppendLine("Calibrated:" + FoveManager.IsEyeTrackingCalibrated().value);
             builder.AppendLine("Ready:" + FoveManager.IsEyeTrackingReady().value);
         }
-
-        Debug.Log(builder.ToString());
+        else if (_vrHMD == VRHMD.Vive)
+        {
+            builder.AppendLine("Vive Pro Eye = " + SRanipal_Eye_API.IsViveProEye());
+            builder.AppendLine("Refresh rate = " + UnityEngine.XR.XRDevice.refreshRate);
+            builder.AppendLine("SRanipal = " + SRanipal_Eye_Framework.Status);
+        }
 
         return builder.ToString();
     }
@@ -436,7 +452,14 @@ public class Main : MonoBehaviour
 
     IEnumerator DoEyeCalibration()
     {
-        FoveManager.StartEyeTrackingCalibration();
+        if (_vrHMD == VRHMD.FOVE)
+        {
+            FoveManager.StartEyeTrackingCalibration();
+        }
+        else if (_vrHMD == VRHMD.Vive)
+        {
+            SRanipal_Eye_v2.LaunchEyeCalibration();
+        }
 
         yield break;
     }

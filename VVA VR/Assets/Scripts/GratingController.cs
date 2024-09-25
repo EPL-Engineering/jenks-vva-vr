@@ -14,12 +14,12 @@ public class GratingController : MonoBehaviour
     public Material material;
     public Transform quad;
 
-    public void InitializeGrating(GratingProperties properties, float vfov)
+    public void InitializeGrating(GratingProperties properties, float vfov, Vector2 screenSize)
     {
         transform.localEulerAngles = Vector3.zero;
         transform.position = new Vector3(0, 0, 1);
 
-        var aspectRatio = (float)Screen.width / Screen.height;
+        var aspectRatio = (float)screenSize.x / screenSize.y;
 
         float degreesPerBar = 1f / properties.density_deg;
 
@@ -31,17 +31,17 @@ public class GratingController : MonoBehaviour
         var wuPerBar = 2 * properties.distance_m * Mathf.Tan(degreesPerBar / 2 * Mathf.Deg2Rad);
         float numBars = (width_wu / wuPerBar);
 
-        float pixelsPerWU = (float)Screen.width / width_wu;
+        float pixelsPerWU = (float)screenSize.x / width_wu;
         var pixelsPerBar = Mathf.RoundToInt(wuPerBar * pixelsPerWU);
 
         float barWidth_wu = 2 * properties.distance_m * Mathf.Tan(properties.size_deg / 2 * Mathf.Deg2Rad);
         int barWidth_pixels = Mathf.CeilToInt(barWidth_wu * pixelsPerWU);
 
-        Debug.Log("Screen width (pixels) = " + Screen.width);
-        Debug.Log("Screen width (w.u.) = " + width_wu);
-        Debug.Log("Screen width (degrees) = " + hfov);
-        Debug.Log("world units per bar = " + wuPerBar);
-        Debug.Log("num bars = " + numBars);
+        KLogger.Debug("Screen width (pixels) = " + screenSize.x);
+        KLogger.Debug("Screen width (w.u.) = " + width_wu);
+        KLogger.Debug("Screen width (degrees) = " + hfov);
+        KLogger.Debug("world units per bar = " + wuPerBar);
+        KLogger.Debug("num bars = " + numBars);
 
         Texture2D tex = new Texture2D(pixelsPerBar, pixelsPerBar, TextureFormat.ARGB32, false);
         var colors = tex.GetPixels();

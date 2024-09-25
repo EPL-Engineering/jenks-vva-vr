@@ -126,7 +126,7 @@ namespace VVA_Controller
             TryVRConnection();
         }
 
-        private void elapsedTimeLabel_DoubleClick(object sender, EventArgs e)
+        private void headsetLabel_DoubleClick(object sender, EventArgs e)
         {
             headsetLabel.Text = GetHeadset();
         }
@@ -502,5 +502,6 @@ namespace VVA_Controller
             var dlg = new MoogDialog(_ipEndPoint, GetSelectedTest());
             dlg.ShowDialog();
         }
+
     }
 }

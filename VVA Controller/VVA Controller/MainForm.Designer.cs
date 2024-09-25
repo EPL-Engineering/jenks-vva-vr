@@ -95,6 +95,7 @@ namespace VVA_Controller
             this.headsetLabel.Name = "headsetLabel";
             this.headsetLabel.Size = new System.Drawing.Size(75, 17);
             this.headsetLabel.Text = "---";
+            this.headsetLabel.DoubleClick += new System.EventHandler(this.headsetLabel_DoubleClick);
             // 
             // progressBar
             // 
@@ -106,7 +107,6 @@ namespace VVA_Controller
             this.elapsedTimeLabel.DoubleClickEnabled = true;
             this.elapsedTimeLabel.Name = "elapsedTimeLabel";
             this.elapsedTimeLabel.Size = new System.Drawing.Size(0, 17);
-            this.elapsedTimeLabel.DoubleClick += new System.EventHandler(this.elapsedTimeLabel_DoubleClick);
             // 
             // imageList
             // 
