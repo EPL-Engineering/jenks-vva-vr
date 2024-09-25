@@ -40,11 +40,8 @@ namespace Jenks.VVA
                 log += $"Amplitude={amplitude_degrees}, ";
                 log += $"Frequency={frequency_Hz}, ";
             }
-            else if (motionSource == MotionSource.UDP)
-            {
-                log += $"Gain={gain}, ";
-            }
 
+            log += $"Gain={gain}, ";
             log += $"Duration={duration_s}";
 
             return log;

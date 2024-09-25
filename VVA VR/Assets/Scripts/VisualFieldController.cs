@@ -73,7 +73,7 @@ public class VisualFieldController : MonoBehaviour
             if (_translate)
             {
                 X = _gain * RollTilt;
-                _target.position = new Vector3(X, 0, 0);
+                _target.position = new Vector3(X, 0, 1);
             }
             else
             {

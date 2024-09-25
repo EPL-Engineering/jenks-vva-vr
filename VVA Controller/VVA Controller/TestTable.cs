@@ -188,7 +188,11 @@ namespace VVA_Controller
                 }
                 else if (e.ColumnIndex == 5)
                 {
-                    Value[e.RowIndex].gain = float.Parse(cells["Gain"].Value.ToString());
+                    if (Value[e.RowIndex].motionDirection == MotionDirection.Translation)
+                    {
+                        Value[e.RowIndex].gain = float.Parse(cells["Gain"].Value.ToString());
+                        Debug.WriteLine("gain = " + Value[e.RowIndex].gain);
+                    }
                 }
                 else if (e.ColumnIndex == 6)
                 {
