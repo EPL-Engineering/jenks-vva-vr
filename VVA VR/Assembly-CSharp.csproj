@@ -70,7 +70,7 @@
     <Compile Include="Assets\Scripts\Moog\MOOGChairController.cs" />
     <Compile Include="Assets\ViveSR\Scripts\SRWork_Modules\SRWork_Rigid_Recontruction_Enums.cs" />
     <Compile Include="Assets\ViveSR\Scripts\ViveSR_ViewCameraFrame.cs" />
-    <Compile Include="Assets\Scripts\GratingController.cs" />
+    <Compile Include="Assets\Scripts\WallController.cs" />
     <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeDataType_v2.cs" />
     <Compile Include="Assets\ViveSR\Scripts\ViveSR_SceneUnderstanding.cs" />
     <Compile Include="Assets\FoveUnityPlugin\Source\Behaviours\FoveInterface.internal.cs" />

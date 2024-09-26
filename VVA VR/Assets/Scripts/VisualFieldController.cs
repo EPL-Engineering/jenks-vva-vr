@@ -54,6 +54,9 @@ public class VisualFieldController : MonoBehaviour
         X = 0;
         RollTilt = 0;
 
+        _target.position = Vector3.zero;
+        _target.eulerAngles = Vector3.zero;
+
         _isRunning = false;
     }
 
@@ -73,7 +76,7 @@ public class VisualFieldController : MonoBehaviour
             if (_translate)
             {
                 X = _gain * RollTilt;
-                _target.position = new Vector3(X, 0, 1);
+                _target.position = new Vector3(X, 0, 0);
             }
             else
             {

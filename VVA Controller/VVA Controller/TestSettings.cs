@@ -11,7 +11,7 @@ namespace Jenks.VVA
         public List<TestSpecification> controls = new List<TestSpecification>();
         public List<TestSpecification> tests = new List<TestSpecification>();
         public DotProperties dotProperties = new DotProperties();
-        public GratingProperties gratingProperties = new GratingProperties();
+        public WallProperties wallProperties = new WallProperties();
         public int filterLength = 5;
 
         public static TestSettings Restore()

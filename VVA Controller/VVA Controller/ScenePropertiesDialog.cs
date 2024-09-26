@@ -15,7 +15,7 @@ namespace VVA_Controller
     public partial class ScenePropertiesDialog : Form
     {
         public DotProperties DotProperties { set; get; }
-        public GratingProperties GratingProperties { set; get; }
+        public WallProperties WallProperties { set; get; }
 
         public ScenePropertiesDialog()
         {
@@ -28,8 +28,11 @@ namespace VVA_Controller
             dotDensityNumeric.FloatValue = DotProperties.density_deg2;
             dotVelocityNumeric.FloatValue = DotProperties.sdVelocity_deg_per_s;
 
-            barWidthNumeric.FloatValue = GratingProperties.size_deg;
-            barDensityNumeric.FloatValue = GratingProperties.density_deg;
+            barWidthNumeric.FloatValue = WallProperties.barWidth_m;
+            barSpacingNumeric.FloatValue = WallProperties.barSpacing_m;
+            wallDistanceNumeric.FloatValue = WallProperties.wallDistance_m;
+            wallHeightNumeric.FloatValue = WallProperties.wallHeight_m;
+            wallOffsetNumeric.FloatValue = WallProperties.wallOffset_m;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -43,8 +46,11 @@ namespace VVA_Controller
             DotProperties.density_deg2 = dotDensityNumeric.FloatValue;
             DotProperties.sdVelocity_deg_per_s = dotVelocityNumeric.FloatValue;
 
-            GratingProperties.size_deg = barWidthNumeric.FloatValue;
-            GratingProperties.density_deg = barDensityNumeric.FloatValue;
+            WallProperties.barWidth_m = barWidthNumeric.FloatValue;
+            WallProperties.barSpacing_m = barSpacingNumeric.FloatValue;
+            WallProperties.wallDistance_m = wallDistanceNumeric.FloatValue;
+            WallProperties.wallHeight_m = wallHeightNumeric.FloatValue;
+            WallProperties.wallOffset_m = wallOffsetNumeric.FloatValue;
 
             Close();
         }

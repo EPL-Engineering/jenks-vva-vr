@@ -90,7 +90,7 @@ namespace VVA_Controller
         {
             var dlg = new ScenePropertiesDialog();
             dlg.DotProperties = _testSettings.dotProperties;
-            dlg.GratingProperties = _testSettings.gratingProperties;
+            dlg.WallProperties = _testSettings.wallProperties;
             dlg.ShowDialog();
         }
 
@@ -366,8 +366,8 @@ namespace VVA_Controller
                 }
                 else if (test.scene == Scene.Bars)
                 {
-                    Log.Information("Sending grating properties: " + _testSettings.gratingProperties);
-                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.gratingProperties));
+                    Log.Information("Sending grating properties: " + _testSettings.wallProperties);
+                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.wallProperties));
                 }
 
                 Log.Information("Starting run: " + test.ToLogString());
@@ -497,7 +497,7 @@ namespace VVA_Controller
         private void mmToolsMoog_Click(object sender, EventArgs e)
         {
             KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
-            KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.gratingProperties));
+            KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.wallProperties));
 
             var dlg = new MoogDialog(_ipEndPoint, GetSelectedTest());
             dlg.ShowDialog();

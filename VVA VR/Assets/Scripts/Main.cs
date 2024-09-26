@@ -26,7 +26,7 @@ public class Main : MonoBehaviour
     public Text messageText;
 
     public RandomDotsController randomDots;
-    public GratingController grating;
+    public WallController wall;
 
     public VisualFieldController visualFieldController;
     public ViveEyeTracker viveEyeTracker;
@@ -50,7 +50,7 @@ public class Main : MonoBehaviour
 
     private TestSpecification _currentTest;
     private DotProperties _dotProperties;
-    private GratingProperties _gratingProperties;
+    private WallProperties _wallProperties = new WallProperties();
 
     private bool _sceneRunning = false;
 
@@ -74,6 +74,12 @@ public class Main : MonoBehaviour
         Debug.Log("App started");
 
         messageText.text = "Initializing...";
+
+        //foveCamera.enabled = false;
+        //_fov = mainCamera.fieldOfView;
+        //_screenSize = new Vector2(Screen.width, Screen.height);
+        //SetScene(Scene.Bars);
+
         StartCoroutine(Initialize());
     }
 
@@ -128,8 +134,8 @@ public class Main : MonoBehaviour
             else
             {
                 _vrHMD = VRHMD.Vive;
-                mainCamera.fieldOfView = 98f;
-                _fov = 98f;
+                _fov = 60f;
+                //mainCamera.fieldOfView = _fov;
                 _screenSize = new Vector2(1440, 1600);
                 //UnityEngine.XR.XRSettings.gameViewRenderMode = UnityEngine.XR.GameViewRenderMode.BothEyes;
                 Debug.Log("XR headset detected (assuming Vive Pro Eye)");
@@ -239,9 +245,9 @@ public class Main : MonoBehaviour
                 break;
 
             case "GratingProperties":
-                _gratingProperties = _listener.ReceiveProtoBuf<GratingProperties>();
+                _wallProperties = _listener.ReceiveProtoBuf<WallProperties>();
                 _listener.SendAcknowledgement();
-                Debug.Log("Received grating properties: " + _gratingProperties.ToLogString());
+                Debug.Log("Received wall properties: " + _wallProperties.ToLogString());
                 break;
 
             case "Abort":
@@ -301,7 +307,6 @@ public class Main : MonoBehaviour
         _currentTest = test;
 
         Debug.Log("Running test: " + test.ToLogString());
-        messageText.enabled = false;
 
         if (_vrHMD == VRHMD.Vive)
         {
@@ -314,20 +319,19 @@ public class Main : MonoBehaviour
 
         dataLogger.StartLogging(test.ToLogString(), _vrHMD);
 
-        SetScene(test.scene, test.amplitude_degrees);
+        SetScene(test.scene);
 
         if (test.scene == Scene.Dots || test.scene == Scene.Bars)
         {
-            var target = (test.scene == Scene.Dots) ? randomDots.transform : grating.transform;
             if (test.motionSource == MotionSource.Internal)
             {
                 if (test.motionDirection == MotionDirection.RollTilt)
                 {
-                    visualFieldController.StartMotion(target, amplitude: test.amplitude_degrees, frequency: test.frequency_Hz);
+                    visualFieldController.StartMotion(mainCamera.transform, amplitude: test.amplitude_degrees, frequency: test.frequency_Hz);
                 }
                 else if (test.motionDirection == MotionDirection.Translation)
                 {
-                    visualFieldController.StartMotion(target,
+                    visualFieldController.StartMotion(mainCamera.transform,
                         amplitude: test.amplitude_degrees,
                         frequency: test.frequency_Hz,
                         gain: test.gain,
@@ -337,7 +341,7 @@ public class Main : MonoBehaviour
             }
             else if (test.motionSource == MotionSource.UDP)
             {
-                visualFieldController.StartMotion(target, moogUDPServer, test.gain, test.motionDirection == MotionDirection.Translation);
+                visualFieldController.StartMotion(mainCamera.transform, moogUDPServer, test.gain, test.motionDirection == MotionDirection.Translation);
             }
         }
 
@@ -359,8 +363,10 @@ public class Main : MonoBehaviour
         return isReady;
     }
 
-    private void SetScene(Scene scene, float amplitude)
+    private void SetScene(Scene scene)
     {
+        messageText.enabled = false;
+
         if (scene == Scene.White)
         {
             mainCamera.backgroundColor = Color.white;
@@ -375,21 +381,26 @@ public class Main : MonoBehaviour
         }
         else if (scene == Scene.Bars)
         {
-            grating.InitializeGrating(_gratingProperties, _fov, _screenSize);
+            mainCamera.clearFlags = CameraClearFlags.Skybox;
+            //mainCamera.fieldOfView = WallController.wallSceneFOV;
+            wall.InitializeWall(_wallProperties, _fov, _screenSize);
         }
         _sceneRunning = true;
     }
 
     private void ClearScene(Scene scene)
     {
+        mainCamera.clearFlags = CameraClearFlags.SolidColor;
         mainCamera.backgroundColor = Color.black;
+        //mainCamera.fieldOfView = _fov;
+
         if (scene == Scene.Dots)
         {
             randomDots.ClearDots();
         }
         else if (scene == Scene.Bars)
         {
-            grating.ClearGrating();
+            wall.HideWall();
         }
         _sceneRunning = false;
     }
