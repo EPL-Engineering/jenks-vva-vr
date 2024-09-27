@@ -113,7 +113,9 @@ public class Main : MonoBehaviour
         {
             mainCamera = foveCamera;
             canvas.worldCamera = foveCamera;
-            _fov = foveCamera.fieldOfView;
+            //foveCamera.fieldOfView = WallController.wallSceneFOV;
+            //_fov = foveCamera.fieldOfView;
+            _fov = 60f;
             _screenSize = new Vector2(1280, 1440);
             _vrHMD = VRHMD.FOVE;
             Debug.Log("FOVE headset detected");
@@ -321,17 +323,19 @@ public class Main : MonoBehaviour
 
         SetScene(test.scene);
 
+        var target = (_vrHMD == VRHMD.FOVE) ? foveCamera.transform.parent : mainCamera.transform;
+
         if (test.scene == Scene.Dots || test.scene == Scene.Bars)
         {
             if (test.motionSource == MotionSource.Internal)
             {
                 if (test.motionDirection == MotionDirection.RollTilt)
                 {
-                    visualFieldController.StartMotion(mainCamera.transform, amplitude: test.amplitude_degrees, frequency: test.frequency_Hz);
+                    visualFieldController.StartMotion(target, amplitude: test.amplitude_degrees, frequency: test.frequency_Hz);
                 }
                 else if (test.motionDirection == MotionDirection.Translation)
                 {
-                    visualFieldController.StartMotion(mainCamera.transform,
+                    visualFieldController.StartMotion(target,
                         amplitude: test.amplitude_degrees,
                         frequency: test.frequency_Hz,
                         gain: test.gain,
