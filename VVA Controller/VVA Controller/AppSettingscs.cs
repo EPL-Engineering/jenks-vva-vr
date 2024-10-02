@@ -3,8 +3,6 @@ using System.Drawing;
 using System.IO;
 
 using KLib;
-using KLib.Utilities;
-
 
 namespace VVA_Controller
 {
