@@ -271,7 +271,7 @@ namespace VVA_Controller
                     while (ntries < 10)
                     {
                         Thread.Sleep(1000);
-                        ep = Discovery.Discover("VVA VR");
+                        ep = Discovery.Discover("VVA VR", "localhost");
                         if (ep != null) break;
                         ++ntries;
                     }

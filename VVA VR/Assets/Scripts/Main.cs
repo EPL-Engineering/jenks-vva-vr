@@ -90,7 +90,8 @@ public class Main : MonoBehaviour
         InitializeHMD();
 
         yield return null;
-        _address = NetworkUtils.FindServerAddress();
+        //_address = NetworkUtils.FindServerAddress();
+        _address = "localhost"; // this is the real-world use case and saves time
 
         _discoveryServer = gameObject.AddComponent<NetworkDiscoveryServer>();
         StartServer();
