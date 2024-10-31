@@ -94,7 +94,7 @@ namespace VVA_Controller
             int rowIndex = dgv.Rows.Add();
             var cells = dgv.Rows[rowIndex].Cells;
 
-            cells["Scene"].Value = test.scene;
+            cells["BaselineScene"].Value = test.baselineScene;
             cells["Source"].Value = test.motionSource.ToString();
             cells["Duration"].Value = test.duration_s.ToString();
 
@@ -171,7 +171,7 @@ namespace VVA_Controller
                 var cells = dgv.Rows[e.RowIndex].Cells;
                 if (e.ColumnIndex == 0)
                 {
-                    Value[e.RowIndex].scene = (Scene)cells["Scene"].Value;
+                    Value[e.RowIndex].baselineScene = (Scene)cells["Scene"].Value;
                 }
                 else if (e.ColumnIndex == 2)
                 {

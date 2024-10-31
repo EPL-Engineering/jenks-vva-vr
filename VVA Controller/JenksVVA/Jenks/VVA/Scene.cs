@@ -1,4 +1,4 @@
 ﻿namespace Jenks.VVA
 {
-    public enum Scene { White, Black, Dots, Bars}
+    public enum Scene { Black, White, Dots, Bars}
 }

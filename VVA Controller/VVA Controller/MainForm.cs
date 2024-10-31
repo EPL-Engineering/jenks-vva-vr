@@ -34,8 +34,8 @@ namespace VVA_Controller
         private DateTime _lastStatusCheck;
         private bool _haveFileName;
 
-        private TestSettings _testSettings;
         private AppSettings _appSettings;
+        private ControllerSettings _controllerSettings;
 
         private int _selectedTable = -1;
 
@@ -55,6 +55,10 @@ namespace VVA_Controller
                 StartPosition = FormStartPosition.Manual;
                 Location = _appSettings.controllerLocation;
             }
+
+            KLib.Controls.Utilities.SetEnumItems(baselineSceneListBox, typeof(Scene));
+            KLib.Controls.Utilities.SetEnumItems(motionControlListBox, typeof(MotionSource));
+            KLib.Controls.Utilities.SetEnumItems(motionDirectionListBox, typeof(MotionDirection));
 
             Log.Information($"VVA Controller v{Assembly.GetExecutingAssembly().GetName().Version.ToString()} started");
         }
@@ -81,15 +85,15 @@ namespace VVA_Controller
 
         private void mmFileSave_Click(object sender, EventArgs e)
         {
-            _testSettings.Save();
+            _controllerSettings.Save();
             MessageBox.Show("Saved defaults.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void mmToolsScene_Click(object sender, EventArgs e)
         {
             var dlg = new ScenePropertiesDialog();
-            dlg.DotProperties = _testSettings.dotProperties;
-            dlg.WallProperties = _testSettings.wallProperties;
+            dlg.DotProperties = _controllerSettings.dotProperties;
+            dlg.WallProperties = _controllerSettings.wallProperties;
             dlg.ShowDialog();
         }
 
@@ -103,21 +107,23 @@ namespace VVA_Controller
                 .WriteTo.File(
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "Logs", "VVA-Controller-.txt"),
                     rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 30,
                     buffered: true)
                 .CreateLogger();
         }
 
         private async Task RestoreTests()
         {
-            _testSettings = TestSettings.Restore();
+            _controllerSettings = ControllerSettings.Restore();
 
             await InitializeTables();
         }
 
         private async Task InitializeTables()
         {
-            controlTable.FillTable(MotionSource.Internal, _testSettings.controls);
-            testTable.FillTable(MotionSource.UDP, _testSettings.tests);
+            KLib.Controls.Utilities.CheckEnumItems(baselineSceneListBox, _controllerSettings.baselineScenes);
+            KLib.Controls.Utilities.CheckEnumItems(motionControlListBox, _controllerSettings.motionSources);
+            KLib.Controls.Utilities.CheckEnumItems(motionDirectionListBox, _controllerSettings.motionDirections);
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
@@ -198,7 +204,7 @@ namespace VVA_Controller
                 connectionStatusLabel.Text = $"Connected to VR at {_ipEndPoint.ToString()}";
                 Log.Information($"Connected to VR at {_ipEndPoint.ToString()}");
             }
-            else if (autoStart)
+            else if (autoStart && false)
             {
                 connectionStatusLabel.Text = "Launching VR...";
                 Log.Information("Launching VR");
@@ -358,16 +364,16 @@ namespace VVA_Controller
 
                 _runDuration = test.duration_s;
 
-                if (test.scene == Scene.Dots)
-                {
-                    Log.Information("Sending dot properties: " + _testSettings.dotProperties);
-                    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
-                }
-                else if (test.scene == Scene.Bars)
-                {
-                    Log.Information("Sending grating properties: " + _testSettings.wallProperties);
-                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.wallProperties));
-                }
+                //if (test.scene == Scene.Dots)
+                //{
+                //    Log.Information("Sending dot properties: " + _testSettings.dotProperties);
+                //    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
+                //}
+                //else if (test.scene == Scene.Bars)
+                //{
+                //    Log.Information("Sending grating properties: " + _testSettings.wallProperties);
+                //    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.wallProperties));
+                //}
 
                 Log.Information("Starting run: " + test.ToLogString());
 
@@ -397,14 +403,7 @@ namespace VVA_Controller
         private TestSpecification GetSelectedTest()
         {
             TestSpecification test = null;
-            if (_selectedTable == 0)
-            {
-                test = _testSettings.controls[controlTable.SelectedRow];
-            }
-            else if (_selectedTable == 1)
-            {
-                test = _testSettings.tests[testTable.SelectedRow];
-            }
+            //test = _testSettings.tests[controlTable.SelectedRow];
             return test;
         }
 
@@ -470,18 +469,7 @@ namespace VVA_Controller
         private void controlTable_SelectionChanged(object sender, EventArgs e)
         {
             _selectedTable = 0;
-            testTable.ClearSelection();
             if (controlTable.SelectedRow > -1)
-            {
-                startButton.Enabled = _haveVR;
-            }
-        }
-
-        private void testTable_SelectionChanged(object sender, EventArgs e)
-        {
-            _selectedTable = 1;
-            controlTable.ClearSelection();
-            if (testTable.SelectedRow > -1)
             {
                 startButton.Enabled = _haveVR;
             }
@@ -495,8 +483,8 @@ namespace VVA_Controller
 
         private void mmToolsMoog_Click(object sender, EventArgs e)
         {
-            KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
-            KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.wallProperties));
+            KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_controllerSettings.dotProperties));
+            KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_controllerSettings.wallProperties));
 
             var dlg = new MoogDialog(_ipEndPoint, GetSelectedTest());
             dlg.ShowDialog();

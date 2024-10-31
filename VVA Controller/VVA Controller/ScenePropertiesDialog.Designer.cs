@@ -55,7 +55,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Teal;
-            this.label1.Location = new System.Drawing.Point(379, 343);
+            this.label1.Location = new System.Drawing.Point(341, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 20);
             this.label1.TabIndex = 1;
@@ -64,7 +64,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(289, 378);
+            this.label2.Location = new System.Drawing.Point(251, 53);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(92, 13);
             this.label2.TabIndex = 2;
@@ -73,7 +73,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(281, 404);
+            this.label3.Location = new System.Drawing.Point(243, 79);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 13);
             this.label3.TabIndex = 4;
@@ -82,7 +82,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(311, 429);
+            this.label4.Location = new System.Drawing.Point(273, 104);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(70, 13);
             this.label4.TabIndex = 6;
@@ -157,11 +157,11 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(15, 102);
+            this.label9.Location = new System.Drawing.Point(11, 102);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(84, 13);
+            this.label9.Size = new System.Drawing.Size(88, 13);
             this.label9.TabIndex = 15;
-            this.label9.Text = "wallDistance (m)";
+            this.label9.Text = "Wall distance (m)";
             // 
             // wallHeightNumeric
             // 
@@ -268,7 +268,7 @@
             this.dotVelocityNumeric.FloatValue = 0F;
             this.dotVelocityNumeric.IntValue = 0;
             this.dotVelocityNumeric.IsInteger = false;
-            this.dotVelocityNumeric.Location = new System.Drawing.Point(384, 427);
+            this.dotVelocityNumeric.Location = new System.Drawing.Point(346, 102);
             this.dotVelocityNumeric.MaxCoerce = false;
             this.dotVelocityNumeric.MaximumSize = new System.Drawing.Size(20000, 20);
             this.dotVelocityNumeric.MaxValue = 1.7976931348623157E+308D;
@@ -292,7 +292,7 @@
             this.dotDensityNumeric.FloatValue = 0F;
             this.dotDensityNumeric.IntValue = 0;
             this.dotDensityNumeric.IsInteger = false;
-            this.dotDensityNumeric.Location = new System.Drawing.Point(384, 401);
+            this.dotDensityNumeric.Location = new System.Drawing.Point(346, 76);
             this.dotDensityNumeric.MaxCoerce = false;
             this.dotDensityNumeric.MaximumSize = new System.Drawing.Size(20000, 20);
             this.dotDensityNumeric.MaxValue = 1.7976931348623157E+308D;
@@ -316,7 +316,7 @@
             this.dotSizeNumeric.FloatValue = 0F;
             this.dotSizeNumeric.IntValue = 0;
             this.dotSizeNumeric.IsInteger = false;
-            this.dotSizeNumeric.Location = new System.Drawing.Point(384, 375);
+            this.dotSizeNumeric.Location = new System.Drawing.Point(346, 50);
             this.dotSizeNumeric.MaxCoerce = false;
             this.dotSizeNumeric.MaximumSize = new System.Drawing.Size(20000, 20);
             this.dotSizeNumeric.MaxValue = 1.7976931348623157E+308D;
@@ -368,7 +368,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(531, 522);
+            this.ClientSize = new System.Drawing.Size(531, 279);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.wallOffsetNumeric);
             this.Controls.Add(this.label8);

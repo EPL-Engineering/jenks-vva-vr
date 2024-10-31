@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jenks\VVA\LinkedParams.cs" />
     <Compile Include="Jenks\VVA\DotProperties.cs" />
     <Compile Include="Jenks\VVA\WallProperties.cs" />
     <Compile Include="Jenks\VVA\MotionDirection.cs" />
