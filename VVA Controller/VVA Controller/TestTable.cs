@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 using KLib.Controls;
 
@@ -17,208 +14,98 @@ namespace VVA_Controller
 {
     public partial class TestTable : KUserControl
     {
-        public MotionSource Type { set; get; }
         public List<TestSpecification> Value { set; get; } = null;
-
-        public int SelectedRow { private set; get; }
-        public event EventHandler SelectionChanged;
-        protected virtual void OnSelectionChanged()
-        {
-            if (this.SelectionChanged != null)
-            {
-                SelectionChanged(this, null);
-            }
-        }
-
-        private const int _maxRows = 3;
+        public List<int> Completed { set; get; } = null;
 
         public TestTable()
         {
             InitializeComponent();
-
-            var col = dgv.Columns["Scene"] as DataGridViewComboBoxColumn;
-            col.DataSource = Enum.GetValues(typeof(Scene));
-            col.ValueType = typeof(Scene);
-
-            col = dgv.Columns["Motion"] as DataGridViewComboBoxColumn;
-            col.DataSource = Enum.GetValues(typeof(MotionDirection));
-            col.ValueType = typeof(MotionDirection);
         }
 
-        public void ClearSelection()
+        public void ClearTable()
         {
-            _ignoreEvents = true;
-            dgv.ClearSelection();
-            _ignoreEvents = false;
+            dgv.Rows.Clear();
+            for (int k = 0; k < 8; k++ )
+            {
+                int rowIndex = dgv.Rows.Add();
+                var cells = dgv.Rows[rowIndex].Cells;
+            }
+
+            dgv.CurrentCell = null;
+            dgv.Refresh();
         }
 
-        public void FillTable(MotionSource type, List<TestSpecification> test)
+        public void FillTable()
         {
             _ignoreEvents = true;
-
-            Type = type;
-            Value = test;
-
-            CustomizeDisplayForType();
 
             dgv.Rows.Clear();
-            for (int k=0; k<_maxRows; k++)
+            foreach (var t in Value)
             {
-                var testIndex = Math.Min(k, Value.Count - 1);
-                Value[testIndex].motionSource = Type;
+                int rowIndex = dgv.Rows.Add();
+                var cells = dgv.Rows[rowIndex].Cells;
 
-                if (Type == MotionSource.Internal)
-                {
-                    Value[testIndex].gain = 1;
-                }
-
-
-                AddRow(Value[testIndex]);
+                cells["BaselineScene"].Value = t.baselineScene;
+                cells["BaselineDuration"].Value = t.baselineDuration_s;
+                cells["Source"].Value = t.motionSource;
+                cells["Direction"].Value = t.motionDirection;
+                cells["Amplitude"].Value = t.amplitude_degrees;
+                cells["Frequency"].Value = t.frequency_Hz;
+                cells["Gain"].Value = t.gain;
+                cells["Duration"].Value = t.duration_s;
             }
 
+            dgv.CurrentCell = null;
             dgv.Refresh();
-            for (int kc = 3; kc < dgv.Columns.Count; kc++)
-            {
-                dgv.Columns[kc].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-
-            SelectedRow = -1;
-            dgv.ClearSelection();
 
             _ignoreEvents = false;
-
         }
 
-        private void AddRow(TestSpecification test)
+        //private void SetGainCellProperties(DataGridViewCell c, MotionDirection motionDirection, float gain)
+        //{
+        //    if (motionDirection == MotionDirection.RollTilt)
+        //    {
+        //        c.Value = 1;
+        //        c.Style.BackColor = Color.FromArgb(216, 216, 216);
+        //        c.ReadOnly = true;
+        //    }
+        //    if (motionDirection == MotionDirection.Translation)
+        //    {
+        //        c.Value = gain;
+        //        c.Style.BackColor = Color.White;
+        //        c.ReadOnly = false;
+        //    }
+        //}
+        private IDesignerHost designerHost;
+        protected override void OnHandleCreated(EventArgs e)
         {
-            int rowIndex = dgv.Rows.Add();
-            var cells = dgv.Rows[rowIndex].Cells;
-
-            cells["BaselineScene"].Value = test.baselineScene;
-            cells["Source"].Value = test.motionSource.ToString();
-            cells["Duration"].Value = test.duration_s.ToString();
-
-            cells["Motion"].Value = test.motionDirection;
-            SetGainCellProperties(cells["Gain"], test.motionDirection, test.gain);
-
-            if (test.motionSource == MotionSource.Internal)
+            base.OnHandleCreated(e);
+            if (DesignMode && Site != null)
             {
-                cells["Amplitude"].Value = test.amplitude_degrees.ToString();
-                cells["Frequency"].Value = test.frequency_Hz;
-            }
-        }
-
-        private void SetGainCellProperties(DataGridViewCell c, MotionDirection motionDirection, float gain)
-        {
-            if (motionDirection == MotionDirection.RollTilt)
-            {
-                c.Value = 1;
-                c.Style.BackColor = Color.FromArgb(216, 216, 216);
-                c.ReadOnly = true;
-            }
-            if (motionDirection == MotionDirection.Translation)
-            {
-                c.Value = gain;
-                c.Style.BackColor = Color.White;
-                c.ReadOnly = false;
-            }
-        }
-
-        private void CustomizeDisplayForType()
-        {
-            if (Type == MotionSource.Internal)
-            {
-                //DisableColumn("Gain");
-            }
-            else if (Type == MotionSource.UDP)
-            {
-                DisableColumn("Amplitude");
-                DisableColumn("Frequency");
-            }
-        }
-
-        private void DisableColumn(string name, bool showName = true)
-        {
-            var col = dgv.Columns[name];
-            var index = col.Index;
-            var headerText = col.HeaderText;
-            var width = col.Width;
-            dgv.Columns.RemoveAt(index);
-
-            col = new DataGridViewTextBoxColumn();
-            col.Name = name;
-            if (showName)
-            {
-                col.HeaderText = headerText;
-            }
-            col.Width = width;
-            col.ReadOnly = true;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.DefaultCellStyle.BackColor = Color.FromArgb(216, 216, 216);
-
-            col.HeaderCell.Style.WrapMode = DataGridViewTriState.True;
-            col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Resizable = DataGridViewTriState.False;
-            col.SortMode = DataGridViewColumnSortMode.NotSortable;
-
-            dgv.Columns.Insert(index, col);
-        }
-
-        private void dgv_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (!_ignoreEvents && e.RowIndex > -1)
-            {
-                var cells = dgv.Rows[e.RowIndex].Cells;
-                if (e.ColumnIndex == 0)
+                designerHost = Site.GetService(typeof(IDesignerHost)) as IDesignerHost;
+                var designer = (ControlDesigner) designerHost?.GetDesigner(this);
+                designer?.Verbs?.Add(new DesignerVerb("Preview with dummy data", (o, a) =>
                 {
-                    Value[e.RowIndex].baselineScene = (Scene)cells["Scene"].Value;
-                }
-                else if (e.ColumnIndex == 2)
-                {
-                    Value[e.RowIndex].motionDirection = (MotionDirection) cells["Motion"].Value;
-                    SetGainCellProperties(cells["Gain"], Value[e.RowIndex].motionDirection, Value[e.RowIndex].gain);
-                }
-                else if (e.ColumnIndex == 3)
-                {
-                    Value[e.RowIndex].amplitude_degrees = float.Parse(cells["Amplitude"].Value.ToString());
-                }
-                else if (e.ColumnIndex == 4)
-                {
-                    Value[e.RowIndex].frequency_Hz = float.Parse(cells["Frequency"].Value.ToString());
-                }
-                else if (e.ColumnIndex == 5)
-                {
-                    if (Value[e.RowIndex].motionDirection == MotionDirection.Translation)
+                    //Some logic to add dummy rows, just for example
+                    dgv.Rows.Clear();
+                    if (dgv.Columns.Count > 0)
                     {
-                        Value[e.RowIndex].gain = float.Parse(cells["Gain"].Value.ToString());
-                        Debug.WriteLine("gain = " + Value[e.RowIndex].gain);
+                        var values = dgv.Columns.Cast<DataGridViewColumn>()
+                            .Select(x => GetDummyData(x)).ToArray();
+                        for (int i = 0; i < 8; i++)
+                            dgv.Rows.Add(values);
                     }
-                }
-                else if (e.ColumnIndex == 6)
+                }));
+                designer?.Verbs?.Add(new DesignerVerb("Clear data", (o, a) =>
                 {
-                    Value[e.RowIndex].duration_s = float.Parse(cells["Duration"].Value.ToString());
-                }
-
-                OnValueChanged();
+                    dgv.Rows.Clear();
+                }));
             }
         }
-
-        private void dgv_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        private object GetDummyData(DataGridViewColumn column)
         {
-            if (!_ignoreEvents && dgv.CurrentCell.ColumnIndex < 3)
-            {
-                dgv.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
+            //You can put some logic to generate dummy data based on column type, etc.
+            return "Sample";
         }
-
-        private void dgv_SelectionChanged(object sender, EventArgs e)
-        {
-            if (!_ignoreEvents)
-            {
-                SelectedRow = dgv.CurrentRow.Index;
-                OnSelectionChanged();
-            }
-        }
-
     }
 }

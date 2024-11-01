@@ -27,6 +27,7 @@ namespace Jenks.VVA
             if (File.Exists(FileLocation))
             {
                 settings = KFile.XmlDeserialize<ControllerSettings>(FileLocation);
+                settings.linkedParams = settings.linkedParams.OrderBy(o => o.frequency_Hz).ToList();
             }
             else
             {
@@ -45,7 +46,7 @@ namespace Jenks.VVA
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "VVA Controller Tests.xml");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Jenks", "VVA Controller Settings.xml");
             }
         }
 

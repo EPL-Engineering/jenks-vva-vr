@@ -44,6 +44,7 @@ namespace VVA_Controller
             InitializeComponent();
 
             startButton.Enabled = false;
+            testTable.ClearTable();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -57,7 +58,7 @@ namespace VVA_Controller
             }
 
             KLib.Controls.Utilities.SetEnumItems(baselineSceneListBox, typeof(Scene));
-            KLib.Controls.Utilities.SetEnumItems(motionControlListBox, typeof(MotionSource));
+            KLib.Controls.Utilities.SetEnumItems(motionSourceListBox, typeof(MotionSource));
             KLib.Controls.Utilities.SetEnumItems(motionDirectionListBox, typeof(MotionDirection));
 
             Log.Information($"VVA Controller v{Assembly.GetExecutingAssembly().GetName().Version.ToString()} started");
@@ -73,7 +74,7 @@ namespace VVA_Controller
             connectionStatusLabel.Text = "Restoring tests...";
             Refresh();
 
-            await RestoreTests();
+            await RestoreSettings();
 
             TryVRConnection();
         }
@@ -83,8 +84,14 @@ namespace VVA_Controller
             Close();
         }
 
+        private async void mmFileRestore_Click(object sender, EventArgs e)
+        {
+            await RestoreSettings();
+        }
+
         private void mmFileSave_Click(object sender, EventArgs e)
         {
+            ReadSettings();
             _controllerSettings.Save();
             MessageBox.Show("Saved defaults.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -112,18 +119,22 @@ namespace VVA_Controller
                 .CreateLogger();
         }
 
-        private async Task RestoreTests()
+        private async Task RestoreSettings()
         {
             _controllerSettings = ControllerSettings.Restore();
 
-            await InitializeTables();
+            KLib.Controls.Utilities.SetCheckedEnumItems(baselineSceneListBox, _controllerSettings.baselineScenes);
+            KLib.Controls.Utilities.SetCheckedEnumItems(motionSourceListBox, _controllerSettings.motionSources);
+            KLib.Controls.Utilities.SetCheckedEnumItems(motionDirectionListBox, _controllerSettings.motionDirections);
+
+            linkedParamsTable.Value = _controllerSettings.linkedParams;
         }
 
-        private async Task InitializeTables()
+        private void ReadSettings()
         {
-            KLib.Controls.Utilities.CheckEnumItems(baselineSceneListBox, _controllerSettings.baselineScenes);
-            KLib.Controls.Utilities.CheckEnumItems(motionControlListBox, _controllerSettings.motionSources);
-            KLib.Controls.Utilities.CheckEnumItems(motionDirectionListBox, _controllerSettings.motionDirections);
+            _controllerSettings.baselineScenes = KLib.Controls.Utilities.GetCheckedEnumItems<Scene>(baselineSceneListBox);
+            _controllerSettings.motionSources = KLib.Controls.Utilities.GetCheckedEnumItems<MotionSource>(motionSourceListBox);
+            _controllerSettings.motionDirections = KLib.Controls.Utilities.GetCheckedEnumItems<MotionDirection>(motionDirectionListBox);
         }
 
         private void connectionStatusLabel_DoubleClick(object sender, EventArgs e)
@@ -429,7 +440,7 @@ namespace VVA_Controller
 
         private void EnableControls(bool enable)
         {
-            controlTable.Enabled = enable;
+            testTable.Enabled = enable;
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -466,15 +477,6 @@ namespace VVA_Controller
             }
         }
 
-        private void controlTable_SelectionChanged(object sender, EventArgs e)
-        {
-            _selectedTable = 0;
-            if (controlTable.SelectedRow > -1)
-            {
-                startButton.Enabled = _haveVR;
-            }
-        }
-
         private void mmToolsHeadset_Click(object sender, EventArgs e)
         {
             var dlg = new HeadsetDialog(_ipEndPoint);
@@ -488,6 +490,40 @@ namespace VVA_Controller
 
             var dlg = new MoogDialog(_ipEndPoint, GetSelectedTest());
             dlg.ShowDialog();
+        }
+
+        private void randomizeButton_Click(object sender, EventArgs e)
+        {
+            ReadSettings();
+
+            var tests = new List<TestSpecification>();
+
+            foreach (var s in _controllerSettings.baselineScenes)
+            foreach (var src in _controllerSettings.motionSources)
+            foreach (var d in _controllerSettings.motionDirections)
+            foreach (var p in _controllerSettings.linkedParams.FindAll(x => x.isActive))
+                tests.Add(
+                    new TestSpecification
+                    {
+                        baselineScene = s,
+                        baselineDuration_s = _controllerSettings.defaultBaselineDuration_s,
+                        motionSource = src,
+                        motionDirection = d,
+                        amplitude_degrees = _controllerSettings.defaultAmplitude_degrees,
+                        frequency_Hz = p.frequency_Hz,
+                        gain = p.gain,
+                        duration_s = p.duration_s
+                    }
+                    );
+
+            var randomized = new List<TestSpecification>();
+            foreach (int i in KLib.KMath.MathUtils.Permute(tests.Count))
+            {
+                randomized.Add(tests[i]);
+            }
+            testTable.Value = randomized;
+
+            testTable.FillTable();
         }
 
     }

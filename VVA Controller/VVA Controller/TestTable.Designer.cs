@@ -28,15 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgv = new VVA_Controller.CustomDataGridView();
-            this.Scene = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.BaselineScene = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BaselineDuration = new CSUST.Data.TNumEditDataGridViewColumn();
-            this.Motion = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Direction = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Amplitude = new CSUST.Data.TNumEditDataGridViewColumn();
             this.Frequency = new CSUST.Data.TNumEditDataGridViewColumn();
             this.Gain = new CSUST.Data.TNumEditDataGridViewColumn();
@@ -52,109 +54,143 @@
             this.dgv.AllowUserToResizeRows = false;
             this.dgv.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgv.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Scene,
+            this.BaselineScene,
             this.BaselineDuration,
-            this.Motion,
+            this.Source,
+            this.Direction,
             this.Amplitude,
             this.Frequency,
             this.Gain,
             this.Duration});
-            this.dgv.Location = new System.Drawing.Point(3, 3);
+            this.dgv.Location = new System.Drawing.Point(0, 0);
+            this.dgv.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.dgv.MultiSelect = false;
             this.dgv.Name = "dgv";
+            this.dgv.ReadOnly = true;
             this.dgv.RowHeadersWidth = 25;
+            this.dgv.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(583, 114);
+            this.dgv.Size = new System.Drawing.Size(581, 275);
             this.dgv.TabIndex = 24;
-            this.dgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellValueChanged);
-            this.dgv.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgv_CurrentCellDirtyStateChanged);
-            this.dgv.SelectionChanged += new System.EventHandler(this.dgv_SelectionChanged);
             // 
-            // Scene
+            // BaselineScene
             // 
-            this.Scene.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Scene.HeaderText = "Baseline";
-            this.Scene.Name = "Scene";
-            this.Scene.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Scene.Width = 75;
+            this.BaselineScene.HeaderText = "Baseline";
+            this.BaselineScene.Name = "BaselineScene";
+            this.BaselineScene.ReadOnly = true;
+            this.BaselineScene.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.BaselineScene.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BaselineScene.Width = 75;
             // 
             // BaselineDuration
             // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "F0";
-            this.BaselineDuration.DefaultCellStyle = dataGridViewCellStyle6;
-            this.BaselineDuration.DividerWidth = 3;
-            this.BaselineDuration.HeaderText = "Duration (seconds)";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "F0";
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+            this.BaselineDuration.DefaultCellStyle = dataGridViewCellStyle2;
+            this.BaselineDuration.HeaderText = "Dur (s)";
             this.BaselineDuration.Name = "BaselineDuration";
-            this.BaselineDuration.Width = 75;
+            this.BaselineDuration.ReadOnly = true;
+            this.BaselineDuration.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.BaselineDuration.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BaselineDuration.Width = 50;
             // 
-            // Motion
+            // Source
             // 
-            this.Motion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Motion.HeaderText = "Motion Direction";
-            this.Motion.Name = "Motion";
+            this.Source.HeaderText = "Source";
+            this.Source.Name = "Source";
+            this.Source.ReadOnly = true;
+            this.Source.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Source.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Source.Width = 75;
+            // 
+            // Direction
+            // 
+            this.Direction.HeaderText = "Direction";
+            this.Direction.Name = "Direction";
+            this.Direction.ReadOnly = true;
+            this.Direction.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Direction.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Direction.Width = 75;
             // 
             // Amplitude
             // 
             this.Amplitude.DecimalLength = 1;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.Format = "F1";
-            this.Amplitude.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Amplitude.HeaderText = "Amplitude (degrees)";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "F1";
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.Amplitude.DefaultCellStyle = dataGridViewCellStyle3;
+            this.Amplitude.HeaderText = "Ampl (deg)";
             this.Amplitude.Name = "Amplitude";
+            this.Amplitude.ReadOnly = true;
             this.Amplitude.RemoveTrailingZeros = true;
-            this.Amplitude.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Amplitude.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Amplitude.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Amplitude.Width = 75;
             // 
             // Frequency
             // 
             this.Frequency.DecimalLength = 2;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.Format = "F2";
-            this.Frequency.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Frequency.HeaderText = "Frequency (Hz)";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "F2";
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.Frequency.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Frequency.HeaderText = "Freq (Hz)";
             this.Frequency.Name = "Frequency";
+            this.Frequency.ReadOnly = true;
             this.Frequency.RemoveTrailingZeros = true;
-            this.Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Frequency.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Frequency.Width = 75;
             // 
             // Gain
             // 
             this.Gain.DecimalLength = 4;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.Format = "F4";
-            this.Gain.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "F4";
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+            this.Gain.DefaultCellStyle = dataGridViewCellStyle5;
             this.Gain.HeaderText = "Gain";
             this.Gain.Name = "Gain";
+            this.Gain.ReadOnly = true;
             this.Gain.RemoveTrailingZeros = true;
             this.Gain.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Gain.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Gain.Width = 75;
+            this.Gain.Width = 50;
             // 
             // Duration
             // 
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.Format = "F0";
-            this.Duration.DefaultCellStyle = dataGridViewCellStyle10;
-            this.Duration.HeaderText = "Duration (seconds)";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "F0";
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+            this.Duration.DefaultCellStyle = dataGridViewCellStyle6;
+            this.Duration.DividerWidth = 1;
+            this.Duration.HeaderText = "Dur (s)";
             this.Duration.Name = "Duration";
+            this.Duration.ReadOnly = true;
             this.Duration.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Duration.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Duration.Width = 75;
+            this.Duration.Width = 50;
             // 
             // TestTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.dgv);
             this.Name = "TestTable";
-            this.Size = new System.Drawing.Size(589, 120);
+            this.Size = new System.Drawing.Size(593, 284);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
 
@@ -163,9 +199,10 @@
         #endregion
 
         private CustomDataGridView dgv;
-        private System.Windows.Forms.DataGridViewComboBoxColumn Scene;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BaselineScene;
         private CSUST.Data.TNumEditDataGridViewColumn BaselineDuration;
-        private System.Windows.Forms.DataGridViewComboBoxColumn Motion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Direction;
         private CSUST.Data.TNumEditDataGridViewColumn Amplitude;
         private CSUST.Data.TNumEditDataGridViewColumn Frequency;
         private CSUST.Data.TNumEditDataGridViewColumn Gain;
