@@ -48,7 +48,7 @@ public class Main : MonoBehaviour
     private float _fov = 60f;
     private Vector2 _screenSize;
 
-    private TestSpecification _currentTest;
+    private RunMessage _currentRun;
     private DotProperties _dotProperties;
     private WallProperties _wallProperties = new WallProperties();
 
@@ -115,8 +115,8 @@ public class Main : MonoBehaviour
             mainCamera = foveCamera;
             canvas.worldCamera = foveCamera;
             //foveCamera.fieldOfView = WallController.wallSceneFOV;
-            //_fov = foveCamera.fieldOfView;
-            _fov = 60f;
+            _fov = foveCamera.fieldOfView;
+            //_fov = 60f;
             _screenSize = new Vector2(1280, 1440);
             _vrHMD = VRHMD.FOVE;
             Debug.Log("FOVE headset detected");
@@ -137,7 +137,8 @@ public class Main : MonoBehaviour
             else
             {
                 _vrHMD = VRHMD.Vive;
-                _fov = 60f;
+                UnityEngine.XR.InputTracking.disablePositionalTracking = true;
+                _fov = 95f;
                 //mainCamera.fieldOfView = _fov;
                 _screenSize = new Vector2(1440, 1600);
                 //UnityEngine.XR.XRSettings.gameViewRenderMode = UnityEngine.XR.GameViewRenderMode.BothEyes;
@@ -235,10 +236,15 @@ public class Main : MonoBehaviour
                 exit = true;
                 break;
 
-            case "Run":
-                var test = ReceiveTestSpecification();
+            case "StartTest":
                 _listener.SendAcknowledgement();
-                StartCoroutine(RunTest(test));
+                StartTest(data);
+                break;
+
+            case "Run":
+                var msg = ReceiveRunMessage();
+                _listener.SendAcknowledgement();
+                StartCoroutine(DoRun(msg));
                 break;
 
             case "DotProperties":
@@ -254,6 +260,7 @@ public class Main : MonoBehaviour
                 break;
 
             case "Abort":
+            case "StopTest":
                 _listener.SendAcknowledgement();
                 StartCoroutine(StopTest());
                 break;
@@ -293,23 +300,30 @@ public class Main : MonoBehaviour
         if (exit) Return();
     }
 
-    private TestSpecification ReceiveTestSpecification()
+    private RunMessage ReceiveRunMessage()
     {
-        TestSpecification test = null;
+        RunMessage msg = null;
         var bytes = _listener.ReadByteArray();
         if (bytes != null)
         {
-            test = FileIO.FromProtoBuf<TestSpecification>(bytes);
+            msg = FileIO.FromProtoBuf<RunMessage>(bytes);
         }
 
-        return test;
+        return msg;
     }
 
-    IEnumerator RunTest(TestSpecification test)
+    private void StartTest(string logHeader)
     {
-        _currentTest = test;
+        dataLogger.StartLogging(logHeader, _vrHMD);
+    }
 
-        Debug.Log("Running test: " + test.ToLogString());
+    IEnumerator DoRun(RunMessage message)
+    {
+        randomDots.ClearDots(); // just to be sure
+
+        _currentRun = message;
+
+        Debug.Log("Running test: " + message.ToLogString());
 
         if (_vrHMD == VRHMD.Vive)
         {
@@ -320,33 +334,33 @@ public class Main : MonoBehaviour
             Debug.Log("Fove tracking ready = " + FoveManager.IsEyeTrackingReady().value);
         }
 
-        dataLogger.StartLogging(test.ToLogString(), _vrHMD);
+        //dataLogger.StartLogging(_currentRun.ToLogString(), _vrHMD);
 
-        SetScene(test.scene);
+        SetScene(_currentRun.scene);
 
         var target = (_vrHMD == VRHMD.FOVE) ? foveCamera.transform.parent : mainCamera.transform;
 
-        if (test.scene == Scene.Dots || test.scene == Scene.Bars)
+        if (_currentRun.scene == Scene.Dots || _currentRun.scene == Scene.Bars)
         {
-            if (test.motionSource == MotionSource.Internal)
+            if (_currentRun.motionSource == MotionSource.Internal)
             {
-                if (test.motionDirection == MotionDirection.RollTilt)
+                if (_currentRun.motionDirection == MotionDirection.RollTilt)
                 {
-                    visualFieldController.StartMotion(target, amplitude: test.amplitude_degrees, frequency: test.frequency_Hz);
+                    visualFieldController.StartMotion(target, amplitude: _currentRun.amplitude_degrees, frequency: _currentRun.frequency_Hz);
                 }
-                else if (test.motionDirection == MotionDirection.Translation)
+                else if (_currentRun.motionDirection == MotionDirection.Translation)
                 {
                     visualFieldController.StartMotion(target,
-                        amplitude: test.amplitude_degrees,
-                        frequency: test.frequency_Hz,
-                        gain: test.gain,
+                        amplitude: _currentRun.amplitude_degrees,
+                        frequency: _currentRun.frequency_Hz,
+                        gain: _currentRun.gain,
                         translate: true
                         );
                 }
             }
-            else if (test.motionSource == MotionSource.UDP)
+            else if (_currentRun.motionSource == MotionSource.UDP)
             {
-                visualFieldController.StartMotion(mainCamera.transform, moogUDPServer, test.gain, test.motionDirection == MotionDirection.Translation);
+                visualFieldController.StartMotion(mainCamera.transform, moogUDPServer, _currentRun.gain, _currentRun.motionDirection == MotionDirection.Translation);
             }
         }
 
@@ -387,8 +401,8 @@ public class Main : MonoBehaviour
         else if (scene == Scene.Bars)
         {
             mainCamera.clearFlags = CameraClearFlags.Skybox;
-            //mainCamera.fieldOfView = WallController.wallSceneFOV;
-            wall.InitializeWall(_wallProperties, _fov, _screenSize);
+            //wall.InitializeWall(_wallProperties, _fov, _screenSize);
+            wall.InitializeWall(_wallProperties, 60f, _screenSize);
         }
         _sceneRunning = true;
     }
@@ -416,7 +430,7 @@ public class Main : MonoBehaviour
         dataLogger.StopLogging();
         visualFieldController.StopMotion();
 
-        ClearScene(_currentTest.scene);
+        ClearScene(_currentRun.scene);
 
         yield return new WaitForSeconds(2);
         messageText.enabled = true;

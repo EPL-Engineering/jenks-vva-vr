@@ -14,25 +14,28 @@ namespace VVA_Controller
 {
     public partial class ScenePropertiesDialog : Form
     {
-        public DotProperties DotProperties { set; get; }
-        public WallProperties WallProperties { set; get; }
+        private ControllerSettings _settings;
 
-        public ScenePropertiesDialog()
+        public ScenePropertiesDialog(ControllerSettings settings)
         {
+            _settings = settings;
             InitializeComponent();
         }
 
         private void OptionsDialog_Load(object sender, EventArgs e)
         {
-            dotSizeNumeric.FloatValue = DotProperties.size_deg;
-            dotDensityNumeric.FloatValue = DotProperties.density_deg2;
-            dotVelocityNumeric.FloatValue = DotProperties.sdVelocity_deg_per_s;
+            dotSizeNumeric.FloatValue = _settings.dotProperties.size_deg;
+            dotDensityNumeric.FloatValue = _settings.dotProperties.density_deg2;
+            dotVelocityNumeric.FloatValue = _settings.dotProperties.sdVelocity_deg_per_s;
 
-            barWidthNumeric.FloatValue = WallProperties.barWidth_m;
-            barSpacingNumeric.FloatValue = WallProperties.barSpacing_m;
-            wallDistanceNumeric.FloatValue = WallProperties.wallDistance_m;
-            wallHeightNumeric.FloatValue = WallProperties.wallHeight_m;
-            wallOffsetNumeric.FloatValue = WallProperties.wallOffset_m;
+            barWidthNumeric.FloatValue = _settings.wallProperties.barWidth_m;
+            barSpacingNumeric.FloatValue = _settings.wallProperties.barSpacing_m;
+            wallDistanceNumeric.FloatValue = _settings.wallProperties.wallDistance_m;
+            wallHeightNumeric.FloatValue = _settings.wallProperties.wallHeight_m;
+            wallOffsetNumeric.FloatValue = _settings.wallProperties.wallOffset_m;
+
+            amplitudeNumeric.FloatValue = _settings.defaultAmplitude_degrees;
+            durationNumeric.FloatValue = _settings.defaultBaselineDuration_s;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -42,15 +45,18 @@ namespace VVA_Controller
 
         private void applyButton_Click(object sender, EventArgs e)
         {
-            DotProperties.size_deg = dotSizeNumeric.FloatValue;
-            DotProperties.density_deg2 = dotDensityNumeric.FloatValue;
-            DotProperties.sdVelocity_deg_per_s = dotVelocityNumeric.FloatValue;
+            _settings.dotProperties.size_deg = dotSizeNumeric.FloatValue;
+            _settings.dotProperties.density_deg2 = dotDensityNumeric.FloatValue;
+            _settings.dotProperties.sdVelocity_deg_per_s = dotVelocityNumeric.FloatValue;
 
-            WallProperties.barWidth_m = barWidthNumeric.FloatValue;
-            WallProperties.barSpacing_m = barSpacingNumeric.FloatValue;
-            WallProperties.wallDistance_m = wallDistanceNumeric.FloatValue;
-            WallProperties.wallHeight_m = wallHeightNumeric.FloatValue;
-            WallProperties.wallOffset_m = wallOffsetNumeric.FloatValue;
+            _settings.wallProperties.barWidth_m = barWidthNumeric.FloatValue;
+            _settings.wallProperties.barSpacing_m = barSpacingNumeric.FloatValue;
+            _settings.wallProperties.wallDistance_m = wallDistanceNumeric.FloatValue;
+            _settings.wallProperties.wallHeight_m = wallHeightNumeric.FloatValue;
+            _settings.wallProperties.wallOffset_m = wallOffsetNumeric.FloatValue;
+
+            _settings.defaultAmplitude_degrees = amplitudeNumeric.FloatValue;
+            _settings.defaultBaselineDuration_s = durationNumeric.FloatValue;
 
             Close();
         }

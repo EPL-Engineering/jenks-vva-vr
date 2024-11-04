@@ -77,7 +77,7 @@
             this.dgv.MultiSelect = false;
             this.dgv.Name = "dgv";
             this.dgv.ReadOnly = true;
-            this.dgv.RowHeadersWidth = 25;
+            this.dgv.RowHeadersWidth = 50;
             this.dgv.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -91,7 +91,7 @@
             this.BaselineScene.ReadOnly = true;
             this.BaselineScene.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.BaselineScene.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BaselineScene.Width = 75;
+            this.BaselineScene.Width = 60;
             // 
             // BaselineDuration
             // 
@@ -113,7 +113,7 @@
             this.Source.ReadOnly = true;
             this.Source.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Source.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Source.Width = 75;
+            this.Source.Width = 65;
             // 
             // Direction
             // 

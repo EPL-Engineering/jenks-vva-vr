@@ -42,7 +42,8 @@ public class DataLogger : MonoBehaviour
     {
         if (!_isRunning) return;
 
-        _log.StartEntry(Time.timeSinceLevelLoad, controller.X, controller.RollTilt);
+        //_log.StartEntry(Time.timeSinceLevelLoad, controller.X, controller.RollTilt);
+        _log.StartEntry(Time.time, controller.X, controller.RollTilt);
 
         if (_hmd == VRHMD.Vive)
         {

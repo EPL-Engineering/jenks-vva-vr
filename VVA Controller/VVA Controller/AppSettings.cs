@@ -10,6 +10,7 @@ namespace VVA_Controller
     {
         public Point controllerLocation = new Point(-1, -1);
         public Point vrLocation = new Point(-1, -1);
+        public ProtocolState protocolState = null;
 
         public static AppSettings Restore()
         {

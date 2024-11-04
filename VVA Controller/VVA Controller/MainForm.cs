@@ -30,19 +30,22 @@ namespace VVA_Controller
         private Serilog.Core.LoggingLevelSwitch _logLevel = new Serilog.Core.LoggingLevelSwitch();
 
         private DateTime _runStartTime;
-        private double _runDuration;
+        private double _phaseDuration;
         private DateTime _lastStatusCheck;
         private bool _haveFileName;
 
         private AppSettings _appSettings;
         private ControllerSettings _controllerSettings;
 
-        private int _selectedTable = -1;
+        private enum RunPhase { Baseline, Motion}
+        private RunPhase _runPhase;
+        private bool _userAbort;
 
         public MainForm()
         {
             InitializeComponent();
 
+            progressLabel.Text = "";
             startButton.Enabled = false;
             testTable.ClearTable();
         }
@@ -76,6 +79,11 @@ namespace VVA_Controller
 
             await RestoreSettings();
 
+            if (_appSettings.protocolState != null && !_appSettings.protocolState.IsFinished)
+            {
+                ShowProtocol();
+            }
+
             TryVRConnection();
         }
 
@@ -98,9 +106,7 @@ namespace VVA_Controller
 
         private void mmToolsScene_Click(object sender, EventArgs e)
         {
-            var dlg = new ScenePropertiesDialog();
-            dlg.DotProperties = _controllerSettings.dotProperties;
-            dlg.WallProperties = _controllerSettings.wallProperties;
+            var dlg = new ScenePropertiesDialog(_controllerSettings);
             dlg.ShowDialog();
         }
 
@@ -169,7 +175,7 @@ namespace VVA_Controller
             _haveVR = ConnectToVR();
             headsetLabel.Text = GetHeadset();
 
-            startButton.Enabled = _haveVR && _selectedTable > -1;
+            startButton.Enabled = _haveVR && _appSettings.protocolState != null && !_appSettings.protocolState.IsFinished;
             mmToolsHeadset.Enabled = _haveVR;
         }
 
@@ -215,7 +221,7 @@ namespace VVA_Controller
                 connectionStatusLabel.Text = $"Connected to VR at {_ipEndPoint.ToString()}";
                 Log.Information($"Connected to VR at {_ipEndPoint.ToString()}");
             }
-            else if (autoStart && false)
+            else if (autoStart)
             {
                 connectionStatusLabel.Text = "Launching VR...";
                 Log.Information("Launching VR");
@@ -351,7 +357,7 @@ namespace VVA_Controller
 
             Log.Information("Pinging VR");
 
-            _ipEndPoint = Discovery.Discover("VVA VR");
+            _ipEndPoint = Discovery.Discover("VVA VR", "localhost");
             if (_ipEndPoint != null)
             {
                 var result = KTcpClient.SendMessage(_ipEndPoint, "Ping");
@@ -371,28 +377,41 @@ namespace VVA_Controller
             startButton.Enabled = false;
             try
             {
-                var test = GetSelectedTest();
+                var test = _appSettings.protocolState.CurrentTest;
 
-                _runDuration = test.duration_s;
+                if (test.baselineScene == Scene.Dots)
+                {
+                    Log.Information("Sending dot properties: " + _controllerSettings.dotProperties);
+                    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_controllerSettings.dotProperties));
+                }
+                else if (test.baselineScene == Scene.Bars)
+                {
+                    Log.Information("Sending grating properties: " + _controllerSettings.wallProperties);
+                    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_controllerSettings.wallProperties));
+                }
 
-                //if (test.scene == Scene.Dots)
-                //{
-                //    Log.Information("Sending dot properties: " + _testSettings.dotProperties);
-                //    KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_testSettings.dotProperties));
-                //}
-                //else if (test.scene == Scene.Bars)
-                //{
-                //    Log.Information("Sending grating properties: " + _testSettings.wallProperties);
-                //    KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_testSettings.wallProperties));
-                //}
+                _userAbort = false;
+                _runPhase = RunPhase.Baseline;
+                _phaseDuration = test.baselineDuration_s;
 
-                Log.Information("Starting run: " + test.ToLogString());
+                var runMessage = new RunMessage()
+                {
+                    scene = test.baselineScene,
+                    motionSource = test.motionSource,
+                    motionDirection = test.motionDirection,
+                    amplitude_degrees = 0,
+                    duration_s = test.baselineDuration_s
+                };
 
-                var response = KTcpClient.SendMessage(_ipEndPoint, "Run", KFile.ToProtoBuf(test));
+                progressLabel.Text = $"Test {_appSettings.protocolState.nextTest + 1}: baseline";
+                Log.Information($"Starting test {_appSettings.protocolState.nextTest + 1}/{_appSettings.protocolState.protocol.Count}: {test.ToLogString()}");
+                Log.Information("Baseline phase: " + runMessage.ToLogString());
+
+                KTcpClient.SendMessage(_ipEndPoint, $"StartTest:{test.ToLogString()}");
+                var response = KTcpClient.SendMessage(_ipEndPoint, "Run", KFile.ToProtoBuf(runMessage));
                 startButton.Visible = false;
-                EnableControls(false);
 
-                progressBar.Maximum = (int)(_runDuration / (0.001 * runTimer.Interval));
+                progressBar.Maximum = (int)(_phaseDuration / (0.001 * runTimer.Interval));
                 progressBar.Value = 0;
 
                 _runStartTime = DateTime.Now;
@@ -411,42 +430,84 @@ namespace VVA_Controller
             }
         }
 
-        private TestSpecification GetSelectedTest()
+        private void EndBaseline()
         {
-            TestSpecification test = null;
-            //test = _testSettings.tests[controlTable.SelectedRow];
-            return test;
+            try
+            {
+                var test = _appSettings.protocolState.CurrentTest;
+
+                _runPhase = RunPhase.Motion;
+                _phaseDuration = test.duration_s;
+
+                var runMessage = new RunMessage()
+                {
+                    scene = Scene.Bars,
+                    motionSource = test.motionSource,
+                    motionDirection = test.motionDirection,
+                    amplitude_degrees = test.amplitude_degrees,
+                    frequency_Hz = test.frequency_Hz,
+                    gain = test.gain,
+                    duration_s = test.duration_s
+                };
+
+                progressLabel.Text = $"Test {_appSettings.protocolState.nextTest + 1}: motion";
+                Log.Information("Motion phase: " + runMessage.ToLogString());
+
+                var response = KTcpClient.SendMessage(_ipEndPoint, "Run", KFile.ToProtoBuf(runMessage));
+
+                progressBar.Maximum = (int)(_phaseDuration / (0.001 * runTimer.Interval));
+                progressBar.Value = 0;
+
+                _runStartTime = DateTime.Now;
+                _lastStatusCheck = DateTime.Now;
+                runTimer.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                runTimer.Enabled = false;
+                startButton.Visible = true;
+                startButton.Enabled = true;
+
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void EndRun(bool vrStopped = false)
+        private void EndRun(bool userAbort, bool vrStopped)
         {
             if (!vrStopped)
             {
-                Log.Information("Aborting run");
+                Log.Information("Ending run");
                 KTcpClient.SendMessage(_ipEndPoint, "Abort");
             }
 
-            EnableControls(true);
             startButton.Visible = true;
             startButton.Enabled = true;
             progressBar.Value = 0;
 
             if (vrStopped)
             {
+                Log.Error("VR stopped unexpectedly");
                 elapsedTimeLabel.Text = "error";
                 KLib.Controls.MsgBox.Show("VR stopped unexpectedly.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+            else if (userAbort)
+            {
+                Log.Information("Run stopped by user");
+            }
+            else
+            {
+                _appSettings.protocolState.Advance();
+                _appSettings.Save();
+                ShowProtocol();
+            }
 
-        private void EnableControls(bool enable)
-        {
-            testTable.Enabled = enable;
+            progressLabel.Text = "";
         }
 
         private void stopButton_Click(object sender, EventArgs e)
         {
-            runTimer.Enabled = false;
-            EndRun();
+            _userAbort = true;
         }
 
         private void runTimer_Tick(object sender, EventArgs e)
@@ -470,10 +531,17 @@ namespace VVA_Controller
                 vrStopped = KTcpClient.SendMessage(_ipEndPoint, "GetStatus") < 0;
             }
 
-            if (elapsedTime.TotalSeconds > _runDuration || vrStopped)
+            if (elapsedTime.TotalSeconds > _phaseDuration || vrStopped || _userAbort)
             {
                 runTimer.Enabled = false;
-                EndRun(vrStopped);
+                if (_runPhase == RunPhase.Baseline && !vrStopped && !_userAbort)
+                {
+                    EndBaseline();
+                }
+                else
+                {
+                    EndRun(_userAbort, vrStopped);
+                }
             }
         }
 
@@ -488,7 +556,7 @@ namespace VVA_Controller
             KTcpClient.SendMessage(_ipEndPoint, "DotProperties", KFile.ToProtoBuf(_controllerSettings.dotProperties));
             KTcpClient.SendMessage(_ipEndPoint, "GratingProperties", KFile.ToProtoBuf(_controllerSettings.wallProperties));
 
-            var dlg = new MoogDialog(_ipEndPoint, GetSelectedTest());
+            var dlg = new MoogDialog(_ipEndPoint, _appSettings.protocolState.CurrentTest);
             dlg.ShowDialog();
         }
 
@@ -511,7 +579,7 @@ namespace VVA_Controller
                         motionDirection = d,
                         amplitude_degrees = _controllerSettings.defaultAmplitude_degrees,
                         frequency_Hz = p.frequency_Hz,
-                        gain = p.gain,
+                        gain = (d == MotionDirection.RollTilt) ? 1 : p.gain,
                         duration_s = p.duration_s
                     }
                     );
@@ -521,10 +589,33 @@ namespace VVA_Controller
             {
                 randomized.Add(tests[i]);
             }
-            testTable.Value = randomized;
 
-            testTable.FillTable();
+            _appSettings.protocolState = new ProtocolState(randomized);
+            _appSettings.Save();
+
+            ShowProtocol();
         }
 
+        private void ShowProtocol()
+        {
+            testTable.FillTable(_appSettings.protocolState.protocol, _appSettings.protocolState.nextTest);
+
+            lockButton.Checked = _appSettings.protocolState != null && !_appSettings.protocolState.IsFinished;
+            lockButton.Enabled = lockButton.Checked;
+
+            startButton.Enabled = lockButton.Checked;
+        }
+
+        private void lockButton_CheckedChanged(object sender, EventArgs e)
+        {
+            lockButton.Text = lockButton.Checked ? "Locked" : "Lock";
+            lockButton.ImageIndex = lockButton.Checked ? 1 : 0;
+
+            baselineSceneListBox.Enabled = !lockButton.Checked;
+            motionSourceListBox.Enabled = !lockButton.Checked;
+            motionDirectionListBox.Enabled = !lockButton.Checked;
+            linkedParamsTable.Enabled = !lockButton.Checked;
+            randomizeButton.Enabled = !lockButton.Checked;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
@@ -14,9 +15,6 @@ namespace VVA_Controller
 {
     public partial class TestTable : KUserControl
     {
-        public List<TestSpecification> Value { set; get; } = null;
-        public List<int> Completed { set; get; } = null;
-
         public TestTable()
         {
             InitializeComponent();
@@ -35,15 +33,19 @@ namespace VVA_Controller
             dgv.Refresh();
         }
 
-        public void FillTable()
+        public void FillTable(List<TestSpecification> tests, int nextTest)
         {
             _ignoreEvents = true;
 
             dgv.Rows.Clear();
-            foreach (var t in Value)
+            foreach (var t in tests)
             {
                 int rowIndex = dgv.Rows.Add();
                 var cells = dgv.Rows[rowIndex].Cells;
+
+                dgv.Rows[rowIndex].HeaderCell.Value = (rowIndex + 1).ToString();
+
+                dgv.Rows[rowIndex].DefaultCellStyle.ForeColor = (rowIndex < nextTest) ? Color.LightGray : Color.Black;
 
                 cells["BaselineScene"].Value = t.baselineScene;
                 cells["BaselineDuration"].Value = t.baselineDuration_s;
@@ -55,27 +57,21 @@ namespace VVA_Controller
                 cells["Duration"].Value = t.duration_s;
             }
 
-            dgv.CurrentCell = null;
+            if (nextTest < tests.Count)
+            {
+                dgv.CurrentCell = dgv.Rows[nextTest].Cells[0];
+                dgv.Rows[nextTest].Selected = true;
+            }
+            else
+            {
+                dgv.CurrentCell = null;
+            }
+
             dgv.Refresh();
 
             _ignoreEvents = false;
         }
 
-        //private void SetGainCellProperties(DataGridViewCell c, MotionDirection motionDirection, float gain)
-        //{
-        //    if (motionDirection == MotionDirection.RollTilt)
-        //    {
-        //        c.Value = 1;
-        //        c.Style.BackColor = Color.FromArgb(216, 216, 216);
-        //        c.ReadOnly = true;
-        //    }
-        //    if (motionDirection == MotionDirection.Translation)
-        //    {
-        //        c.Value = gain;
-        //        c.Style.BackColor = Color.White;
-        //        c.ReadOnly = false;
-        //    }
-        //}
         private IDesignerHost designerHost;
         protected override void OnHandleCreated(EventArgs e)
         {

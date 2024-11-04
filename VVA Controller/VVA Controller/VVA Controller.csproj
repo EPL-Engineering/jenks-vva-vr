@@ -125,6 +125,7 @@
     <Compile Include="MoogDialog.Designer.cs">
       <DependentUpon>MoogDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProtocolState.cs" />
     <Compile Include="ScenePropertiesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,6 +193,8 @@
     <Content Include="Images\VVA.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\dice_blue1.png" />
+    <None Include="Resources\dice_blue.png" />
     <None Include="Resources\tape_measure2.png" />
     <None Include="Resources\delete.png" />
     <None Include="Resources\ok.png" />

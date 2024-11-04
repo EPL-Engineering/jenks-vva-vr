@@ -55,11 +55,14 @@ namespace VVA_Controller
             this.baselineSceneListBox = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.motionDirectionListBox = new System.Windows.Forms.CheckedListBox();
+            this.randomizeButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
-            this.randomizeButton = new System.Windows.Forms.Button();
+            this.imageList32 = new System.Windows.Forms.ImageList(this.components);
+            this.lockButton = new System.Windows.Forms.CheckBox();
             this.testTable = new VVA_Controller.TestTable();
             this.linkedParamsTable = new VVA_Controller.LinkedParamsTable();
+            this.progressLabel = new System.Windows.Forms.Label();
             this.statusStrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -120,6 +123,8 @@ namespace VVA_Controller
             this.imageList.Images.SetKeyName(0, "nav_plain_red.png");
             this.imageList.Images.SetKeyName(1, "nav_plain_yellow.png");
             this.imageList.Images.SetKeyName(2, "nav_plain_green.png");
+            this.imageList.Images.SetKeyName(3, "lock_open.png");
+            this.imageList.Images.SetKeyName(4, "lock.png");
             // 
             // runTimer
             // 
@@ -279,6 +284,19 @@ namespace VVA_Controller
             this.motionDirectionListBox.Size = new System.Drawing.Size(100, 87);
             this.motionDirectionListBox.TabIndex = 34;
             // 
+            // randomizeButton
+            // 
+            this.randomizeButton.Image = global::VVA_Controller.Properties.Resources.dice_blue1;
+            this.randomizeButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.randomizeButton.Location = new System.Drawing.Point(21, 159);
+            this.randomizeButton.Name = "randomizeButton";
+            this.randomizeButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.randomizeButton.Size = new System.Drawing.Size(169, 56);
+            this.randomizeButton.TabIndex = 37;
+            this.randomizeButton.Text = "Randomize";
+            this.randomizeButton.UseVisualStyleBackColor = true;
+            this.randomizeButton.Click += new System.EventHandler(this.randomizeButton_Click);
+            // 
             // startButton
             // 
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -307,26 +325,38 @@ namespace VVA_Controller
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
-            // randomizeButton
+            // imageList32
             // 
-            this.randomizeButton.Location = new System.Drawing.Point(20, 166);
-            this.randomizeButton.Name = "randomizeButton";
-            this.randomizeButton.Size = new System.Drawing.Size(169, 36);
-            this.randomizeButton.TabIndex = 37;
-            this.randomizeButton.Text = "Randomize";
-            this.randomizeButton.UseVisualStyleBackColor = true;
-            this.randomizeButton.Click += new System.EventHandler(this.randomizeButton_Click);
+            this.imageList32.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList32.ImageStream")));
+            this.imageList32.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList32.Images.SetKeyName(0, "lock_open.png");
+            this.imageList32.Images.SetKeyName(1, "lock.png");
+            // 
+            // lockButton
+            // 
+            this.lockButton.Appearance = System.Windows.Forms.Appearance.Button;
+            this.lockButton.Enabled = false;
+            this.lockButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lockButton.ImageIndex = 0;
+            this.lockButton.ImageList = this.imageList32;
+            this.lockButton.Location = new System.Drawing.Point(401, 159);
+            this.lockButton.Name = "lockButton";
+            this.lockButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.lockButton.Size = new System.Drawing.Size(169, 56);
+            this.lockButton.TabIndex = 41;
+            this.lockButton.Text = "Lock";
+            this.lockButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lockButton.UseVisualStyleBackColor = true;
+            this.lockButton.CheckedChanged += new System.EventHandler(this.lockButton_CheckedChanged);
             // 
             // testTable
             // 
             this.testTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.testTable.Completed = null;
             this.testTable.Enabled = false;
-            this.testTable.Location = new System.Drawing.Point(21, 208);
+            this.testTable.Location = new System.Drawing.Point(21, 221);
             this.testTable.Name = "testTable";
             this.testTable.Size = new System.Drawing.Size(561, 217);
             this.testTable.TabIndex = 39;
-            this.testTable.Value = null;
             // 
             // linkedParamsTable
             // 
@@ -337,11 +367,22 @@ namespace VVA_Controller
             this.linkedParamsTable.TabIndex = 36;
             this.linkedParamsTable.Value = null;
             // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Location = new System.Drawing.Point(193, 461);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(47, 13);
+            this.progressLabel.TabIndex = 42;
+            this.progressLabel.Text = "progress";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(594, 560);
+            this.Controls.Add(this.progressLabel);
+            this.Controls.Add(this.lockButton);
             this.Controls.Add(this.testTable);
             this.Controls.Add(this.randomizeButton);
             this.Controls.Add(this.linkedParamsTable);
@@ -405,6 +446,9 @@ namespace VVA_Controller
         private System.Windows.Forms.Button randomizeButton;
         private TestTable testTable;
         private LinkedParamsTable linkedParamsTable;
+        private System.Windows.Forms.ImageList imageList32;
+        private System.Windows.Forms.CheckBox lockButton;
+        private System.Windows.Forms.Label progressLabel;
     }
 }
 
