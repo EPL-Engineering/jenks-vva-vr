@@ -1,1 +1,3 @@
-# jenks-fove-vr
+# VVA VR
+
+[Changelog](CHANGELOG.md)
