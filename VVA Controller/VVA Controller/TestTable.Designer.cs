@@ -79,10 +79,10 @@
             this.dgv.ReadOnly = true;
             this.dgv.RowHeadersWidth = 50;
             this.dgv.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(581, 275);
+            this.dgv.Size = new System.Drawing.Size(572, 199);
             this.dgv.TabIndex = 24;
+            this.dgv.SelectionChanged += new System.EventHandler(this.dgv_SelectionChanged);
             // 
             // BaselineScene
             // 
@@ -190,7 +190,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.dgv);
             this.Name = "TestTable";
-            this.Size = new System.Drawing.Size(593, 284);
+            this.Size = new System.Drawing.Size(586, 212);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
 

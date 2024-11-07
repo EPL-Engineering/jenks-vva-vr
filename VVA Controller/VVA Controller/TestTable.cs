@@ -15,6 +15,8 @@ namespace VVA_Controller
 {
     public partial class TestTable : KUserControl
     {
+        private int _selectedRow = -1;
+
         public TestTable()
         {
             InitializeComponent();
@@ -59,17 +61,34 @@ namespace VVA_Controller
 
             if (nextTest < tests.Count)
             {
+                _selectedRow = nextTest;
                 dgv.CurrentCell = dgv.Rows[nextTest].Cells[0];
                 dgv.Rows[nextTest].Selected = true;
             }
             else
             {
+                _selectedRow = -1;
                 dgv.CurrentCell = null;
             }
 
             dgv.Refresh();
 
             _ignoreEvents = false;
+        }
+
+        private void dgv_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_ignoreEvents) return;
+
+            if (_selectedRow >= 0)
+            {
+                dgv.CurrentCell = dgv.Rows[_selectedRow].Cells[0];
+                dgv.Rows[_selectedRow].Selected = true;
+            }
+            else
+            {
+                dgv.CurrentCell = null;
+            }
         }
 
         private IDesignerHost designerHost;
@@ -103,5 +122,6 @@ namespace VVA_Controller
             //You can put some logic to generate dummy data based on column type, etc.
             return "Sample";
         }
+
     }
 }

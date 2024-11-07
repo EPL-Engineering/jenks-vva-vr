@@ -12,7 +12,7 @@ public class BuildStandalone : MonoBehaviour
     public static void MyBuild()
     {
         ClearConsole();
-        Debug.Log("Beginning Windows standalone build...");
+        Debug.Log("Beginning Windows standalone build..."); 
 
         var proc = new System.Diagnostics.Process();
 

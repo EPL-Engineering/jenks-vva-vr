@@ -60,9 +60,9 @@ namespace VVA_Controller
             this.stopButton = new System.Windows.Forms.Button();
             this.imageList32 = new System.Windows.Forms.ImageList(this.components);
             this.lockButton = new System.Windows.Forms.CheckBox();
+            this.progressLabel = new System.Windows.Forms.Label();
             this.testTable = new VVA_Controller.TestTable();
             this.linkedParamsTable = new VVA_Controller.LinkedParamsTable();
-            this.progressLabel = new System.Windows.Forms.Label();
             this.statusStrip.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +76,7 @@ namespace VVA_Controller
             this.elapsedTimeLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 538);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(594, 22);
+            this.statusStrip.Size = new System.Drawing.Size(598, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -139,7 +139,7 @@ namespace VVA_Controller
             this.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(594, 23);
+            this.mainMenu.Size = new System.Drawing.Size(598, 23);
             this.mainMenu.TabIndex = 22;
             this.mainMenu.Text = "menuStrip1";
             // 
@@ -214,7 +214,7 @@ namespace VVA_Controller
             // 
             // datafileTextBox
             // 
-            this.datafileTextBox.Location = new System.Drawing.Point(196, 478);
+            this.datafileTextBox.Location = new System.Drawing.Point(196, 470);
             this.datafileTextBox.Name = "datafileTextBox";
             this.datafileTextBox.ReadOnly = true;
             this.datafileTextBox.Size = new System.Drawing.Size(374, 20);
@@ -302,7 +302,7 @@ namespace VVA_Controller
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startButton.Image = global::VVA_Controller.Properties.Resources.media_play_green;
             this.startButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.startButton.Location = new System.Drawing.Point(21, 461);
+            this.startButton.Location = new System.Drawing.Point(21, 453);
             this.startButton.Name = "startButton";
             this.startButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.startButton.Size = new System.Drawing.Size(144, 51);
@@ -316,7 +316,7 @@ namespace VVA_Controller
             this.stopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopButton.Image = global::VVA_Controller.Properties.Resources.media_stop_red;
             this.stopButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.stopButton.Location = new System.Drawing.Point(21, 461);
+            this.stopButton.Location = new System.Drawing.Point(21, 453);
             this.stopButton.Name = "stopButton";
             this.stopButton.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             this.stopButton.Size = new System.Drawing.Size(144, 51);
@@ -349,13 +349,21 @@ namespace VVA_Controller
             this.lockButton.UseVisualStyleBackColor = true;
             this.lockButton.CheckedChanged += new System.EventHandler(this.lockButton_CheckedChanged);
             // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Location = new System.Drawing.Point(193, 453);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(47, 13);
+            this.progressLabel.TabIndex = 42;
+            this.progressLabel.Text = "progress";
+            // 
             // testTable
             // 
             this.testTable.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.testTable.Enabled = false;
             this.testTable.Location = new System.Drawing.Point(21, 221);
             this.testTable.Name = "testTable";
-            this.testTable.Size = new System.Drawing.Size(561, 217);
+            this.testTable.Size = new System.Drawing.Size(589, 211);
             this.testTable.TabIndex = 39;
             // 
             // linkedParamsTable
@@ -367,20 +375,11 @@ namespace VVA_Controller
             this.linkedParamsTable.TabIndex = 36;
             this.linkedParamsTable.Value = null;
             // 
-            // progressLabel
-            // 
-            this.progressLabel.AutoSize = true;
-            this.progressLabel.Location = new System.Drawing.Point(193, 461);
-            this.progressLabel.Name = "progressLabel";
-            this.progressLabel.Size = new System.Drawing.Size(47, 13);
-            this.progressLabel.TabIndex = 42;
-            this.progressLabel.Text = "progress";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(594, 560);
+            this.ClientSize = new System.Drawing.Size(598, 560);
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.lockButton);
             this.Controls.Add(this.testTable);
